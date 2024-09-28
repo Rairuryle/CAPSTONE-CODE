@@ -1,0 +1,194 @@
+<body>
+    {{> headerLanding}}
+
+    <div class="container">
+        <div class="row">
+            <div class="col position-relative" style="min-height: 30px;">
+                <div
+                    class="position-absolute top-0 start-50 my-1 translate-middle-x text-center d-flex align-items-center">
+                    <p class="brackets-register">[</p>
+                    <p class="title-register mx-5">Register</p>
+                    <p class="brackets-register">]</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <div class="row d-flex flex-column" style="width: 1000px;">
+                <div class="col">
+                    <a href="/dashboard">
+                        <button type="button" class="btn btn-dashboard-redirect btn-light btn-md fw-bold w-25">Back to
+                            Dashboard</button>
+                    </a>
+                </div>
+
+                <div class="col">
+                    <div class="card card-register d-flex justify-content-center align-items-center mt-2"
+                        style="min-height: 515px;">
+                        <div class="card-body card-body-register w-100" style="max-width: 900px;">
+                            <form action="/auth/register" method="POST">
+
+                                <span>Organization</span>
+                                <div class="form-group row mt-2 border-bottom">
+                                    <div class="col col-org d-flex">
+                                        <button class="btn border border-2 fw-bold mb-3" type="button">SAO</button>
+                                        <button class="btn border border-2 fw-bold ms-3 mb-3" type="button">USG</button>
+                                        <button class="btn border border-2 fw-bold ms-3 mb-3" type="button">CSO</button>
+
+                                        <div class="dropdown">
+                                            <button class="btn border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
+                                                type="button" id="dropdown1" data-dropdown-id="dropdown1"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                COLLEGE
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown1">
+                                                <a class="dropdown-item" href="#">CAS</a>
+                                                <a class="dropdown-item" href="#">CBA</a>
+                                                <a class="dropdown-item" href="#">CCJE</a>
+                                                <a class="dropdown-item" href="#">CCSEA</a>
+                                                <a class="dropdown-item" href="#">CON</a>
+                                                <a class="dropdown-item" href="#">CTE</a>
+                                                <a class="dropdown-item" href="#">CTHM</a>
+                                            </div>
+                                        </div>
+
+                                        <div class="dropdown">
+                                            <button class="btn border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
+                                                type="button" id="dropdown2" data-dropdown-id="dropdown2"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                ABO
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown2">
+                                                <a class="dropdown-item" href="#">JSWAP</a>
+                                                <a class="dropdown-item" href="#">LABELS</a>
+                                                <a class="dropdown-item" href="#">LSUPS</a>
+                                                <a class="dropdown-item" href="#">POLISAYS</a>
+                                                <a class="dropdown-item" href="#">JFINEX</a>
+                                                <a class="dropdown-item" href="#">JMEX</a>
+                                                <a class="dropdown-item" href="#">JPIA</a>
+                                                <a class="dropdown-item" href="#">ALGES</a>
+                                                <a class="dropdown-item" href="#">ICpEP</a>
+                                                <a class="dropdown-item" href="#">IIEE</a>
+                                                <a class="dropdown-item" href="#">JIECEP</a>
+                                                <a class="dropdown-item" href="#">LISSA</a>
+                                                <a class="dropdown-item" href="#">PICE</a>
+                                                <a class="dropdown-item" href="#">SOURCE</a>
+                                                <a class="dropdown-item" href="#">UAPSA</a>
+                                                <a class="dropdown-item" href="#">ECC</a>
+                                                <a class="dropdown-item" href="#">GENTLE</a>
+                                                <a class="dropdown-item" href="#">GEM-O</a>
+                                                <a class="dropdown-item" href="#">LapitBayan</a>
+                                                <a class="dropdown-item" href="#">LME</a>
+                                                <a class="dropdown-item" href="#">SPEM</a>
+                                                <a class="dropdown-item" href="#">SSS</a>
+                                                <a class="dropdown-item" href="#">FHARO</a>
+                                                <a class="dropdown-item" href="#">FTL</a>
+                                                <a class="dropdown-item" href="#">SOTE</a>
+                                            </div>
+                                        </div>
+
+                                        <div class="dropdown">
+                                            <button class="btn border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
+                                                type="button" id="dropdown3" data-dropdown-id="dropdown3"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                IBO
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown3">
+                                                <a class="dropdown-item" href="#">Compatriots</a>
+                                                <a class="dropdown-item" href="#">Cosplay Corps</a>
+                                                <a class="dropdown-item" href="#">Green Leaders</a>
+                                                <a class="dropdown-item" href="#">Kainos</a>
+                                                <a class="dropdown-item" href="#">Meeples</a>
+                                                <a class="dropdown-item" href="#">Micromantics</a>
+                                                <a class="dropdown-item" href="#">Red Cross Youth</a>
+                                                <a class="dropdown-item" href="#">Soul Whisperers</a>
+                                                <a class="dropdown-item" href="#">Vanguard E-sports</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="organizationRegister" id="organizationRegister">
+
+                                <div class="form-group row d-flex align-items-center mt-4">
+                                    <div class="col-2">
+                                        <label for="inputLasttName">Last Name</label>
+                                    </div>
+                                    <div class="col-7">
+                                        <input type="text" class="form-control registration-field" id="inputLastName"
+                                            name="lastNameRegister">
+                                    </div>
+                                </div>
+                                <div class="form-group row d-flex align-items-center mt-3">
+                                    <div class="col-2">
+                                        <label for="inputFirstName">First Name</label>
+                                    </div>
+                                    <div class="col-7">
+                                        <input type="text" class="form-control registration-field" id="inputFirstName"
+                                            name="firstNameRegister">
+                                    </div>
+                                </div>
+                                <div class="form-group row d-flex align-items-center mt-3">
+                                    <div class="col-2">
+                                        <label for="inputUsername">Username</label>
+                                    </div>
+                                    <div class="col-7">
+                                        <input type="text" class="form-control registration-field" id="inputUsername"
+                                            name="username">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row d-flex align-items-center mt-3">
+                                    <div class="col-2">
+                                        <label for="inputPassword">Password</label>
+                                    </div>
+                                    <div class="col-7">
+                                        <div
+                                            class="input-group password-field registration-field border show_hide_password">
+                                            <input type="password" class="form-control border-0 password-input"
+                                                id="inputPassword" name="password">
+                                            <div class="input-group-append">
+                                                <span
+                                                    class="input-group-text bg-transparent border-0 pt-2 togglePassword"
+                                                    style="cursor: pointer;">
+                                                    <i class="fas fa-eye-slash"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row d-flex align-items-center mt-4">
+                                    <div class="col-2">
+                                        <label for="confirmPassword">Confirm Password</label>
+                                    </div>
+                                    <div class="col-7">
+                                        <div
+                                            class="input-group password-field registration-field border show_hide_password">
+                                            <input type="password" class="form-control border-0 password-input"
+                                                id="confirmPassword" name="passwordConfirm">
+                                            <div class="input-group-append">
+                                                <span
+                                                    class="input-group-text bg-transparent border-0 pt-2 togglePassword"
+                                                    style="cursor: pointer;">
+                                                    <i class="fas fa-eye-slash"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group d-flex justify-content-end mt-4 w-100">
+                                    <button class="btn btn-reset btn-light mx-4">Reset</button>
+                                    <input class="btn btn-register btn-outline-success w-25" type="submit"
+                                        value="Register">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/landing.js"></script>
+</body>

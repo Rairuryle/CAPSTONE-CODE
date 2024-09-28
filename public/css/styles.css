@@ -1,0 +1,18 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --main-green: #213a31;
+  --secondary-green: #33db9e;
+  --tertiary-green: #297257;
+}
+
+body {
+  font-family: "Josefin Sans", sans-serif;
+  min-height: 100vh;
+  background-color: var(--main-green);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  margin: 0;
+}

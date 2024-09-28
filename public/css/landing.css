@@ -1,0 +1,170 @@
+.header-landing {
+  height: 5.5rem;
+}
+
+.lsu-star-logo img {
+  height: 2.5rem;
+}
+
+.figure-landing img {
+  width: 95%;
+}
+
+.brackets-landing,
+.title-img-landing,
+.brackets-login,
+.title-login {
+  color: white;
+}
+
+.brackets-landing,
+.brackets-login {
+  font-size: 3rem;
+}
+
+.title-img-landing,
+.title-login {
+  line-height: 1.6;
+}
+
+.btn-landing {
+  color: var(--main-green);
+  border-radius: 15px;
+  margin-left: -1rem;
+}
+
+.title-landing,
+.description-landing {
+  color: white;
+}
+
+.description-landing {
+  top: calc(10% + 9rem);
+}
+
+.second-col-landing {
+  height: 35rem;
+}
+
+.logo-link-landing img {
+  width: 2rem;
+}
+
+.title-help,
+.title-contact {
+  text-underline-offset: 0.95rem;
+}
+
+.title-one-help,
+.title-one-contact {
+  padding-left: 4rem;
+}
+
+.title-two-help a {
+  text-decoration: none;
+}
+
+.title-two-help a:hover {
+  text-decoration: underline;
+}
+
+.card-faq {
+  border-radius: 20px;
+  height: 23rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-body {
+  overflow: auto;
+}
+
+.card-faq-text {
+  color: var(--tertiary-green);
+}
+
+.title-one-contact a {
+  text-decoration: none;
+}
+
+.title-one-contact a:hover {
+  text-decoration: underline;
+}
+
+.row-contact a {
+  text-decoration: none;
+}
+
+.icons-contact img {
+  width: 1.2rem;
+}
+
+/* login.hbs */
+
+.card-login {
+  border-start-start-radius: 30px;
+  border-start-end-radius: 30px;
+  border-end-start-radius: 0px;
+  border-end-end-radius: 0px;
+}
+
+.btn-login {
+  background-color: var(--main-green);
+  color: white;
+  border-radius: 30px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.form-control::placeholder {
+  letter-spacing: 3px;
+}
+
+#togglePassword i {
+  font-size: 1rem;
+}
+
+#togglePassword i:hover {
+  color: rgb(53, 51, 51);
+}
+
+/* register */
+
+.brackets-register,
+.title-register {
+  color: white;
+}
+
+.btn-dashboard-redirect {
+  border-radius: 30px;
+}
+
+.card-register {
+  border-start-start-radius: 30px;
+  border-start-end-radius: 30px;
+  border-end-start-radius: 0px;
+  border-end-end-radius: 0px;
+}
+
+.col-org button {
+  min-width: 7.5rem;
+  border-radius: 10px;
+}
+
+.col-org button:hover,
+.col-org .dropdown-item:hover {
+  background-color: var(--main-green);
+  color: white;
+  cursor: pointer;
+}
+
+.active-style,
+.col-org button:active,
+.col-org button:focus,
+.btn-register {
+  color: white;
+  background-color: var(--main-green);
+}
+
+.registration-field {
+  border-radius: 7px;
+}
