@@ -55,6 +55,7 @@ exports.register = (req, res) => {
         });
 }
 
+// hehe
 // function getFlags(organization) {
 //     const { isSAO, isUSGorSAO, isCollegeOrSAO } = isMainOrgs(organization);
 //     const { isCSOorSAO, isCSOorIBOorSAO, isExtraOrgsTrue } = isExtraOrgs(organization);
