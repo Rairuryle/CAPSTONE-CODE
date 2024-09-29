@@ -16,7 +16,7 @@ const db = mysql.createConnection({
 exports.register = (req, res) => {
     console.log(req.body);
 
-    const { lastNameRegister, firstNameRegister, organizationRegister, username,
+    const { lastNameRegister, firstameRegister, organizationRegister, username,
         password, passwordConfirm } = req.body;
 
     db.query('SELECT username FROM admin WHERE username = ?', [username],
@@ -40,7 +40,7 @@ exports.register = (req, res) => {
 
             db.query('INSERT INTO admin SET?', {
                 last_name: lastNameRegister,
-                first_name: firstNameRegister,
+                first_name: firstameRegister,
                 organization: organizationRegister,
                 username: username,
                 password: hashedPassword
@@ -55,7 +55,6 @@ exports.register = (req, res) => {
         });
 }
 
-// hehe
 // function getFlags(organization) {
 //     const { isSAO, isUSGorSAO, isCollegeOrSAO } = isMainOrgs(organization);
 //     const { isCSOorSAO, isCSOorIBOorSAO, isExtraOrgsTrue } = isExtraOrgs(organization);
@@ -81,7 +80,7 @@ exports.register = (req, res) => {
 // }
 
 // exports.register = (req, res) => {
-//     const { lastNameRegister, firstNameRegister, organizationRegister, username, password, passwordConfirm } = req.body;
+//     const { lastNameRegister, firstameRegister, organizationRegister, username, password, passwordConfirm } = req.body;
 //     const organization = req.session.adminData.organization;
 
 //     const flags = getFlags(organization);
@@ -124,7 +123,7 @@ exports.register = (req, res) => {
 
 //         db.query('INSERT INTO admin SET?', {
 //             last_name: lastNameRegister,
-//             first_name: firstNameRegister,
+//             first_name: firstameRegister,
 //             organization: organizationRegister,
 //             username: username,
 //             password: hashedPassword

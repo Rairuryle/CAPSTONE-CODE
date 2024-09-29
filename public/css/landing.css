@@ -1,3 +1,7 @@
+body {
+  background-color: var(--main-green);
+}
+
 .header-landing {
   height: 5.5rem;
 }
