@@ -23,14 +23,14 @@ app.engine('hbs', exphbs.engine({
 app.set('view engine', 'hbs');
 
 router.get('/', (req, res) => {
-    res.render('landingPage', {
+    res.render('landing-page', {
         title: 'Landing Page | LSU HEU Events and Attendance Tracking Website'
     });
 });
 
 router.get('/help', (req, res) => {
     res.render('help', {
-        title: 'Help and Resource | LSU HEU Events and Attendance Tracking Website'
+        title: 'Help and Resources | LSU HEU Events and Attendance Tracking Website'
     });
 });
 
@@ -99,7 +99,7 @@ router.get('/register', (req, res) => {
         // isCTE,
         // isCTHM,
         // isCollegeOrSAORegister,
-        title: 'Register | LSU Events and Attendance Tracking Website'
+        title: 'Register | LSU HEU Events and Attendance Tracking Website'
     });
 });
 
@@ -112,80 +112,15 @@ router.get('/login', (req, res) => {
     });
 });
 
-// router.get('/logout', (req, res) => {
-//     req.session.destroy((err) => {
-//         if (err) {
-//             console.error('Error destroying session:', err);
-//         }
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error destroying session:', err);
+        }
 
-//         res.redirect('/login?isLoggedOut=true');
-//     });
-// });
-
-// router.get('/help', (req, res) => {
-//     res.render('help', {
-//         title: 'Help and Resources | LSU Events and Attendance Tracking Website'
-//     });
-// });
-
-// router.get('/student-participation-record', (req, res) => {
-//     const idNumber = req.query.id_number;
-//     const adminData = req.session.adminData;
-//     const departmentName = req.session.departmentName;
-//     const aboName = req.session.aboName;
-//     const iboName = req.session.iboName;
-//     const eventData = req.session.eventData;
-
-//     const {
-//         isAdminURL,
-//         isStudentURL,
-//         isRecordPage
-//     } = getUrlFlags(req.url);
-
-//     db.query('SELECT * FROM event', (error, events) => {
-//         if (error) {
-//             console.log(error);
-//             res.redirect('/');
-//         } else {
-//             const institutionalEvents = events.filter(event => event.event_scope === 'INSTITUTIONAL');
-//             const collegeEvents = events.filter(event => event.event_scope === departmentName);
-//             const aboEvents = events.filter(event => event.event_scope === aboName);
-//             const iboEvents = events.filter(event => event.event_scope === iboName);
-
-//             db.query('SELECT * FROM student WHERE id_number = ?', [idNumber], (error, results) => {
-//                 if (error) {
-//                     console.log(error);
-//                     res.redirect('/');
-//                 } else {
-//                     if (results.length > 0) {
-//                         const studentData = results[0];
-//                         res.render('student-participation-record', {
-//                             idNumber: idNumber,
-//                             adminData,
-//                             studentData,
-//                             eventData,
-//                             isAdminURL,
-//                             isStudentURL,
-//                             isRecordPage,
-//                             institutionalEvents,
-//                             collegeEvents,
-//                             aboEvents,
-//                             iboEvents,
-//                             events: events.map(event => ({
-//                                 ...event,
-//                                 formattedStartDate: event.event_date_start.toLocaleDateString(),
-//                                 formattedEndDate: event.event_date_end.toLocaleDateString(),
-//                             })), // Pass the events with formatted dates to the template
-//                             title: 'LSU Events and Attendance Tracking Website',
-//                         });
-//                     } else {
-//                         res.redirect('/');
-//                     }
-//                 }
-//             });
-//         }
-//     });
-// });
+        res.redirect('/login?isLoggedOut=true');
+    });
+});
 
 router.get('/dashboard', (req, res) => {
     if (req.session.isAuthenticated) {
@@ -200,6 +135,7 @@ router.get('/dashboard', (req, res) => {
             // isUSGorSAO,
             // isExtraOrgsTrue,
             // studentData,
+            currentPath: '/dashboard',
             title: 'Dashboard | LSU HEU Events and Attendance Tracking Website'
         });
     } else {
@@ -207,31 +143,86 @@ router.get('/dashboard', (req, res) => {
     }
 });
 
-// router.get('/dashboard-add-student', (req, res) => {
-//     if (req.session.isAuthenticated) {
-//         const adminData = req.session.adminData;
-//         const organization = adminData.organization;
-//         const { isUSGorSAO } = isMainOrgs(organization);
-//         const { isExtraOrgsTrue } = isExtraOrgs(organization);
+router.get('/add-student', (req, res) => {
+    if (req.session.isAuthenticated) {
+        const adminData = req.session.adminData;
+        // const organization = adminData.organization;
+        // const { isUSGorSAO } = isMainOrgs(organization);
+        // const { isExtraOrgsTrue } = isExtraOrgs(organization);
 
-//         let errorMessage = '';
+        // let errorMessage = '';
 
-//         if (req.session.errorMessage) {
-//             errorMessage = req.session.errorMessage;
-//             delete req.session.errorMessage;
-//         }
+        // if (req.session.errorMessage) {
+        //     errorMessage = req.session.errorMessage;
+        //     delete req.session.errorMessage;
+        // }
 
-//         res.render('dashboard-add-student', {
-//             adminData,
-//             isUSGorSAO,
-//             isExtraOrgsTrue,
-//             title: 'Dashboard Add Student Profile | LSU Events and Attendance Tracking Website',
-//             errorMessage: errorMessage
-//         });
-//     } else {
-//         res.redirect('/login');
-//     }
-// });
+        res.render('add-student', {
+            adminData,
+            // isUSGorSAO,
+            // isExtraOrgsTrue,
+            currentPath: '/add-student',
+            title: 'Add Student Account | LSU HEU Events and Attendance Tracking Website',
+            // errorMessage: errorMessage
+        });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+router.get('/list', (req, res) => {
+    if (req.session.isAuthenticated) {
+        const adminData = req.session.adminData;
+        // const organization = adminData.organization;
+        // const { isUSGorSAO } = isMainOrgs(organization);
+        // const { isExtraOrgsTrue } = isExtraOrgs(organization);
+
+        // let errorMessage = '';
+
+        // if (req.session.errorMessage) {
+        //     errorMessage = req.session.errorMessage;
+        //     delete req.session.errorMessage;
+        // }
+
+        res.render('list', {
+            adminData,
+            // isUSGorSAO,
+            // isExtraOrgsTrue,
+            currentPath: '/list',
+            title: 'List of Students | LSU HEU Events and Attendance Tracking Website',
+            // errorMessage: errorMessage
+        });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+router.get('/spr-main', (req, res) => {
+    if (req.session.isAuthenticated) {
+        const adminData = req.session.adminData;
+        // const organization = adminData.organization;
+        // const { isUSGorSAO } = isMainOrgs(organization);
+        // const { isExtraOrgsTrue } = isExtraOrgs(organization);
+
+        // let errorMessage = '';
+
+        // if (req.session.errorMessage) {
+        //     errorMessage = req.session.errorMessage;
+        //     delete req.session.errorMessage;
+        // }
+
+        res.render('spr-main', {
+            adminData,
+            // isUSGorSAO,
+            // isExtraOrgsTrue,
+            currentPath: '/spr-main',
+            title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website',
+            // errorMessage: errorMessage
+        });
+    } else {
+        res.redirect('/login');
+    }
+});
 
 // router.get('/university-events-admin', (req, res) => {
 //     if (req.session.isAuthenticated) {

@@ -19,8 +19,25 @@ body {
   font-size: 0.6rem;
 }
 
+.nav-pills {
+  margin-left: -1.5rem;
+}
+
 .nav-item img {
   width: 1.3rem;
+}
+
+.nav-item-title {
+  width: 40rem;
+}
+
+.nav-item.active,
+.nav-item-title:hover {
+  background-color: var(--gray-shade);
+}
+
+.nav-item.active .title-link-sidebar {
+  opacity: 1;
 }
 
 .title-link-sidebar {

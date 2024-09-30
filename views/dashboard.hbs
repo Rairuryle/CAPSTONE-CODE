@@ -4,151 +4,10 @@
 
 <div class="container-fluid">
     <div class="row flex-nowrap">
-        <div class="col-sidebar-container col-auto col-2 px-sm-2 px-0 ms-2 bg-white mt-2">
-            <div
-                class="col-sidebar d-flex flex-column align-items-center align-items-sm-start mx-3 mt-4 pt-2 pb-5 h-100">
-                <div
-                    class="title-group-sidebar d-flex align-items-center pb-2 mb-md-0 me-md-auto border-bottom border-dark-subtle">
-                    <img src="../img/lsu-star.png" alt="LSU Corporate Logo" class="w-25">
-                    <span class="title-logo-dashboard fw-bold">EVENT AND ATTENDANCE TRACKING WEBSITE</span>
-                </div>
-
-                <ul class="nav nav-pills flex-column mt-4 mb-sm-auto mb-0 align-items-center align-items-sm-start h-100"
-                    id="menu">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link align-middle px-0">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-container me-4">
-                                    <img src="../img/dashboard.png" alt="Dashboard Icon">
-                                </div>
-                                <div class="text-container flex-grow-1">
-                                    <span class="title-link-sidebar fw-bold">DASHBOARD</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li class="nav-item mt-3">
-                        <a href="#" class="nav-link align-middle px-0">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-container me-4">
-                                    <img src="../img/record.png" alt="Record Icon">
-                                </div>
-                                <div class="text-container flex-grow-1">
-                                    <span class="title-link-sidebar fw-bold">RECORDS</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li class="nav-item mt-3">
-                        <a href="#" class="nav-link align-middle px-0">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-container me-4">
-                                    <img src="../img/add-student.png" alt="Add Student Icon">
-                                </div>
-                                <div class="text-container flex-grow-1">
-                                    <span class="title-link-sidebar fw-bold">ADD STUDENT</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li class="nav-item mt-3">
-                        <a href="#" class="nav-link align-middle px-0">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-container me-4">
-                                    <img src="../img/list.png" alt="Student List Icon">
-                                </div>
-                                <div class="text-container flex-grow-1">
-                                    <span class="title-link-sidebar fw-bold">LIST</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li class="nav-item mt-3">
-                        <a href="#" class="nav-link align-middle px-0">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-container me-4">
-                                    <img src="../img/register.png" alt="Register Icon">
-                                </div>
-                                <div class="text-container flex-grow-1">
-                                    <span class="title-link-sidebar fw-bold">REGISTER</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li class="nav-item mt-auto">
-                        <a href="#" class="nav-link align-middle px-0">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-container me-4">
-                                    <img src="../img/logout.png" alt="Logout Icon">
-                                </div>
-                                <div class="text-container flex-grow-1">
-                                    <span class="title-link-sidebar fw-bold">LOG OUT</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    {{!-- <li>
-                        <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Orders</span></a>
-                    </li>
-                    <li>
-                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                            <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Bootstrap</span></a>
-                        <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Products</span> </a>
-                        <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Customers</span> </a>
-                    </li> --}}
-                </ul>
-                {{!-- <div class="dropdown pb-4">
-                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                        id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30"
-                            class="rounded-circle">
-                        <span class="d-none d-sm-inline mx-1">loser</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                        <li><a class="dropdown-item" href="#">New project...</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Sign out</a></li>
-                    </ul>
-                </div> --}}
-            </div>
-        </div>
+        {{> navbarDashboard}}
 
         <div class="col-7 mt-3">
-            <nav class="navbar search-dashboard-container bg-white">
-                <div class="container-fluid">
-                    <img src="../img/lsu-star-black.png" alt="LSU Corporate Logo"
-                        class="lsu-star-search-dashboard mx-3">
-                    <form class="d-flex w-50">
-                        <div class="input-group search-dashboard-group border w-100">
-                            <input class="form-control border-0" type="search" placeholder="Search Student..."
-                                aria-label="Search">
-                            <span class="input-group-text border-0 bg-white">
-                                <img src="../img/search.png" alt="Search">
-                            </span>
-                        </div>
-                    </form>
-                </div>
-            </nav>
+            {{> headerSearch}}
 
             <div class="card mt-4 card-spr-dashboard" style="min-height: 270px;">
                 <div class="row g-0">
@@ -177,8 +36,10 @@
                         <div class="input-group">
                             <button type="button"
                                 class="btn btn-dark btn-block btn-card-bottom d-flex align-items-center ms-auto ">
-                                <span class="px-2 btn-card-bottom-text">Add</span>
-                                <img src="../img/add-card-dashboard.png" alt="Add Student" class="pe-1">
+                                <a href="/add-student" style="text-decoration: none; color: white;">
+                                    <span class="px-2 btn-card-bottom-text">Add</span>
+                                    <img src="../img/add-card-dashboard.png" alt="Add Student" class="pe-1">
+                                </a>
                             </button>
                         </div>
                     </div>
@@ -193,8 +54,10 @@
                         <div class="input-group">
                             <button type="button"
                                 class="btn btn-dark btn-block btn-card-bottom d-flex align-items-center ms-auto ">
-                                <span class="px-2 btn-card-bottom-text">View</span>
-                                <img src="../img/list-card-dashboard.png" alt="List" class="pe-1">
+                                <a href="/list" style="text-decoration: none; color: white;">
+                                    <span class="px-2 btn-card-bottom-text">View</span>
+                                    <img src="../img/list-card-dashboard.png" alt="List" class="pe-1">
+                                </a>
                             </button>
                         </div>
                     </div>
@@ -208,8 +71,10 @@
                         <div class="input-group">
                             <button type="button"
                                 class="btn btn-dark btn-block btn-card-bottom d-flex align-items-center ms-auto ">
-                                <span class="px-2 btn-card-bottom-text">Register</span>
-                                <img src="../img/register-card-dashboard.png" alt="Register" class="pe-1">
+                                <a a href="/register" style="text-decoration: none; color: white;">
+                                    <span class="px-2 btn-card-bottom-text">Register</span>
+                                    <img src="../img/register-card-dashboard.png" alt="Register" class="pe-1">
+                                </a>
                             </button>
                         </div>
                     </div>
@@ -219,11 +84,7 @@
         </div>
 
         <div class="col mt-3">
-            <div class="header-profile-dashboard d-flex justify-content-end align-items-center pt-2 pe-2">
-                {{adminData.organization}}, {{adminData.first_name}} {{adminData.last_name}}
-                <span class="p-2 px-3"><img src="../img/profile.png" alt="Profile Icon"></span>
-                <a href="/help"><img src="../img/help.png" alt="Help Icon"></a>
-            </div>
+            {{> headerOfficer}}
         </div>
     </div>
 </div>
