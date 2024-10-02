@@ -113,10 +113,14 @@ body {
 }
 
 .btn-login {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.btn-login,
+.btn-register-another {
   background-color: var(--main-green);
   color: white;
   border-radius: 30px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .form-control::placeholder {
@@ -171,4 +175,15 @@ body {
 
 .registration-field {
   border-radius: 7px;
+}
+
+/* registration success */
+
+.card-body-nested {
+  border: 1px solid var(--main-green);
+  border-radius: 20px;
+}
+
+.btn-register-another {
+  font-size: 0.9rem;
 }

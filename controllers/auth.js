@@ -16,22 +16,33 @@ const db = mysql.createConnection({
 exports.register = (req, res) => {
     console.log(req.body);
 
-    const { lastNameRegister, firstameRegister, organizationRegister, username,
+    const { lastNameRegister, firstNameRegister, organizationRegister, username,
         password, passwordConfirm } = req.body;
 
     db.query('SELECT username FROM admin WHERE username = ?', [username],
         async (error, results) => {
             if (error) {
                 console.log(error);
+                return res.render('register', {
+                    message: 'An unexpected error occurred. Please try again.'
+                });
             }
 
             if (results.length > 0) {
                 return res.render('register', {
                     message: 'That username is already in use'
-                })
+                });
             } else if (password !== passwordConfirm) {
                 return res.render('register', {
                     message: 'Passwords do not match'
+                });
+            } else if (password.length < 6) {
+                return res.render('register', {
+                    message: 'Password should be at least 6 characters long',
+                });
+            } else if (!organizationRegister || organizationRegister.length === 0) {
+                return res.render('register', {
+                    message: 'Select an Organization',
                 });
             }
 
@@ -40,20 +51,24 @@ exports.register = (req, res) => {
 
             db.query('INSERT INTO admin SET?', {
                 last_name: lastNameRegister,
-                first_name: firstameRegister,
+                first_name: firstNameRegister,
                 organization: organizationRegister,
                 username: username,
                 password: hashedPassword
             }, (error, results) => {
                 if (error) {
                     console.log(error);
+                    return res.render('register', {
+                        message: 'An unexpected error occurred. Please try again.'
+                    });
                 } else {
                     console.log(results);
-                    res.redirect('/login');
+                    return res.redirect('/register-successful');
                 }
-            })
+            });
         });
 }
+
 
 // function getFlags(organization) {
 //     const { isSAO, isUSGorSAO, isCollegeOrSAO } = isMainOrgs(organization);

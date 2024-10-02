@@ -31,12 +31,16 @@
                                 <span>Organization</span>
                                 <div class="form-group row mt-2 border-bottom">
                                     <div class="col col-org d-flex">
-                                        <button class="btn border border-2 fw-bold mb-3" type="button">SAO</button>
-                                        <button class="btn border border-2 fw-bold ms-3 mb-3" type="button">USG</button>
-                                        <button class="btn border border-2 fw-bold ms-3 mb-3" type="button">CSO</button>
+                                        <button class="btn btn-org border border-2 fw-bold mb-3"
+                                            type="button">SAO</button>
+                                        <button class="btn btn-org border border-2 fw-bold ms-3 mb-3"
+                                            type="button">USG</button>
+                                        <button class="btn btn-org border border-2 fw-bold ms-3 mb-3"
+                                            type="button">CSO</button>
 
                                         <div class="dropdown">
-                                            <button class="btn border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
+                                            <button
+                                                class="btn btn-org border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
                                                 type="button" id="dropdown1" data-dropdown-id="dropdown1"
                                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 COLLEGE
@@ -53,7 +57,8 @@
                                         </div>
 
                                         <div class="dropdown">
-                                            <button class="btn border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
+                                            <button
+                                                class="btn btn-org border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
                                                 type="button" id="dropdown2" data-dropdown-id="dropdown2"
                                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 ABO
@@ -88,7 +93,8 @@
                                         </div>
 
                                         <div class="dropdown">
-                                            <button class="btn border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
+                                            <button
+                                                class="btn btn-org border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
                                                 type="button" id="dropdown3" data-dropdown-id="dropdown3"
                                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 IBO
@@ -116,7 +122,7 @@
                                     </div>
                                     <div class="col-7">
                                         <input type="text" class="form-control registration-field" id="inputLastName"
-                                            name="lastNameRegister">
+                                            name="lastNameRegister" required>
                                     </div>
                                 </div>
                                 <div class="form-group row d-flex align-items-center mt-3">
@@ -125,7 +131,7 @@
                                     </div>
                                     <div class="col-7">
                                         <input type="text" class="form-control registration-field" id="inputFirstName"
-                                            name="firstNameRegister">
+                                            name="firstNameRegister" required>
                                     </div>
                                 </div>
                                 <div class="form-group row d-flex align-items-center mt-3">
@@ -134,7 +140,7 @@
                                     </div>
                                     <div class="col-7">
                                         <input type="text" class="form-control registration-field" id="inputUsername"
-                                            name="username">
+                                            name="username" required>
                                     </div>
                                 </div>
 
@@ -146,7 +152,7 @@
                                         <div
                                             class="input-group password-field registration-field border show_hide_password">
                                             <input type="password" class="form-control border-0 password-input"
-                                                id="inputPassword" name="password">
+                                                id="inputPassword" name="password" required>
                                             <div class="input-group-append">
                                                 <span
                                                     class="input-group-text bg-transparent border-0 pt-2 togglePassword"
@@ -166,7 +172,7 @@
                                         <div
                                             class="input-group password-field registration-field border show_hide_password">
                                             <input type="password" class="form-control border-0 password-input"
-                                                id="confirmPassword" name="passwordConfirm">
+                                                id="confirmPassword" name="passwordConfirm" required>
                                             <div class="input-group-append">
                                                 <span
                                                     class="input-group-text bg-transparent border-0 pt-2 togglePassword"
@@ -190,5 +196,11 @@
             </div>
         </div>
     </div>
+    {{#if error}}
+    <div class="alert alert-danger" role="alert">
+        {{error}}
+    </div>
+    {{/if}}
+
     <script src="../js/landing.js"></script>
 </body>

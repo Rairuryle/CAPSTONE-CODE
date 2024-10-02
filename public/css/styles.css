@@ -6,7 +6,7 @@
   --main-green: #213a31;
   --secondary-green: #33db9e;
   --tertiary-green: #297257;
-  --gray-shade: #F0FAED;
+  --gray-shade: #f0faed;
 }
 
 body {
@@ -15,4 +15,72 @@ body {
   background-size: 100% 100%;
   background-repeat: no-repeat;
   margin: 0;
+}
+
+.user-prompt {
+  position: fixed;
+  background-color: white;
+  width: 20rem;
+  text-align: center;
+  margin-top: -1rem;
+  justify-content: center;
+  padding: 1rem;
+  color: var(--main-green);
+  font-weight: bold;
+  border-radius: 25px;
+  transform: translateY(-100%);
+  -webkit-transform: translateY(-100%);
+  transition: opacity 0.5s, transform 0.5s;
+  opacity: 0;
+}
+
+.slide-in {
+  animation: slide-in 3.5s cubic-bezier(0.5, 0, 0, 1) forwards,
+    fadein 1s linear forwards, fadeout 1s linear forwards;
+  -webkit-animation: slide-in 3.5s cubic-bezier(0.5, 0, 0, 1) forwards,
+    fadein 1s linear forwards, fadeout 1s 1.5s linear forwards;
+}
+
+@keyframes slide-in {
+  0%,
+  100% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(150%);
+  }
+}
+
+@-webkit-keyframes slide-in {
+  0%,
+  100% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(150%);
+  }
+}
+
+@-webkit-keyframes fadein {
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  100% {
+    opacity: 0;
+  }
 }

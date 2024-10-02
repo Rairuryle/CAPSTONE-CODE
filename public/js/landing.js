@@ -25,11 +25,13 @@ document.addEventListener('click', function (e) {
         const dropdownId = dropdownButton.getAttribute('data-dropdown-id');
         const button = document.querySelector(`[data-dropdown-id="${dropdownId}"]`);
 
+        // Reset previous active button if it exists
         if (lastSelectedButton && lastSelectedButton !== button) {
             lastSelectedButton.innerText = lastSelectedButton.getAttribute('data-original-text');
             lastSelectedButton.classList.remove('active-style');
         }
 
+        // Set new active button
         button.innerText = e.target.innerText;
         button.classList.add('active-style');
         lastSelectedButton = button;
@@ -39,7 +41,7 @@ document.addEventListener('click', function (e) {
     }
 
     // Check if one of the primary organization buttons (SAO, USG, CSO) was clicked
-    if (e.target.tagName === 'BUTTON' && !e.target.classList.contains('dropdown-toggle')) {
+    if (e.target.tagName === 'BUTTON' && !e.target.classList.contains('dropdown-toggle') && !e.target.classList.contains('btn-reset')) {
         if (lastSelectedButton && lastSelectedButton !== e.target) {
             lastSelectedButton.classList.remove('active-style');
         }
@@ -57,13 +59,10 @@ document.querySelectorAll('.dropdown-toggle').forEach((btn) => {
     btn.setAttribute('data-original-text', btn.innerText);
 });
 
-
-
-// Event listener for the reset button
 document.querySelector('.btn-reset').addEventListener('click', function (e) {
     e.preventDefault();
 
-    // Clear all text input fields
+    // Clear input fields
     document.querySelectorAll('input[type="text"], input[type="password"]').forEach((input) => {
         input.value = '';
     });
@@ -71,8 +70,14 @@ document.querySelector('.btn-reset').addEventListener('click', function (e) {
     // Reset all dropdown buttons to their original text
     document.querySelectorAll('.dropdown-toggle').forEach((btn) => {
         btn.innerText = btn.getAttribute('data-original-text');
+    });
+
+    // Reset active styles on primary organization buttons
+    document.querySelectorAll('.btn-org').forEach((btn) => {
         btn.classList.remove('active-style');
     });
+
+    document.getElementById('organizationRegister').value = '';
 
     // Reset the lastSelectedButton variable
     lastSelectedButton = null;
