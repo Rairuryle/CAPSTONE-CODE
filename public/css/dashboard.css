@@ -95,3 +95,38 @@ body {
 .btn-card-bottom-text {
   padding-top: 0.1rem;
 }
+
+/* add student */
+.col-add-student-field {
+  margin-left: -2rem;
+}
+
+.add-student-field {
+  border-radius: 7px;
+}
+
+.add-student-label-department,
+.add-student-label-year {
+  padding-left: 4rem;
+}
+
+/* .col-add-student-label-abo {
+  margin-left: 7.3rem;
+}
+
+.col-add-student-field-abo {
+  margin-left: -1.5rem;
+} */
+
+.col-hidden {
+  visibility: hidden;
+}
+
+.col-add-student-label-status {
+  padding-right: 2.5rem;
+}
+
+.btn-add-student {
+  color: white;
+  background-color: var(--main-green);
+}
