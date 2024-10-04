@@ -36,9 +36,9 @@ body {
 
 .slide-in {
   animation: slide-in 3.5s cubic-bezier(0.5, 0, 0, 1) forwards,
-    fadein 1s linear forwards, fadeout 1s linear forwards;
+    fadein 1s linear forwards, fadeout 1s 3.5s linear forwards;
   -webkit-animation: slide-in 3.5s cubic-bezier(0.5, 0, 0, 1) forwards,
-    fadein 1s linear forwards, fadeout 1s 1.5s linear forwards;
+    fadein 1s linear forwards, fadeout 1s 3.5s linear forwards;
 }
 
 @keyframes slide-in {

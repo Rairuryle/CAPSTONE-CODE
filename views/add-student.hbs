@@ -13,7 +13,8 @@
 
                     <div class="ms-3" style="width: 67rem;">
                         <h1 class="border-bottom border-secondary pb-1">Add Student</h1>
-                        <div class="d-flex align-items-center justify-content-center flex-column form-group"
+                        <form action="/student/add-student" method="POST"
+                            class="d-flex align-items-center justify-content-center flex-column form-group"
                             style="min-height: 25rem;">
                             <div class="row d-flex justify-content-center align-items-center w-100">
                                 {{!-- first name --}}
@@ -44,15 +45,32 @@
                                 </div>
                                 <div class="col-2 col-add-student-field">
                                     <input type="text" class="form-control add-student-field border-secondary"
-                                        id="inputIDNumberStudent" name="IDNumberStudent" required>
+                                        id="inputIDNumberStudent" name="IDNumberStudent" minlength="9" maxlength="9"
+                                        required>
                                 </div>
                                 <div class="col-2 d-flex justify-content-end">
                                     <label for="inputDepartmentStudent"
                                         class="add-student-label-department">Department</label>
                                 </div>
                                 <div class="col-2">
+                                    {{#if isUSG}}
+                                    <select id="inputDepartmentStudent"
+                                        class="form-control add-student-field add-student-dropdown border-secondary"
+                                        name="departmentStudent" required>
+                                        <option disabled="disabled" selected="selected">Select Dept.</option>
+                                        <option value="CAS">CAS</option>
+                                        <option value="CBA">CBA</option>
+                                        <option value="CCJE">CCJE</option>
+                                        <option value="CCSEA">CCSEA</option>
+                                        <option value="CON">CON</option>
+                                        <option value="CTE">CTE</option>
+                                        <option value="CTHM">CTHM</option>
+                                    </select>
+                                    {{else}}
                                     <input type="text" class="form-control add-student-field border-secondary"
-                                        id="inputDepartmentStudent" name="departmentStudent" required>
+                                        id="inputDepartmentStudent" name="departmentStudent"
+                                        value="{{adminData.organization}}" readonly>
+                                    {{/if}}
                                 </div>
                             </div>
 
@@ -62,15 +80,30 @@
                                     <label for="inputCourseStudent">Course</label>
                                 </div>
                                 <div class="col-2 col-add-student-field">
-                                    <input type="text" class="form-control add-student-field border-secondary"
-                                        id="inputCourseStudent" name="courseStudent" required>
+                                    <select type="text" id="inputCourseStudent"
+                                        class="form-control add-student-field add-student-dropdown border-secondary"
+                                        name="courseStudent" required>
+                                        <option disabled="disabled" selected="selected"></option>
+                                    </select>
+                                    {{!-- <input type="text" class="form-control add-student-field border-secondary"
+                                        id="inputCourseStudent" name="courseStudent" required> --}}
                                 </div>
                                 <div class="col-2 d-flex justify-content-end">
                                     <label for="inputYearStudent" class="add-student-label-year">Year</label>
                                 </div>
                                 <div class="col-2">
-                                    <input type="text" class="form-control add-student-field border-secondary"
-                                        id="inputYearStudent" name="yearStudent" required>
+                                    <select id="inputYearStudent"
+                                        class="form-control add-student-field add-student-dropdown border-secondary"
+                                        name="yearStudent" required>
+                                        <option disabled="disabled" selected="selected">Select Year</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                    {{!-- <input type="text" class="form-control add-student-field border-secondary"
+                                        id="inputYearStudent" name="yearStudent" required> --}}
                                 </div>
                             </div>
 
@@ -80,8 +113,13 @@
                                     <label for="inputABOStudent">ABO</label>
                                 </div>
                                 <div class="col-2 col-add-student-field">
-                                    <input type="text" class="form-control add-student-field border-secondary"
-                                        id="inputABOStudent" name="ABOStudent" required>
+                                    <select type="text" id="inputABOStudent"
+                                        class="form-control add-student-field add-student-dropdown border-secondary"
+                                        name="ABOStudent" required>
+                                        <option disabled="disabled" selected="selected"></option>
+                                    </select>
+                                    {{!-- <input type="text" class="form-control add-student-field border-secondary"
+                                        id="inputABOStudent" name="ABOStudent" required> --}}
                                 </div>
                                 <div class="col-2 col-hidden">
                                 </div>
@@ -97,29 +135,43 @@
                                     <label for="inputExemptionStatusStudent">Exemption Status</label>
                                 </div>
                                 <div class="col-2 col-add-student-field">
-                                    <input type="text" class="form-control add-student-field border-secondary"
-                                        id="inputExemptionStatusStudent" name="exemptionStatusStudent" required>
+                                    <select id="inputExemptionStatusStudent"
+                                        class="form-control add-student-field add-student-dropdown border-secondary"
+                                        name="exemptionStatusStudent" required>
+                                        <option disabled="disabled" selected="selected">Select Status</option>
+                                        <option value="Exempted">Exempted</option>
+                                        <option value="Not Exempted">Not Exempted</option>
+                                    </select>
+                                    {{!-- <input type="text" class="form-control add-student-field border-secondary"
+                                        id="inputExemptionStatusStudent" name="exemptionStatusStudent" required> --}}
                                 </div>
+
                                 <div class="col-2 d-flex justify-content-end pe-1">
                                     <label for="inputActiveStatusStudent" class="add-student-label-year">Active
                                         Status</label>
                                 </div>
                                 <div class="col-2">
-                                    <input type="text" class="form-control add-student-field border-secondary"
-                                        id="inputActiveStatusStudent" name="activeStatusStudent" required>
+                                    <select id="inputActiveStatusStudent"
+                                        class="form-control add-student-field add-student-dropdown border-secondary"
+                                        name="activeStatusStudent" required>
+                                        <option disabled="disabled" selected="selected">Select Status</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                    {{!-- <input type="text" class="form-control add-student-field border-secondary"
+                                        id="inputActiveStatusStudent" name="activeStatusStudent" required> --}}
                                 </div>
 
                                 <div class="border-bottom border-secondary w-100 mt-3"></div>
 
                                 <div class="form-group d-flex justify-content-end mt-4 me-5 pe-5 w-75">
-                                    <button class="btn btn-reset btn-light mx-4">Reset</button>
+                                    <button type="button" class="btn btn-reset btn-light mx-4">Reset</button>
                                     <input class="btn btn-add-student btn-outline-success w-25" type="submit"
                                         value="Add Student">
                                 </div>
 
                             </div>
-                        </div>
-
+                        </form>
                     </div>
                 </div>
 
@@ -130,3 +182,4 @@
         </div>
     </div>
 </div>
+<script src="../js/addStudent.js"></script>

@@ -1,5 +1,6 @@
 <body>
     {{> headerLanding}}
+    {{> officerPermission}}
 
     <div class="container">
         <div class="row">
@@ -27,17 +28,24 @@
                         style="min-height: 515px;">
                         <div class="card-body card-body-register w-100" style="max-width: 900px;">
                             <form action="/auth/register" method="POST">
-
                                 <span>Organization</span>
                                 <div class="form-group row mt-2 border-bottom">
                                     <div class="col col-org d-flex">
+                                        {{#if isSAO}}
                                         <button class="btn btn-org border border-2 fw-bold mb-3"
                                             type="button">SAO</button>
+                                        {{/if}}
+                                        {{#if isUSGorSAO}}
                                         <button class="btn btn-org border border-2 fw-bold ms-3 mb-3"
                                             type="button">USG</button>
+                                        {{/if}}
+                                        {{#if isCSOorSAO}}
                                         <button class="btn btn-org border border-2 fw-bold ms-3 mb-3"
                                             type="button">CSO</button>
+                                        {{/if}}
 
+                                        {{!-- College --}}
+                                        {{#if isCollegeOrSAORegister}} {{!-- Start of CollegeOrSAORegister --}}
                                         <div class="dropdown">
                                             <button
                                                 class="btn btn-org border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
@@ -46,16 +54,33 @@
                                                 COLLEGE
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdown1">
-                                                <a class="dropdown-item" href="#">CAS</a>
-                                                <a class="dropdown-item" href="#">CBA</a>
-                                                <a class="dropdown-item" href="#">CCJE</a>
-                                                <a class="dropdown-item" href="#">CCSEA</a>
-                                                <a class="dropdown-item" href="#">CON</a>
-                                                <a class="dropdown-item" href="#">CTE</a>
-                                                <a class="dropdown-item" href="#">CTHM</a>
+                                                {{#if (or (eq organization "CAS") (eq organization "SAO"))}}
+                                                <a class="dropdown-item">CAS</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "CBA") (eq organization "SAO"))}}
+                                                <a class="dropdown-item">CBA</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "CCJE") (eq organization "SAO"))}}
+                                                <a class="dropdown-item">CCJE</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "CCSEA") (eq organization "SAO"))}}
+                                                <a class="dropdown-item">CCSEA</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "CON") (eq organization "SAO"))}}
+                                                <a class="dropdown-item">CON</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "CTE") (eq organization "SAO"))}}
+                                                <a class="dropdown-item">CTE</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "CTHM") (eq organization "SAO"))}}
+                                                <a class="dropdown-item">CTHM</a>
+                                                {{/if}}
                                             </div>
                                         </div>
+                                        {{/if}} {{!-- End of CollegeOrSAORegister --}}
 
+                                        {{#if isExtraOrgsTrue}} {{!-- Start of ExtraOrgsTrue --}}
+                                        {{#if isCSOorABOorSAO}} {{!-- Start of CSOorABOorSAO --}}
                                         <div class="dropdown">
                                             <button
                                                 class="btn btn-org border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
@@ -64,34 +89,137 @@
                                                 ABO
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdown2">
-                                                <a class="dropdown-item" href="#">JSWAP</a>
-                                                <a class="dropdown-item" href="#">LABELS</a>
-                                                <a class="dropdown-item" href="#">LSUPS</a>
-                                                <a class="dropdown-item" href="#">POLISAYS</a>
-                                                <a class="dropdown-item" href="#">JFINEX</a>
-                                                <a class="dropdown-item" href="#">JMEX</a>
-                                                <a class="dropdown-item" href="#">JPIA</a>
-                                                <a class="dropdown-item" href="#">ALGES</a>
-                                                <a class="dropdown-item" href="#">ICpEP</a>
-                                                <a class="dropdown-item" href="#">IIEE</a>
-                                                <a class="dropdown-item" href="#">JIECEP</a>
-                                                <a class="dropdown-item" href="#">LISSA</a>
-                                                <a class="dropdown-item" href="#">PICE</a>
-                                                <a class="dropdown-item" href="#">SOURCE</a>
-                                                <a class="dropdown-item" href="#">UAPSA</a>
-                                                <a class="dropdown-item" href="#">ECC</a>
-                                                <a class="dropdown-item" href="#">GENTLE</a>
-                                                <a class="dropdown-item" href="#">GEM-O</a>
-                                                <a class="dropdown-item" href="#">LapitBayan</a>
-                                                <a class="dropdown-item" href="#">LME</a>
-                                                <a class="dropdown-item" href="#">SPEM</a>
-                                                <a class="dropdown-item" href="#">SSS</a>
-                                                <a class="dropdown-item" href="#">FHARO</a>
-                                                <a class="dropdown-item" href="#">FTL</a>
-                                                <a class="dropdown-item" href="#">SOTE</a>
+                                                {{#if isCAS}} {{!-- Start of CAS --}}
+                                                <a class="dropdown-item disabled" tabindex="-1" aria-disabled="true">CAS
+                                                    ABO</a>
+
+                                                {{#if (or (eq organization "JSWAP") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">JSWAP</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "LABELS") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">LABELS</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "LSUPS") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">LSUPS</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "POLISAYS") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">POLISAYS</a>
+                                                {{/if}}
+                                                {{/if}} {{!-- End of CAS --}}
+
+                                                {{#if isCBA}} {{!-- Start of CBA --}}
+                                                <a class="dropdown-item disabled" tabindex="-1" aria-disabled="true">CBA
+                                                    ABO</a>
+                                                {{#if (or (eq organization "JFINEX") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">JFINEX</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "JMEX") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">JMEX</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "JPIA") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">JPIA</a>
+                                                {{/if}}
+                                                {{/if}} {{!-- End of CBA --}}
+
+                                                {{#if isCCSEA}} {{!-- Start of CCSEA --}}
+                                                <a class="dropdown-item disabled" tabindex="-1"
+                                                    aria-disabled="true">CCSEA ABO</a>
+                                                {{#if (or (eq organization "ALGES") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">ALGES</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "ICpEP") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">ICpEP</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "IIEE") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">IIEE</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "JIECEP") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">JIECEP</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "LISSA") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">LISSA</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "PICE") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">PICE</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "SOURCE") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">SOURCE</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "UAPSA") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">UAPSA</a>
+                                                {{/if}}
+                                                {{/if}} {{!-- End of CCSEA --}}
+
+                                                {{#if isCTE}} {{!-- Start of CTE --}}
+                                                <a class="dropdown-item disabled" tabindex="-1" aria-disabled="true">CTE
+                                                    ABO</a>
+                                                {{#if (or (eq organization "ECC") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">ECC</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "GENTLE") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">GENTLE</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "GEM-O") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">GEM-O</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "LapitBayan") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">LapitBayan</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "LME") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">LME</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "SPEM") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">SPEM</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "SSS") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">SSS</a>
+                                                {{/if}}
+                                                {{/if}} {{!-- End of CTE --}}
+
+                                                {{#if isCTHM}} {{!-- Start of CTHM --}}
+                                                <a class="dropdown-item disabled" tabindex="-1"
+                                                    aria-disabled="true">CTHM
+                                                    ABO</a>
+                                                {{#if (or (eq organization "FHARO") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">FHARO</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "FTL") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">FTL</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "SOTE") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">SOTE</a>
+                                                {{/if}}
+                                                {{/if}} {{!-- End of CTHM --}}
                                             </div>
                                         </div>
+                                        {{/if}} {{!-- End of CSOorABOorSAO --}}
 
+                                        {{#if isCSOorIBOorSAO}} {{!-- Start of CSOorIBOorSAO --}}
                                         <div class="dropdown">
                                             <button
                                                 class="btn btn-org border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
@@ -100,17 +228,47 @@
                                                 IBO
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdown3">
-                                                <a class="dropdown-item" href="#">Compatriots</a>
-                                                <a class="dropdown-item" href="#">Cosplay Corps</a>
-                                                <a class="dropdown-item" href="#">Green Leaders</a>
-                                                <a class="dropdown-item" href="#">Kainos</a>
-                                                <a class="dropdown-item" href="#">Meeples</a>
-                                                <a class="dropdown-item" href="#">Micromantics</a>
-                                                <a class="dropdown-item" href="#">Red Cross Youth</a>
-                                                <a class="dropdown-item" href="#">Soul Whisperers</a>
-                                                <a class="dropdown-item" href="#">Vanguard E-sports</a>
+                                                {{#if (or (eq organization "Compatriots") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">Compatriots</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "Cosplay Corps") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">Cosplay Corps</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "Green Leaders") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">Green Leaders</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "Kainos") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">Kainos</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "Meeples") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">Meeples</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "Micromantics") (eq organization "CSO") (eq
+                                                organization "SAO"))}}
+                                                <a class="dropdown-item">Micromantics</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "Red Cross Youth") (eq organization "CSO")
+                                                (eq organization "SAO"))}}
+                                                <a class="dropdown-item">Red Cross Youth</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "Soul Whisperers") (eq organization "CSO")
+                                                (eq organization "SAO"))}}
+                                                <a class="dropdown-item">Soul Whisperers</a>
+                                                {{/if}}
+                                                {{#if (or (eq organization "Vanguard E-sports") (eq organization "CSO")
+                                                (eq organization
+                                                "SAO"))}}
+                                                <a class="dropdown-item">Vanguard E-sports</a>
+                                                {{/if}}
                                             </div>
                                         </div>
+                                        {{/if}} {{!-- End of CSOorIBOorSAO --}}
+                                        {{/if}} {{!-- End of ExtraOrgsTrue --}}
                                     </div>
                                 </div>
 

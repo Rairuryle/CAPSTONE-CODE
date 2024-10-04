@@ -177,9 +177,16 @@ body {
   border-radius: 7px;
 }
 
+.disabled-item {
+  color: #6c757d;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 /* registration success */
 
 .card-body-nested {
+  width: 20rem;
   border: 1px solid var(--main-green);
   border-radius: 20px;
 }

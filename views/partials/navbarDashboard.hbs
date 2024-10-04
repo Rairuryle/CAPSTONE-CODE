@@ -42,7 +42,7 @@
                     </div>
                 </a>
             </li>
-
+            {{#if (eq isExtraOrgsTrue false)}}
             <li
                 class="nav-item nav-item-title nav-item-add-student ps-4 mt-3 {{#if (eq currentPath '/add-student')}}active{{/if}}">
                 <a href="/add-student" class="nav-link align-middle px-0">
@@ -60,6 +60,7 @@
                     </div>
                 </a>
             </li>
+            {{/if}}
 
             <li class="nav-item nav-item-title nav-item-list ps-4 mt-3 {{#if (eq currentPath '/list')}}active{{/if}}">
                 <a href="/list" class="nav-link align-middle px-0">

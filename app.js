@@ -69,6 +69,7 @@ db.connect((error) => {
 app.use('/', require('./routes/pages'));
 app.use('/auth', require('./routes/auth'));
 app.use('/dashboard', authMiddleware);
+app.use('/student', require('./routes/student'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 

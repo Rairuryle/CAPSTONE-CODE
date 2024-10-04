@@ -44,63 +44,67 @@ router.get('/register', (req, res) => {
     if (req.session.isAuthenticated) {
 
         const adminData = req.session.adminData;
-        // const organization = adminData.organization;
-        // const departmentName = req.session.departmentName;
+        const organization = adminData.organization;
+        const departmentName = req.session.departmentName;
 
-        // const CAS_ABO = ["JSWAP", "LABELS", "LSUPS", "POLISAYS"];
-        // const CBA_ABO = ["JFINEX", "JMEX", "JPIA"];
-        // const CCSEA_ABO = ["ALGES", "ICpEP", "IIEE", "JIECEP", "LISSA", "PICE", "SOURCE", "UAPSA"];
-        // const CTE_ABO = ["ECC", "GENTLE", "GEM-O", "LapitBayan", "LME", "SPEM", "SSS"];
-        // const CTHM_ABO = ["FHARO", "FTL", "SOTE"];
+        const CAS_ABO = ["JSWAP", "LABELS", "LSUPS", "POLISAYS"];
+        const CBA_ABO = ["JFINEX", "JMEX", "JPIA"];
+        const CCSEA_ABO = ["ALGES", "ICpEP", "IIEE", "JIECEP", "LISSA", "PICE", "SOURCE", "UAPSA"];
+        const CTE_ABO = ["ECC", "GENTLE", "GEM-O", "LapitBayan", "LME", "SPEM", "SSS"];
+        const CTHM_ABO = ["FHARO", "FTL", "SOTE"];
 
-        // const CAS_College = ["CAS"];
-        // const CBA_College = ["CBA"];
-        // const CCSEA_College = ["CCSEA"];
-        // const CTE_College = ["CTE"];
-        // const CTHM_College = ["CTHM"];
+        const CAS_College = ["CAS"];
+        const CBA_College = ["CBA"];
+        const CCSEA_College = ["CCSEA"];
+        const CTE_College = ["CTE"];
+        const CTHM_College = ["CTHM"];
 
-        // const {
-        //     isSAO,
-        //     isUSGorSAO,
-        //     isCollegeOrSAO,
-        // } = isMainOrgs(organization, departmentName);
+        const {
+            isSAO,
+            isUSGorSAO,
+            isCollegeOrSAO,
+        } = isMainOrgs(organization, departmentName);
 
-        // const {
-        //     isCSOorSAO,
-        //     isCSOorIBOorSAO,
-        //     isExtraOrgsTrue
-        // } = isExtraOrgs(organization);
+        const {
+            isCSOorSAO,
+            isCSOorABOorSAO,
+            isCSOorIBOorSAO,
+            isExtraOrgsTrue
+        } = isExtraOrgs(organization);
 
-        // const isCAS = CAS_ABO.includes(organization) || isCSOorSAO;
-        // const isCBA = CBA_ABO.includes(organization) || isCSOorSAO;
-        // const isCCSEA = CCSEA_ABO.includes(organization) || isCSOorSAO;
-        // const isCTE = CTE_ABO.includes(organization) || isCSOorSAO;
-        // const isCTHM = CTHM_ABO.includes(organization) || isCSOorSAO;
+        const isCAS = CAS_ABO.includes(organization) || isCSOorSAO;
+        const isCBA = CBA_ABO.includes(organization) || isCSOorSAO;
+        const isCCSEA = CCSEA_ABO.includes(organization) || isCSOorSAO;
+        const isCTE = CTE_ABO.includes(organization) || isCSOorSAO;
+        const isCTHM = CTHM_ABO.includes(organization) || isCSOorSAO;
 
-        // const isCASCollege = CAS_College.includes(organization) || isSAO;
-        // const isCBACollege = CBA_College.includes(organization) || isSAO;
-        // const isCCSEACollege = CCSEA_College.includes(organization) || isSAO;
-        // const isCTECollege = CTE_College.includes(organization) || isSAO;
-        // const isCTHMCollege = CTHM_College.includes(organization) || isSAO;
+        const isCASCollege = CAS_College.includes(organization) || isSAO;
+        const isCBACollege = CBA_College.includes(organization) || isSAO;
+        const isCCSEACollege = CCSEA_College.includes(organization) || isSAO;
+        const isCTECollege = CTE_College.includes(organization) || isSAO;
+        const isCTHMCollege = CTHM_College.includes(organization) || isSAO;
 
-        // const isCollegeOrSAORegister = isCASCollege || isCBACollege || isCCSEACollege || isCTECollege || isCTHMCollege || isSAO;
+        const isCollegeOrSAORegister = isCASCollege || isCBACollege || isCCSEACollege || isCTECollege || isCTHMCollege || isSAO;
+
+        // console.log('isCAS:', isCAS, 'isCBA:', isCBA, 'isCCSEA:', isCCSEA, 'isCTE:', isCTE, 'isCTHM:', isCTHM, 'isCollegeOrSAO', isCollegeOrSAO, 'isCollegeOrSAORegister', isCollegeOrSAORegister);
 
         res.render('register', {
             adminData,
-            // departmentName,
-            // isSAO,
-            // isUSGorSAO,
-            // isCollegeOrSAO,
-            // isCSOorSAO,
-            // isCSOorIBOorSAO,
-            // isExtraOrgsTrue,
-            // organization,
-            // isCAS,
-            // isCBA,
-            // isCCSEA,
-            // isCTE,
-            // isCTHM,
-            // isCollegeOrSAORegister,
+            departmentName,
+            isSAO,
+            isUSGorSAO,
+            isCollegeOrSAO,
+            isCSOorSAO,
+            isCSOorABOorSAO,
+            isCSOorIBOorSAO,
+            isExtraOrgsTrue,
+            organization,
+            isCAS,
+            isCBA,
+            isCCSEA,
+            isCTE,
+            isCTHM,
+            isCollegeOrSAORegister,
             title: 'Register | LSU HEU Events and Attendance Tracking Website'
         });
     } else {
@@ -112,63 +116,9 @@ router.get('/register-successful', (req, res) => {
     if (req.session.isAuthenticated) {
 
         const adminData = req.session.adminData;
-        // const organization = adminData.organization;
-        // const departmentName = req.session.departmentName;
-
-        // const CAS_ABO = ["JSWAP", "LABELS", "LSUPS", "POLISAYS"];
-        // const CBA_ABO = ["JFINEX", "JMEX", "JPIA"];
-        // const CCSEA_ABO = ["ALGES", "ICpEP", "IIEE", "JIECEP", "LISSA", "PICE", "SOURCE", "UAPSA"];
-        // const CTE_ABO = ["ECC", "GENTLE", "GEM-O", "LapitBayan", "LME", "SPEM", "SSS"];
-        // const CTHM_ABO = ["FHARO", "FTL", "SOTE"];
-
-        // const CAS_College = ["CAS"];
-        // const CBA_College = ["CBA"];
-        // const CCSEA_College = ["CCSEA"];
-        // const CTE_College = ["CTE"];
-        // const CTHM_College = ["CTHM"];
-
-        // const {
-        //     isSAO,
-        //     isUSGorSAO,
-        //     isCollegeOrSAO,
-        // } = isMainOrgs(organization, departmentName);
-
-        // const {
-        //     isCSOorSAO,
-        //     isCSOorIBOorSAO,
-        //     isExtraOrgsTrue
-        // } = isExtraOrgs(organization);
-
-        // const isCAS = CAS_ABO.includes(organization) || isCSOorSAO;
-        // const isCBA = CBA_ABO.includes(organization) || isCSOorSAO;
-        // const isCCSEA = CCSEA_ABO.includes(organization) || isCSOorSAO;
-        // const isCTE = CTE_ABO.includes(organization) || isCSOorSAO;
-        // const isCTHM = CTHM_ABO.includes(organization) || isCSOorSAO;
-
-        // const isCASCollege = CAS_College.includes(organization) || isSAO;
-        // const isCBACollege = CBA_College.includes(organization) || isSAO;
-        // const isCCSEACollege = CCSEA_College.includes(organization) || isSAO;
-        // const isCTECollege = CTE_College.includes(organization) || isSAO;
-        // const isCTHMCollege = CTHM_College.includes(organization) || isSAO;
-
-        // const isCollegeOrSAORegister = isCASCollege || isCBACollege || isCCSEACollege || isCTECollege || isCTHMCollege || isSAO;
 
         res.render('register-successful', {
             adminData,
-            // departmentName,
-            // isSAO,
-            // isUSGorSAO,
-            // isCollegeOrSAO,
-            // isCSOorSAO,
-            // isCSOorIBOorSAO,
-            // isExtraOrgsTrue,
-            // organization,
-            // isCAS,
-            // isCBA,
-            // isCCSEA,
-            // isCTE,
-            // isCTHM,
-            // isCollegeOrSAORegister,
             title: 'Register | LSU HEU Events and Attendance Tracking Website'
         });
     } else {
@@ -190,7 +140,6 @@ router.get('/logout', (req, res) => {
         if (err) {
             console.error('Error destroying session:', err);
         }
-
         res.redirect('/login?isLoggedOut=true');
     });
 });
@@ -199,14 +148,14 @@ router.get('/dashboard', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
         // const studentData = req.session.studentData;
-        // const organization = adminData.organization;
-        // const { isUSGorSAO } = isMainOrgs(organization);
-        // const { isExtraOrgsTrue } = isExtraOrgs(organization);
+        const organization = adminData.organization;
+        const { isUSGorSAO } = isMainOrgs(organization);
+        const { isExtraOrgsTrue } = isExtraOrgs(organization);
 
         res.render('dashboard', {
             adminData,
-            // isUSGorSAO,
-            // isExtraOrgsTrue,
+            isUSGorSAO,
+            isExtraOrgsTrue,
             // studentData,
             currentPath: '/dashboard',
             title: 'Dashboard | LSU HEU Events and Attendance Tracking Website'
@@ -219,24 +168,38 @@ router.get('/dashboard', (req, res) => {
 router.get('/add-student', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
-        // const organization = adminData.organization;
-        // const { isUSGorSAO } = isMainOrgs(organization);
-        // const { isExtraOrgsTrue } = isExtraOrgs(organization);
+        const organization = adminData.organization;
+        const { isUSG } = isMainOrgs(organization);
+        const { isExtraOrgsTrue } = isExtraOrgs(organization);
 
-        // let errorMessage = '';
+        let errorMessage = '';
 
-        // if (req.session.errorMessage) {
-        //     errorMessage = req.session.errorMessage;
-        //     delete req.session.errorMessage;
-        // }
+        if (req.session.errorMessage) {
+            errorMessage = req.session.errorMessage;
+            delete req.session.errorMessage;
+        }
 
         res.render('add-student', {
             adminData,
-            // isUSGorSAO,
-            // isExtraOrgsTrue,
+            isUSG,
+            isExtraOrgsTrue,
             currentPath: '/add-student',
             title: 'Add Student Account | LSU HEU Events and Attendance Tracking Website',
-            // errorMessage: errorMessage
+            errorMessage: errorMessage
+        });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+router.get('/add-student-successful', (req, res) => {
+    if (req.session.isAuthenticated) {
+        const adminData = req.session.adminData;
+
+        res.render('add-student-successful', {
+            adminData,
+            currentPath: '/add-student-successful',
+            title: 'Add Student Account | LSU HEU Events and Attendance Tracking Website',
         });
     } else {
         res.redirect('/login');
