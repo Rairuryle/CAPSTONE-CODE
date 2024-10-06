@@ -6,13 +6,174 @@
     <div class="row flex-nowrap">
         {{> navbarDashboard}}
 
-        <div class="col-7 mt-3">
-            {{> headerSearch}}
+        <div class="col-9 mt-3">
+            <div class="d-flex justify-content-between">
+                <div class="col-lg-9 me-5">
+                    {{> headerSearch}}
+                    <div class="ms-3" style="width: 40rem;">
+                        <div class="row border-bottom border-secondary">
+                            <div class="col-auto">
+                                <h1 class="mb-3">List of Students</h1>
+                            </div>
 
-        </div>
+                            <div class="col d-flex align-items-center justify-content-end px-0">
+                                {{#if isUSGorSAO}}
+                                <select id="selectGroupListCollege"
+                                    class="form-control list-dropdown border-secondary fw-bold pt-2" name="groupList">
+                                    <option disabled="disabled" selected="selected">College</option>
+                                    <option value="CAS">CAS</option>
+                                    <option value="CBA">CBA</option>
+                                    <option value="CCJE">CCJE</option>
+                                    <option value="CCSEA">CCSEA</option>
+                                    <option value="CON">CON</option>
+                                    <option value="CTE">CTE</option>
+                                    <option value="CTHM">CTHM</option>
+                                </select>
 
-        <div class="col mt-3">
-            {{> headerOfficer}}
+                                <select id="selectGroupListABO"
+                                    class="form-control list-dropdown d-flex border-secondary mx-2 pt-2 fw-bold"
+                                    name="groupList">
+                                    <option disabled="disabled" selected="selected">ABO</option>
+                                    <optgroup label="CAS ABO">
+                                        <option value="JSWAP">JSWAP</option>
+                                        <option value="LABELS">LABELS</option>
+                                        <option value="LSUPS">LSUPS</option>
+                                        <option value="POLISAYS">POLISAYS</option>
+                                    </optgroup>
+
+                                    <optgroup label="CBA ABO">
+                                        <option value="JFINEX">JFINEX</option>
+                                        <option value="JMEX">JMEX</option>
+                                        <option value="JPIA">JPIA</option>
+                                    </optgroup>
+
+                                    <optgroup label="CCSEA ABO">
+                                        <option value="ALGES">ALGES</option>
+                                        <option value="ICpEP">ICpEP</option>
+                                        <option value="IIEE">IIEE</option>
+                                        <option value="JIECEP">JIECEP</option>
+                                        <option value="LISSA">LISSA</option>
+                                        <option value="PICE">PICE</option>
+                                        <option value="SOURCE">SOURCE</option>
+                                        <option value="UAPSA">UAPSA</option>
+                                    </optgroup>
+
+                                    <optgroup label="CTE ABO">
+                                        <option value="ECC">ECC</option>
+                                        <option value="GENTLE">GENTLE</option>
+                                        <option value="GEM-O">GEM-O</option>
+                                        <option value="LapitBayan">LapitBayan</option>
+                                        <option value="LME">LME</option>
+                                        <option value="SPEM">SPEM</option>
+                                        <option value="SSS">SSS</option>
+                                    </optgroup>
+
+                                    <optgroup label="CTHM ABO">
+                                        <option value="FHARO">FHARO</option>
+                                        <option value="FTL">FTL</option>
+                                        <option value="SOTE">SOTE</option>
+                                    </optgroup>
+                                </select>
+
+                                <select id="selectGroupListIBO"
+                                    class="form-control list-dropdown border-secondary fw-bold pt-2" name="groupList">
+                                    <option disabled="disabled" selected="selected">IBO</option>
+                                    <option value="Compatriots">Compatriots</option>
+                                    <option value="Cosplay Corps">Cosplay Corps</option>
+                                    <option value="Green Leaders">Green Leaders</option>
+                                    <option value="Kainos">Kainos</option>
+                                    <option value="Meeples">Meeples</option>
+                                    <option value="Micromantics">Micromantics</option>
+                                    <option value="Red Cross Youth">RCY</option>
+                                    <option value="Soul Whisperers">Soul Whisperers</option>
+                                    <option value="Vanguard E-sports">Vanguard</option>
+                                </select>
+
+                                {{else}}
+                                <input type="text"
+                                    class="form-control automatic-list-group border-secondary w-auto fw-bold text-center pt-2 px-0"
+                                    id="inputGroupList" name="groupList" value="{{adminData.organization}}" readonly>
+                                {{/if}}
+                            </div>
+                        </div>
+
+                        <div class="row mt-3 d-flex align-items-center">
+                            <div class="col d-flex align-items-center">
+                                <img src="../img/document-filter.png" alt="Sort" class="ps-2" style="height: 20px;">
+                                <select id="sortList" class="form-control sort-list border-0 fw-bold ps-3"
+                                    name="sortList">
+                                    <option disabled="disabled" selected="selected">Sort By</option>
+                                    <option value="Name">Name</option>
+                                    <option value="ID Number">ID Number</option>
+                                    <option value="Course">Course</option>
+                                    <option value="Year">Year</option>
+                                </select>
+                            </div>
+                            <div class="col d-flex justify-content-end px-0">
+                                <form class="w-75">
+                                    <div class="input-group search-list-group border w-100">
+                                        <input class="form-control border-0 search-list-field" type="search"
+                                            aria-label="Search">
+                                        <span class="input-group-text border-0">
+                                            <img src="../img/search.png" alt="Search">
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4 ms-1 pb-2 fw-bold border-bottom border-secondary-subtle">
+                            <div class="col-5 px-0">
+                                <span>Name</span>
+                            </div>
+                            <div class="col-3 col-list-header-idnumber">
+                                <span>ID Number</span>
+                            </div>
+                            <div class="col-3">
+                                <span>Course</span>
+                            </div>
+                            <div class="col-1">
+                                <span>Year</span>
+                            </div>
+                        </div>
+
+                        <div class="row ps-2">
+                            <div class="col-5 p-0 ps-2">
+                                {{#each selectedStudents}}
+                                <p
+                                    class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
+                                    {{this.last_name}}</p>
+                                {{/each}}
+                            </div>
+                            <div class="col-3 p-0">
+                                {{#each selectedStudents}}
+                                <p
+                                    class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
+                                    {{this.id_number}}</p>
+                                {{/each}}
+                            </div>
+                            <div class="col-3 p-0">
+                                {{#each selectedStudents}}
+                                <p
+                                    class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
+                                    {{this.course_name}}</p>
+                                {{/each}}
+                            </div>
+                            <div class="col-1 p-0">
+                                {{#each selectedStudents}}
+                                <p
+                                    class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
+                                    {{this.year_level}}</p>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 ms-5">
+                    {{> headerOfficer}}
+                </div>
+            </div>
         </div>
     </div>
 </div>
+<script src="../js/selectStudentList.js"></script>

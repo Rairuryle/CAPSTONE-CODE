@@ -55,7 +55,8 @@ body {
   width: 4rem;
 }
 
-.search-dashboard-group {
+.search-dashboard-group,
+.search-list-group {
   border-radius: 10px;
   overflow: hidden;
 }
@@ -110,14 +111,6 @@ body {
   padding-left: 4rem;
 }
 
-/* .col-add-student-label-abo {
-  margin-left: 7.3rem;
-}
-
-.col-add-student-field-abo {
-  margin-left: -1.5rem;
-} */
-
 .col-hidden {
   visibility: hidden;
 }
@@ -133,13 +126,17 @@ body {
 }
 
 .add-student-dropdown {
+  background-position: right 0.75rem center;
+  background-size: 0.65rem 0.65rem;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='none' stroke='%23000' d='M0 0l2 2 2-2'/%3E%3C/svg%3E");
+}
+
+.add-student-dropdown,
+.list-dropdown {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='none' stroke='%23000' d='M0 0l2 2 2-2'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 0.65rem 0.65rem;
 }
 
 /* add student successful */
@@ -159,6 +156,37 @@ body {
   font-size: 0.9rem;
 }
 
-/* .btn-register-another {
-  font-size: 0.9rem;
-} */
+/* list */
+.list-dropdown {
+  font-size: 0.7rem;
+  background-image: url("../img/arrow-dropdown.png");
+  background-position: right 0.4rem center;
+  background-size: 0.9rem 0.9rem;
+  border-radius: 15px;
+}
+
+.automatic-list-group {
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+
+.search-list-field,
+.sort-list {
+  background-color: var(--gray-shade);
+}
+
+.sort-list {
+  text-decoration: none;
+}
+
+.col-list-header-idnumber {
+  margin-left: -1rem;
+}
+
+.row-even {
+  background-color: var(--gray-shade);
+}
+
+.row-odd {
+  background-color: rgba(60, 98, 85, 0.15);
+}

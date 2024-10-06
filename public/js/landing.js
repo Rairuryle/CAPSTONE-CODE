@@ -75,8 +75,6 @@ document.querySelectorAll('.dropdown-toggle').forEach((btn) => {
     btn.setAttribute('data-original-text', btn.innerText);
 });
 
-
-
 document.querySelector('.btn-reset').addEventListener('click', function (e) {
     e.preventDefault();
 

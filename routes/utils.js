@@ -24,6 +24,7 @@ function isMainOrgs(organization, departmentName) {
     const isSAO = organization === "SAO";
     const isUSG = organization === "USG";
     const isCollege = departmentName === organization;
+    const isCollegeDepartment = ["CAS", "CBA", "CCJE", "CCSEA", "CON", "CTE", "CTHM"].includes(organization);
 
     const isUSGorCollege = isUSG || isCollege;
     const isUSGorSAO = isUSG || isSAO;
@@ -34,13 +35,13 @@ function isMainOrgs(organization, departmentName) {
         isUSG,
         isSAO,
         isCollege,
+        isCollegeDepartment,
         isUSGorCollege,
         isUSGorSAO,
         isCollegeOrSAO,
         isMainOrgsTrue
     };
 }
-
 
 function isExtraOrgs(organization) {
     const ABO = [

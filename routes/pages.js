@@ -40,9 +40,26 @@ router.get('/contact', (req, res) => {
     });
 });
 
+router.get('/login', (req, res) => {
+    const isLoggedOut = req.query.isLoggedOut === 'true';
+
+    res.render('login', {
+        title: 'Login | LSU HEU Events and Attendance Tracking Website',
+        isLoggedOut: isLoggedOut
+    });
+});
+
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error destroying session:', err);
+        }
+        res.redirect('/login?isLoggedOut=true');
+    });
+});
+
 router.get('/register', (req, res) => {
     if (req.session.isAuthenticated) {
-
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const departmentName = req.session.departmentName;
@@ -55,12 +72,15 @@ router.get('/register', (req, res) => {
 
         const CAS_College = ["CAS"];
         const CBA_College = ["CBA"];
+        const CCJE_College = ["CCJE"];
         const CCSEA_College = ["CCSEA"];
+        const CON_College = ["CON"];
         const CTE_College = ["CTE"];
         const CTHM_College = ["CTHM"];
 
         const {
             isSAO,
+            isCollegeDepartment,
             isUSGorSAO,
             isCollegeOrSAO,
         } = isMainOrgs(organization, departmentName);
@@ -80,18 +100,19 @@ router.get('/register', (req, res) => {
 
         const isCASCollege = CAS_College.includes(organization) || isSAO;
         const isCBACollege = CBA_College.includes(organization) || isSAO;
+        const isCCJECollege = CCJE_College.includes(organization) || isSAO;
         const isCCSEACollege = CCSEA_College.includes(organization) || isSAO;
+        const isCONCollege = CON_College.includes(organization) || isSAO;
         const isCTECollege = CTE_College.includes(organization) || isSAO;
         const isCTHMCollege = CTHM_College.includes(organization) || isSAO;
 
-        const isCollegeOrSAORegister = isCASCollege || isCBACollege || isCCSEACollege || isCTECollege || isCTHMCollege || isSAO;
-
-        // console.log('isCAS:', isCAS, 'isCBA:', isCBA, 'isCCSEA:', isCCSEA, 'isCTE:', isCTE, 'isCTHM:', isCTHM, 'isCollegeOrSAO', isCollegeOrSAO, 'isCollegeOrSAORegister', isCollegeOrSAORegister);
+        const isCollegeOrSAORegister = isCASCollege || isCBACollege || isCCJECollege || isCCSEACollege || isCONCollege || isCTECollege || isCTHMCollege || isSAO;
 
         res.render('register', {
             adminData,
             departmentName,
             isSAO,
+            isCollegeDepartment,
             isUSGorSAO,
             isCollegeOrSAO,
             isCSOorSAO,
@@ -114,7 +135,6 @@ router.get('/register', (req, res) => {
 
 router.get('/register-successful', (req, res) => {
     if (req.session.isAuthenticated) {
-
         const adminData = req.session.adminData;
 
         res.render('register-successful', {
@@ -126,28 +146,9 @@ router.get('/register-successful', (req, res) => {
     }
 });
 
-router.get('/login', (req, res) => {
-    const isLoggedOut = req.query.isLoggedOut === 'true';
-
-    res.render('login', {
-        title: 'Login | LSU HEU Events and Attendance Tracking Website',
-        isLoggedOut: isLoggedOut
-    });
-});
-
-router.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Error destroying session:', err);
-        }
-        res.redirect('/login?isLoggedOut=true');
-    });
-});
-
 router.get('/dashboard', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
-        // const studentData = req.session.studentData;
         const organization = adminData.organization;
         const { isUSGorSAO } = isMainOrgs(organization);
         const { isExtraOrgsTrue } = isExtraOrgs(organization);
@@ -156,7 +157,6 @@ router.get('/dashboard', (req, res) => {
             adminData,
             isUSGorSAO,
             isExtraOrgsTrue,
-            // studentData,
             currentPath: '/dashboard',
             title: 'Dashboard | LSU HEU Events and Attendance Tracking Website'
         });
@@ -195,11 +195,14 @@ router.get('/add-student', (req, res) => {
 router.get('/add-student-successful', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
+        const organization = adminData.organization;
+        const { isExtraOrgsTrue } = isExtraOrgs(organization);
 
         res.render('add-student-successful', {
             adminData,
+            isExtraOrgsTrue,
             currentPath: '/add-student-successful',
-            title: 'Add Student Account | LSU HEU Events and Attendance Tracking Website',
+            title: 'Add Student Account | LSU HEU Events and Attendance Tracking Website'
         });
     } else {
         res.redirect('/login');
@@ -209,51 +212,111 @@ router.get('/add-student-successful', (req, res) => {
 router.get('/list', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
-        // const organization = adminData.organization;
-        // const { isUSGorSAO } = isMainOrgs(organization);
-        // const { isExtraOrgsTrue } = isExtraOrgs(organization);
+        const organization = adminData.organization;
+        const departmentName = req.session.departmentName;
 
-        // let errorMessage = '';
+        const collegesAndABOs = {
+            CAS: ["JSWAP", "LABELS", "LSUPS", "POLISAYS"],
+            CBA: ["JFINEX", "JMEX", "JPIA"],
+            CCJE: [""],
+            CCSEA: ["ALGES", "ICpEP", "IIEE", "JIECEP", "LISSA", "PICE", "SOURCE", "UAPSA"],
+            CON: [""],
+            CTE: ["ECC", "GENTLE", "GEM-O", "LapitBayan", "LME", "SPEM", "SSS"],
+            CTHM: ["FHARO", "FTL", "SOTE"],
+        };
 
-        // if (req.session.errorMessage) {
-        //     errorMessage = req.session.errorMessage;
-        //     delete req.session.errorMessage;
-        // }
+        const {
+            isSAO,
+            isCollegeDepartment,
+            isUSGorSAO,
+            isCollegeOrSAO,
+        } = isMainOrgs(organization, departmentName);
 
-        res.render('list', {
-            adminData,
-            // isUSGorSAO,
-            // isExtraOrgsTrue,
-            currentPath: '/list',
-            title: 'List of Students | LSU HEU Events and Attendance Tracking Website',
-            // errorMessage: errorMessage
+        const {
+            isCSOorSAO,
+            isCSOorABOorSAO,
+            isCSOorIBOorSAO,
+            isExtraOrgsTrue
+        } = isExtraOrgs(organization);
+
+        // College department names
+        const collegeDepartments = Object.keys(collegesAndABOs);
+
+        const isCollege = collegeDepartments.includes(organization);
+        const isABO = collegeDepartments.some(college => collegesAndABOs[college].includes(organization));
+        const isCollegeOrSAORegister = isCollege || isSAO;
+
+        db.query('SELECT * FROM student', (error, students) => {
+            if (error) {
+                console.log(error);
+                res.redirect('/');
+            } else {
+                // Create a function to filter students based on department_name or abo_name
+                const filterStudents = (students, organization) => {
+                    return students.filter(student => student.department_name === organization || student.abo_name === organization);
+                };
+
+                // Build student groups dynamically
+                const studentGroups = {};
+
+                // Populate student groups based on college departments
+                collegeDepartments.forEach(college => {
+                    studentGroups[college] = filterStudents(students, college);
+                });
+
+                // Populate student groups based on ABOs
+                Object.entries(collegesAndABOs).forEach(([college, abos]) => {
+                    abos.forEach(abo => {
+                        studentGroups[abo] = filterStudents(students, abo);
+                    });
+                });
+
+                // Dynamically select the right student list based on admin organization
+                const selectedStudents = filterStudents(students, organization);
+
+                res.render('list', {
+                    adminData,
+                    departmentName,
+                    isSAO,
+                    isCollegeDepartment,
+                    isUSGorSAO,
+                    isCollegeOrSAO,
+                    isCSOorSAO,
+                    isCSOorABOorSAO,
+                    isCSOorIBOorSAO,
+                    isExtraOrgsTrue,
+                    organization,
+                    isCollege,
+                    isABO,
+                    isCollegeOrSAORegister,
+                    selectedStudents,  // Pass the dynamically selected students to the template
+                    students: students.map(student => ({
+                        ...student
+                    })),
+                    currentPath: '/list',
+                    title: 'List of Students | LSU HEU Events and Attendance Tracking Website',
+                });
+            }
         });
     } else {
         res.redirect('/login');
     }
 });
 
+
+
+
 router.get('/spr-main', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
-        // const organization = adminData.organization;
-        // const { isUSGorSAO } = isMainOrgs(organization);
-        // const { isExtraOrgsTrue } = isExtraOrgs(organization);
-
-        // let errorMessage = '';
-
-        // if (req.session.errorMessage) {
-        //     errorMessage = req.session.errorMessage;
-        //     delete req.session.errorMessage;
-        // }
+        const organization = adminData.organization;
+        const { isExtraOrgsTrue } = isExtraOrgs(organization);
 
         res.render('spr-main', {
             adminData,
-            // isUSGorSAO,
-            // isExtraOrgsTrue,
+            isExtraOrgsTrue,
             currentPath: '/spr-main',
-            title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website',
-            // errorMessage: errorMessage
+            title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
         });
     } else {
         res.redirect('/login');
