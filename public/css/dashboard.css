@@ -71,6 +71,8 @@ body {
   width: 1.9rem;
 }
 
+/* dashboard */
+
 .card-spr-dashboard,
 .card-bottom {
   border-radius: 30px;
@@ -139,6 +141,10 @@ body {
   background-repeat: no-repeat;
 }
 
+.container-calendar {
+  margin-left: -1.8rem;
+}
+
 /* add student successful */
 
 .card-body-nested-add-student {
@@ -189,4 +195,52 @@ body {
 
 .row-odd {
   background-color: rgba(60, 98, 85, 0.15);
+}
+
+.card-list-container {
+  margin-left: -8rem;
+  border: 1px dashed var(--main-green);
+}
+
+.student-name-list {
+  font-size: 1.2rem;
+}
+
+.student-id-number-list {
+  background-color: #efefef;
+  border: 1px solid rgba(33, 58, 49, 0.3);
+}
+
+.student-status-list {
+  background-color: var(--main-green);
+  color: white;
+}
+
+.student-id-number-list,
+.student-status-list {
+  border-radius: 20px;
+  font-size: 0.7rem;
+  padding-top: 0.2rem;
+  padding: 0.3rem;
+}
+
+.student-group-list,
+.participation-record-list {
+  font-size: 0.8rem;
+}
+
+.student-group-list-details,
+.participation-record-list-details {
+  border: 1px solid rgba(33, 58, 49, 0.5);
+  border-radius: 20px;
+}
+
+.student-group-list-title,
+.participation-record-list-title {
+  display: inline-block;
+  width: 6rem;
+}
+
+.btn-view-record {
+  background-color: var(--main-green);
 }

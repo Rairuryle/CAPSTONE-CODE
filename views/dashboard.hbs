@@ -8,7 +8,7 @@
 
         <div class="col-9 mt-3">
             <div class="d-flex justify-content-between">
-                <div class="col-lg-9 me-5">
+                <div class="col-sm-9 me-5">
                     {{> headerSearch}}
 
                     <div class="card mt-4 card-spr-dashboard" style="min-height: 270px;">
@@ -32,15 +32,15 @@
 
                     <div class="d-flex mt-4">
                         <div class="card card-bottom">
-                            <div class="card-body p-4">
+                            <div class="card-body p-3">
                                 <h3 class="card-title text-center">Add Student</h3>
                                 <p class="card-text card-text-bottom-description">Create an account for a student for
-                                    their
-                                    participation to be recorded! It also keeps them informed of their clearance status.
+                                    their participation to be recorded! It also keeps them informed of their clearance
+                                    status.
                                 </p>
                                 <div class="input-group">
                                     <button type="button"
-                                        class="btn btn-dark btn-block btn-card-bottom d-flex align-items-center ms-auto ">
+                                        class="btn btn-dark btn-block btn-card-bottom d-flex align-items-center ms-auto">
                                         <a href="/add-student" style="text-decoration: none; color: white;">
                                             <span class="px-2 btn-card-bottom-text">Add</span>
                                             <img src="../img/add-card-dashboard.png" alt="Add Student" class="pe-1">
@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="card card-bottom mx-3">
-                            <div class="card-body p-4">
+                            <div class="card-body p-3">
                                 <h3 class="card-title text-center">List</h3>
                                 <p class="card-text card-text-bottom-description">Shows every student
                                     listed in the system, complete with profiles and a link to the student's record and
@@ -59,7 +59,7 @@
                                     by affiliation.</p>
                                 <div class="input-group">
                                     <button type="button"
-                                        class="btn btn-dark btn-block btn-card-bottom d-flex align-items-center ms-auto ">
+                                        class="btn btn-dark btn-block btn-card-bottom d-flex align-items-center ms-auto">
                                         <a href="/list" style="text-decoration: none; color: white;">
                                             <span class="px-2 btn-card-bottom-text">View</span>
                                             <img src="../img/list-card-dashboard.png" alt="List" class="pe-1">
@@ -70,15 +70,15 @@
                         </div>
 
                         <div class="card card-bottom">
-                            <div class="card-body p-4">
+                            <div class="card-body p-3">
                                 <h3 class="card-title text-center">Register</h3>
-                                <p class="card-text card-text-bottom-description">Register a new authorized officer into
-                                    the
-                                    system in order for them to access the records and increase manpower!</p>
+                                <p class="card-text card-text-bottom-description">Register a newly authorized officer
+                                    into the system in order for them to access the records, aid in organizing events,
+                                    and increase manpower!</p>
                                 <div class="input-group">
                                     <button type="button"
-                                        class="btn btn-dark btn-block btn-card-bottom d-flex align-items-center ms-auto ">
-                                        <a a href="/register" style="text-decoration: none; color: white;">
+                                        class="btn btn-dark btn-block btn-card-bottom d-flex align-items-center ms-auto">
+                                        <a href="/register" style="text-decoration: none; color: white;">
                                             <span class="px-2 btn-card-bottom-text">Register</span>
                                             <img src="../img/register-card-dashboard.png" alt="Register" class="pe-1">
                                         </a>
@@ -89,8 +89,18 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 ms-5">
+                <div class="col-sm-3 ms-5">
                     {{> headerOfficer}}
+
+                    <div class="container-calendar">
+                        <h4 class="mt-4 mb-0">Calendar of Activities</h4>
+                        <p class="card-text card-small-text mb-2">2024-2025</p>
+                        <div class="card">
+                            <div class="card-body">
+                                <img src="../img/calendar.png" alt="Calendar of Activities" class="img-fluid">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
