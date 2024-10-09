@@ -47,6 +47,9 @@ app.engine('hbs', exphbs.engine({
         },
         indexIsEven: function (index) {
             return index % 2 === 0;
+        },
+        json: (context) => {
+            return JSON.stringify(context);
         }
     }
 }));

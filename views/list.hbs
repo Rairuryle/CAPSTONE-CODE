@@ -18,76 +18,141 @@
 
                             <div class="col d-flex align-items-center justify-content-end px-0">
                                 {{#if isUSGorSAO}}
-                                <select id="selectGroupListCollege"
-                                    class="form-control list-dropdown border-secondary fw-bold pt-2" name="groupList">
-                                    <option disabled="disabled" selected="selected">College</option>
-                                    <option value="CAS">CAS</option>
-                                    <option value="CBA">CBA</option>
-                                    <option value="CCJE">CCJE</option>
-                                    <option value="CCSEA">CCSEA</option>
-                                    <option value="CON">CON</option>
-                                    <option value="CTE">CTE</option>
-                                    <option value="CTHM">CTHM</option>
-                                </select>
+                                <form action="/list" method="GET" id="filterForm" class="d-flex w-100">
+                                    <select id="selectGroupListCollege"
+                                        class="form-control list-dropdown border-secondary fw-bold pt-2"
+                                        name="groupList">
+                                        <option disabled="disabled" selected="selected">College</option>
+                                        <option value="CAS" {{#if (eq selectedGroup "CAS" )}}selected{{/if}}>CAS
+                                        </option>
+                                        <option value="CBA" {{#if (eq selectedGroup "CBA" )}}selected{{/if}}>CBA
+                                        </option>
+                                        <option value="CCJE" {{#if (eq selectedGroup "CCJE" )}}selected{{/if}}>CCJE
+                                        </option>
+                                        <option value="CCSEA" {{#if (eq selectedGroup "CCSEA" )}}selected{{/if}}>CCSEA
+                                        </option>
+                                        <option value="CON" {{#if (eq selectedGroup "CON" )}}selected{{/if}}>CON
+                                        </option>
+                                        <option value="CTE" {{#if (eq selectedGroup "CTE" )}}selected{{/if}}>CTE
+                                        </option>
+                                        <option value="CTHM" {{#if (eq selectedGroup "CTHM" )}}selected{{/if}}>CTHM
+                                        </option>
+                                    </select>
 
-                                <select id="selectGroupListABO"
-                                    class="form-control list-dropdown d-flex border-secondary mx-2 pt-2 fw-bold"
-                                    name="groupList">
-                                    <option disabled="disabled" selected="selected">ABO</option>
-                                    <optgroup label="CAS ABO">
-                                        <option value="JSWAP">JSWAP</option>
-                                        <option value="LABELS">LABELS</option>
-                                        <option value="LSUPS">LSUPS</option>
-                                        <option value="POLISAYS">POLISAYS</option>
-                                    </optgroup>
+                                    <select id="selectGroupListABO"
+                                        class="form-control list-dropdown border-secondary mx-2 fw-bold"
+                                        name="groupList">
+                                        <option disabled="disabled" selected="selected">ABO</option>
+                                        <optgroup label="CAS ABO">
+                                            <option value="JSWAP" {{#if (eq selectedGroup "JSWAP" )}}selected{{/if}}>
+                                                JSWAP
+                                            </option>
+                                            <option value="LABELS" {{#if (eq selectedGroup "LABELS" )}}selected{{/if}}>
+                                                LABELS
+                                            </option>
+                                            <option value="LSUPS" {{#if (eq selectedGroup "LSUPS" )}}selected{{/if}}>
+                                                LSUPS
+                                            </option>
+                                            <option value="POLISAYS" {{#if (eq selectedGroup "POLISAYS"
+                                                )}}selected{{/if}}>POLISAYS
+                                            </option>
+                                        </optgroup>
+                                        <optgroup label="CBA ABO">
+                                            <option value="JFINEX" {{#if (eq selectedGroup "JFINEX" )}}selected{{/if}}>
+                                                JFINEX
+                                            </option>
+                                            <option value="JMEX" {{#if (eq selectedGroup "JMEX" )}}selected{{/if}}>JMEX
+                                            </option>
+                                            <option value="JPIA" {{#if (eq selectedGroup "JPIA" )}}selected{{/if}}>JPIA
+                                            </option>
+                                        </optgroup>
+                                        <optgroup label="CCSEA ABO">
+                                            <option value="ALGES" {{#if (eq selectedGroup "ALGES" )}}selected{{/if}}>
+                                                ALGES
+                                            </option>
+                                            <option value="ICpEP" {{#if (eq selectedGroup "ICpEP" )}}selected{{/if}}>
+                                                ICpEP
+                                            </option>
+                                            <option value="IIEE" {{#if (eq selectedGroup "IIEE" )}}selected{{/if}}>IIEE
+                                            </option>
+                                            <option value="JIECEP" {{#if (eq selectedGroup "JIECEP" )}}selected{{/if}}>
+                                                JIECEP
+                                            </option>
+                                            <option value="LISSA" {{#if (eq selectedGroup "LISSA" )}}selected{{/if}}>
+                                                LISSA
+                                            </option>
+                                            <option value="PICE" {{#if (eq selectedGroup "PICE" )}}selected{{/if}}>PICE
+                                            </option>
+                                            <option value="SOURCE" {{#if (eq selectedGroup "SOURCE" )}}selected{{/if}}>
+                                                SOURCE
+                                            </option>
+                                            <option value="UAPSA" {{#if (eq selectedGroup "UAPSA" )}}selected{{/if}}>
+                                                UAPSA
+                                            </option>
+                                        </optgroup>
+                                        <optgroup label="CTE ABO">
+                                            <option value="ECC" {{#if (eq selectedGroup "ECC" )}}selected{{/if}}>ECC
+                                            </option>
+                                            <option value="GENTLE" {{#if (eq selectedGroup "GENTLE" )}}selected{{/if}}>
+                                                GENTLE
+                                            </option>
+                                            <option value="GEM-O" {{#if (eq selectedGroup "GEM-O" )}}selected{{/if}}>
+                                                GEM-O
+                                            </option>
+                                            <option value="LapitBayan" {{#if (eq selectedGroup "LapitBayan"
+                                                )}}selected{{/if}}>LapitBayan
+                                            </option>
+                                            <option value="LME" {{#if (eq selectedGroup "LME" )}}selected{{/if}}>LME
+                                            </option>
+                                            <option value="SPEM" {{#if (eq selectedGroup "SPEM" )}}selected{{/if}}>SPEM
+                                            </option>
+                                            <option value="SSS" {{#if (eq selectedGroup "SSS" )}}selected{{/if}}>SSS
+                                            </option>
+                                        </optgroup>
+                                        <optgroup label="CTHM ABO">
+                                            <option value="FHARO" {{#if (eq selectedGroup "FHARO" )}}selected{{/if}}>
+                                                FHARO
+                                            </option>
+                                            <option value="FTL" {{#if (eq selectedGroup "FTL" )}}selected{{/if}}>FTL
+                                            </option>
+                                            <option value="SOTE" {{#if (eq selectedGroup "SOTE" )}}selected{{/if}}>SOTE
+                                            </option>
+                                        </optgroup>
+                                    </select>
 
-                                    <optgroup label="CBA ABO">
-                                        <option value="JFINEX">JFINEX</option>
-                                        <option value="JMEX">JMEX</option>
-                                        <option value="JPIA">JPIA</option>
-                                    </optgroup>
-
-                                    <optgroup label="CCSEA ABO">
-                                        <option value="ALGES">ALGES</option>
-                                        <option value="ICpEP">ICpEP</option>
-                                        <option value="IIEE">IIEE</option>
-                                        <option value="JIECEP">JIECEP</option>
-                                        <option value="LISSA">LISSA</option>
-                                        <option value="PICE">PICE</option>
-                                        <option value="SOURCE">SOURCE</option>
-                                        <option value="UAPSA">UAPSA</option>
-                                    </optgroup>
-
-                                    <optgroup label="CTE ABO">
-                                        <option value="ECC">ECC</option>
-                                        <option value="GENTLE">GENTLE</option>
-                                        <option value="GEM-O">GEM-O</option>
-                                        <option value="LapitBayan">LapitBayan</option>
-                                        <option value="LME">LME</option>
-                                        <option value="SPEM">SPEM</option>
-                                        <option value="SSS">SSS</option>
-                                    </optgroup>
-
-                                    <optgroup label="CTHM ABO">
-                                        <option value="FHARO">FHARO</option>
-                                        <option value="FTL">FTL</option>
-                                        <option value="SOTE">SOTE</option>
-                                    </optgroup>
-                                </select>
-
-                                <select id="selectGroupListIBO"
-                                    class="form-control list-dropdown border-secondary fw-bold pt-2" name="groupList">
-                                    <option disabled="disabled" selected="selected">IBO</option>
-                                    <option value="Compatriots">Compatriots</option>
-                                    <option value="Cosplay Corps">Cosplay Corps</option>
-                                    <option value="Green Leaders">Green Leaders</option>
-                                    <option value="Kainos">Kainos</option>
-                                    <option value="Meeples">Meeples</option>
-                                    <option value="Micromantics">Micromantics</option>
-                                    <option value="Red Cross Youth">RCY</option>
-                                    <option value="Soul Whisperers">Soul Whisperers</option>
-                                    <option value="Vanguard E-sports">Vanguard</option>
-                                </select>
+                                    <select id="selectGroupListIBO"
+                                        class="form-control list-dropdown border-secondary fw-bold pt-2"
+                                        name="groupList">
+                                        <option disabled="disabled" selected="selected">IBO</option>
+                                        <option value="Compatriots" {{#if (eq selectedGroup "Compatriots"
+                                            )}}selected{{/if}}>Compatriots
+                                        </option>
+                                        <option value="Cosplay Corps" {{#if (eq selectedGroup "Cosplay Corps"
+                                            )}}selected{{/if}}>Cosplay Corps
+                                        </option>
+                                        <option value="Green Leaders" {{#if (eq selectedGroup "Green Leaders"
+                                            )}}selected{{/if}}>Green Leaders
+                                        </option>
+                                        <option value="Kainos" {{#if (eq selectedGroup "Kainos" )}}selected{{/if}}>
+                                            Kainos
+                                        </option>
+                                        <option value="Meeples" {{#if (eq selectedGroup "Meeples" )}}selected{{/if}}>
+                                            Meeples
+                                        </option>
+                                        <option value="Micromantics" {{#if (eq selectedGroup "Micromantics"
+                                            )}}selected{{/if}}>Micromantics
+                                        </option>
+                                        <option value="Red Cross Youth" {{#if (eq selectedGroup "Red Cross Youth"
+                                            )}}selected{{/if}}>RCY
+                                        </option>
+                                        <option value="Soul Whisperers" {{#if (eq selectedGroup "Soul Whisperers"
+                                            )}}selected{{/if}}>Soul Whisperers
+                                        </option>
+                                        <option value="Vanguard E-sports" {{#if (eq selectedGroup "Vanguard E-sports"
+                                            )}}selected{{/if}}>Vanguard
+                                        </option>
+                                    </select>
+                                </form>
 
                                 {{else}}
                                 <input type="text"
@@ -102,18 +167,22 @@
                                 <img src="../img/document-filter.png" alt="Sort" class="ps-2" style="height: 20px;">
                                 <select id="sortList" class="form-control sort-list border-0 fw-bold ps-3"
                                     name="sortList">
-                                    <option disabled="disabled" selected="selected">Sort By</option>
-                                    <option value="Name">Name</option>
-                                    <option value="ID Number">ID Number</option>
-                                    <option value="Course">Course</option>
-                                    <option value="Year">Year</option>
+                                    <option value="" disabled selected>Sort By</option>
+                                    <option value="Name" {{#if (eq selectedSort "Name" )}}selected{{/if}}>Sort By Name
+                                    </option>
+                                    <option value="ID Number" {{#if (eq selectedSort "ID Number" )}}selected{{/if}}>Sort
+                                        By ID Number</option>
+                                    <option value="Course" {{#if (eq selectedSort "Course" )}}selected{{/if}}>Sort By
+                                        Course</option>
+                                    <option value="Year" {{#if (eq selectedSort "Year" )}}selected{{/if}}>Sort By Year
+                                    </option>
                                 </select>
                             </div>
                             <div class="col d-flex justify-content-end px-0">
-                                <form class="w-75">
+                                <form class="w-75" id="searchForm">
                                     <div class="input-group search-list-group border w-100">
                                         <input class="form-control border-0 search-list-field" type="search"
-                                            aria-label="Search">
+                                            aria-label="Search" id="searchInput">
                                         <span class="input-group-text border-0">
                                             <img src="../img/search.png" alt="Search">
                                         </span>
@@ -121,6 +190,7 @@
                                 </form>
                             </div>
                         </div>
+
 
                         <div class="row mt-4 ms-1 pb-2 fw-bold border-bottom border-secondary-subtle">
                             <div class="col-5 px-0">
@@ -137,36 +207,39 @@
                             </div>
                         </div>
 
-                        <div class="row ps-2">
-                            <div class="col-5 p-0 ps-2">
-                                {{#each selectedStudents}}
-                                <p
-                                    class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
-                                    {{this.last_name}}</p>
-                                {{/each}}
+                        <div class="row student-details-row ps-2">
+                            {{#each selectedStudents}}
+                            <div class="student-row d-flex" data-abo-name="{{this.abo_name}}">
+                                <div class="col-5 p-0 ps-2">
+                                    <p
+                                        class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
+                                        {{this.last_name}}, {{this.first_name}}
+                                    </p>
+                                </div>
+                                <div class="col-3 p-0">
+                                    <p
+                                        class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
+                                        {{this.id_number}}
+                                    </p>
+                                </div>
+                                <div class="col-3 p-0">
+                                    <p
+                                        class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
+                                        {{this.course_name}}
+                                    </p>
+                                </div>
+                                <div class="col-1 p-0">
+                                    <p
+                                        class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
+                                        {{this.year_level}}
+                                    </p>
+                                </div>
                             </div>
-                            <div class="col-3 p-0">
-                                {{#each selectedStudents}}
-                                <p
-                                    class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
-                                    {{this.id_number}}</p>
-                                {{/each}}
-                            </div>
-                            <div class="col-3 p-0">
-                                {{#each selectedStudents}}
-                                <p
-                                    class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
-                                    {{this.course_name}}</p>
-                                {{/each}}
-                            </div>
-                            <div class="col-1 p-0">
-                                {{#each selectedStudents}}
-                                <p
-                                    class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
-                                    {{this.year_level}}</p>
-                                {{/each}}
-                            </div>
+                            {{/each}}
                         </div>
+
+                        <div id="selectedAbo" class="mt-3"></div>
+
                     </div>
                 </div>
                 <div class="col-lg-3 ms-5">
@@ -234,9 +307,14 @@
                                 Record</button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    const selectedStudents = {{{ json selectedStudents }}}; // Use triple braces to avoid escaping
+</script>
 <script src="../js/selectStudentList.js"></script>
+<script src="../js/sortStudentList.js"></script>

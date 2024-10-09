@@ -215,6 +215,9 @@ router.get('/list', (req, res) => {
         const organization = adminData.organization;
         const departmentName = req.session.departmentName;
 
+        const selectedGroup = req.query.groupList || organization; // Use selected group if available, otherwise default to the admin's organization.
+        const sortOption = req.query.sortList; // Capture the selected sort option from the query.
+
         const collegesAndABOs = {
             CAS: ["JSWAP", "LABELS", "LSUPS", "POLISAYS"],
             CBA: ["JFINEX", "JMEX", "JPIA"],
@@ -239,40 +242,33 @@ router.get('/list', (req, res) => {
             isExtraOrgsTrue
         } = isExtraOrgs(organization);
 
-        // College department names
-        const collegeDepartments = Object.keys(collegesAndABOs);
-
-        const isCollege = collegeDepartments.includes(organization);
-        const isABO = collegeDepartments.some(college => collegesAndABOs[college].includes(organization));
-        const isCollegeOrSAORegister = isCollege || isSAO;
-
         db.query('SELECT * FROM student', (error, students) => {
             if (error) {
                 console.log(error);
                 res.redirect('/');
             } else {
-                // Create a function to filter students based on department_name or abo_name
-                const filterStudents = (students, organization) => {
-                    return students.filter(student => student.department_name === organization || student.abo_name === organization);
+                // Filter students based on the selected group (either college, ABO, or IBO).
+                const filterStudents = (students, group) => {
+                    return students.filter(student => student.department_name === group || student.abo_name === group);
                 };
 
-                // Build student groups dynamically
-                const studentGroups = {};
+                let selectedStudents = filterStudents(students, selectedGroup);
 
-                // Populate student groups based on college departments
-                collegeDepartments.forEach(college => {
-                    studentGroups[college] = filterStudents(students, college);
-                });
-
-                // Populate student groups based on ABOs
-                Object.entries(collegesAndABOs).forEach(([college, abos]) => {
-                    abos.forEach(abo => {
-                        studentGroups[abo] = filterStudents(students, abo);
+                // Sort the selected students based on the selected option
+                if (sortOption) {
+                    selectedStudents.sort((a, b) => {
+                        if (sortOption === 'Name') {
+                            return a.last_name.localeCompare(b.last_name);
+                        } else if (sortOption === 'ID Number') {
+                            return a.id_number - b.id_number;
+                        } else if (sortOption === 'Course') {
+                            return a.course_name.localeCompare(b.course_name);
+                        } else if (sortOption === 'Year') {
+                            return a.year_level - b.year_level;
+                        }
+                        return 0;
                     });
-                });
-
-                // Dynamically select the right student list based on admin organization
-                const selectedStudents = filterStudents(students, organization);
+                }
 
                 res.render('list', {
                     adminData,
@@ -286,15 +282,11 @@ router.get('/list', (req, res) => {
                     isCSOorIBOorSAO,
                     isExtraOrgsTrue,
                     organization,
-                    isCollege,
-                    isABO,
-                    isCollegeOrSAORegister,
-                    selectedStudents,  // Pass the dynamically selected students to the template
-                    students: students.map(student => ({
-                        ...student
-                    })),
+                    selectedGroup,  // Pass the selected group for highlighting in the view.
+                    selectedStudents,  // Pass the filtered and sorted students to the template.
                     currentPath: '/list',
                     title: 'List of Students | LSU HEU Events and Attendance Tracking Website',
+                    selectedSort: sortOption // Pass the selected sort option to the template
                 });
             }
         });
@@ -302,6 +294,8 @@ router.get('/list', (req, res) => {
         res.redirect('/login');
     }
 });
+
+
 
 
 
