@@ -8,6 +8,22 @@
 
         <div class="col-7 mt-3">
             {{> headerSearch}}
+            <div class="student-info">
+                {{#if student}}
+                <h2>Student Record for {{student.first_name}} {{student.last_name}}</h2>
+                <p>ID Number: {{student.id_number}}</p>
+                <p>Department: {{student.department_name}}</p>
+                <p>Course: {{student.course_name}}</p>
+                <p>Year Level: {{student.year_level}}</p>
+                <p>Exemption Status: {{student.exemption_status}}</p>
+                <p>Active Status: {{student.active_status}}</p>
+                <p>ABO: {{student.abo_name}}</p>
+                <p>IBO: {{student.ibo_name}}</p>
+                {{else}}
+                <p>No student record found.</p>
+                {{/if}}
+            </div>
+
 
         </div>
 

@@ -209,7 +209,13 @@
 
                         <div class="row student-details-row ps-2">
                             {{#each selectedStudents}}
-                            <div class="student-row d-flex" data-abo-name="{{this.abo_name}}">
+                            <div class="student-row d-flex" data-last-name="{{this.last_name}}"
+                                data-first-name="{{this.first_name}}" data-id-number="{{this.id_number}}"
+                                data-exemption-status="{{this.exemption_status}}"
+                                data-active-status="{{this.active_status}}"
+                                data-department-name="{{this.department_name}}" data-course-name="{{this.course_name}}"
+                                data-year-level="{{this.year_level}}" data-abo-name="{{this.abo_name}}"
+                                data-ibo-name="{{this.ibo_name}}">
                                 <div class="col-5 p-0 ps-2">
                                     <p
                                         class="studentDetails m-0 py-1 w-100 {{#if (indexIsEven @index)}}row-even{{else}}row-odd{{/if}}">
@@ -237,9 +243,6 @@
                             </div>
                             {{/each}}
                         </div>
-
-                        <div id="selectedAbo" class="mt-3"></div>
-
                     </div>
                 </div>
                 <div class="col-lg-3 ms-5">
@@ -247,34 +250,35 @@
 
                     <div class="card card-list-container mt-3">
                         <div class="card-body">
-                            <h3 class="m-0 fw-bold">BATOCTOY,</h3>
-                            <p class="card-text card-small-text student-name-list mb-1 fw-bold">Lorenxon Nic</p>
-                            <span class="student-id-number-list p-2 fw-bold">N11510437</span>
+                            <h3 id="selectedLastName" class="m-0 fw-bold"></h3>
+                            <p id="selectedFirstName" class="card-text card-small-text student-name-list mb-1 fw-bold">
+                            </p>
+                            <span id="selectedIDNumber" class="student-id-number-list p-2 fw-bold"></span>
                             <div class="d-flex mt-2 border-bottom border-secondary pb-2">
-                                <span class="student-status-list border px-3 me-2">Not Exempted</span>
-                                <span class="student-status-list border px-3">Active</span>
+                                <span id="selectedExemptionStatus" class="student-status-list border px-3 me-2"></span>
+                                <span id="selectedActiveStatus" class="student-status-list border px-3"></span>
                             </div>
                             <div class="student-group-list d-flex flex-column mt-3">
                                 <div class="student-group-list-details px-2 py-1">
                                     <span
                                         class="card-text card-small-text student-group-list-title px-1">Department</span>
-                                    <span class="fw-bold">CCSEA</span>
+                                    <span id="selectedDepartment" class="fw-bold"></span>
                                 </div>
                                 <div class="student-group-list-details mt-1 px-2 py-1">
                                     <span class="card-text card-small-text student-group-list-title px-1">Course</span>
-                                    <span class="fw-bold">BSCS</span>
+                                    <span id="selectedCourse" class="fw-bold"></span>
                                 </div>
                                 <div class="student-group-list-details mt-1 px-2 py-1">
                                     <span class="card-text card-small-text student-group-list-title px-1">Year</span>
-                                    <span class="fw-bold">2</span>
+                                    <span id="selectedYearLevel" class="fw-bold"></span>
                                 </div>
                                 <div class="student-group-list-details mt-1 px-2 py-1">
                                     <span class="card-text card-small-text student-group-list-title px-1">ABO</span>
-                                    <span class="fw-bold">SOURCE</span>
+                                    <span id="selectedABO" class="fw-bold"></span>
                                 </div>
                                 <div class="student-group-list-details mt-1 px-2 py-1">
                                     <span class="card-text card-small-text student-group-list-title px-1">IBO</span>
-                                    <span class="fw-bold">Meeples</span>
+                                    <span id="selectedIBO" class="fw-bold"></span>
                                 </div>
                             </div>
 
@@ -303,8 +307,9 @@
                                 </div>
                             </div>
                             <button type="button"
-                                class="btn btn-success btn-view-record d-flex justify-content-center w-50 m-auto mt-3">View
-                                Record</button>
+                                class="btn btn-success btn-view-record d-flex justify-content-center w-50 m-auto mt-3">
+                                View Record
+                            </button>
                         </div>
                     </div>
 
@@ -314,7 +319,6 @@
     </div>
 </div>
 <script>
-    const selectedStudents = {{{ json selectedStudents }}}; // Use triple braces to avoid escaping
+    const selectedStudents = {{{ json selectedStudents }}};
 </script>
-<script src="../js/selectStudentList.js"></script>
-<script src="../js/sortStudentList.js"></script>
+<script src="../js/studentList.js"></script>

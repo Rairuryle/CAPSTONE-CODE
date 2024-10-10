@@ -42,10 +42,12 @@ router.get('/contact', (req, res) => {
 
 router.get('/login', (req, res) => {
     const isLoggedOut = req.query.isLoggedOut === 'true';
+    const message = req.query.message || null;
 
     res.render('login', {
         title: 'Login | LSU HEU Events and Attendance Tracking Website',
-        isLoggedOut: isLoggedOut
+        isLoggedOut: isLoggedOut,
+        message: message
     });
 });
 
@@ -54,9 +56,10 @@ router.get('/logout', (req, res) => {
         if (err) {
             console.error('Error destroying session:', err);
         }
-        res.redirect('/login?isLoggedOut=true');
+        res.redirect('/login?isLoggedOut=true&message=You have logged out');
     });
 });
+
 
 router.get('/register', (req, res) => {
     if (req.session.isAuthenticated) {
@@ -215,8 +218,7 @@ router.get('/list', (req, res) => {
         const organization = adminData.organization;
         const departmentName = req.session.departmentName;
 
-        const selectedGroup = req.query.groupList || organization; // Use selected group if available, otherwise default to the admin's organization.
-        const sortOption = req.query.sortList; // Capture the selected sort option from the query.
+        const selectedGroup = req.query.groupList || organization;  // Use selected group if available, otherwise default to the admin's organization.
 
         const collegesAndABOs = {
             CAS: ["JSWAP", "LABELS", "LSUPS", "POLISAYS"],
@@ -252,23 +254,7 @@ router.get('/list', (req, res) => {
                     return students.filter(student => student.department_name === group || student.abo_name === group);
                 };
 
-                let selectedStudents = filterStudents(students, selectedGroup);
-
-                // Sort the selected students based on the selected option
-                if (sortOption) {
-                    selectedStudents.sort((a, b) => {
-                        if (sortOption === 'Name') {
-                            return a.last_name.localeCompare(b.last_name);
-                        } else if (sortOption === 'ID Number') {
-                            return a.id_number - b.id_number;
-                        } else if (sortOption === 'Course') {
-                            return a.course_name.localeCompare(b.course_name);
-                        } else if (sortOption === 'Year') {
-                            return a.year_level - b.year_level;
-                        }
-                        return 0;
-                    });
-                }
+                const selectedStudents = filterStudents(students, selectedGroup);
 
                 res.render('list', {
                     adminData,
@@ -283,10 +269,9 @@ router.get('/list', (req, res) => {
                     isExtraOrgsTrue,
                     organization,
                     selectedGroup,  // Pass the selected group for highlighting in the view.
-                    selectedStudents,  // Pass the filtered and sorted students to the template.
+                    selectedStudents,  // Pass the filtered students to the template.
                     currentPath: '/list',
                     title: 'List of Students | LSU HEU Events and Attendance Tracking Website',
-                    selectedSort: sortOption // Pass the selected sort option to the template
                 });
             }
         });
@@ -296,26 +281,57 @@ router.get('/list', (req, res) => {
 });
 
 
-
-
-
-
 router.get('/spr-main', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const { isExtraOrgsTrue } = isExtraOrgs(organization);
+        
+        const idNumber = req.query.id;
+        console.log('ID Number:', idNumber);
 
-        res.render('spr-main', {
-            adminData,
-            isExtraOrgsTrue,
-            currentPath: '/spr-main',
-            title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
-        });
+        if (idNumber) {
+            const query = 'SELECT * FROM student WHERE id_number = ?';
+            db.query(query, [idNumber], (err, results) => {
+                if (err) {
+                    return res.status(500).send('Database error');
+                }
+
+                if (results.length > 0) {
+                    const student = results[0];
+                    res.render('spr-main', {
+                        adminData,
+                        isExtraOrgsTrue,
+                        student, // Pass the student data to the spr-main template
+                        currentPath: '/spr-main',
+                        title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
+                    });
+                } else {
+                    // Render the page without student data if not found
+                    res.render('spr-main', {
+                        adminData,
+                        isExtraOrgsTrue,
+                        student: null, // No student found
+                        currentPath: '/spr-main',
+                        title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
+                    });
+                }
+            });
+        } else {
+            // Render the page without student data if no ID is provided
+            res.render('spr-main', {
+                adminData,
+                isExtraOrgsTrue,
+                student: null, // No student found
+                currentPath: '/spr-main',
+                title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
+            });
+        }
     } else {
         res.redirect('/login');
     }
 });
+
 
 // router.get('/university-events-admin', (req, res) => {
 //     if (req.session.isAuthenticated) {
