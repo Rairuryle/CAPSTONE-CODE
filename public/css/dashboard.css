@@ -56,7 +56,8 @@ body {
 }
 
 .search-dashboard-group,
-.search-list-group {
+.search-list-group,
+.search-ibo-group {
   border-radius: 10px;
   overflow: hidden;
 }
@@ -145,6 +146,34 @@ body {
   margin-left: -1.8rem;
 }
 
+/* add student ibo */
+
+.searchStudentIBO {
+  color: gray;
+}
+
+.search-ibo-group {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#suggestionsList {
+  overflow-y: auto;
+  display: none;
+}
+
+#suggestionsList .list-group-item {
+  cursor: pointer;
+}
+
+#suggestionsList .list-group-item:hover {
+  background-color: #f0f0f0;
+}
+
+input:focus + #suggestionsList {
+  display: block; /* Show suggestions when input is focused */
+}
+
 /* add student successful */
 
 .card-body-nested-add-student {
@@ -177,6 +206,7 @@ body {
 }
 
 .search-list-field,
+.search-ibo-field,
 .sort-list {
   background-color: var(--gray-shade);
 }

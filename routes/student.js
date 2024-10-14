@@ -98,4 +98,18 @@ router.post('/add-student', (req, res) => {
     });
 });
 
+const connection = require('../db'); // Assuming you've already set up your MySQL connection in 'db.js'
+
+// Route to get students
+router.get('/students', (req, res) => {
+    const yourQuery = 'SELECT id_number, last_name, first_name FROM student';
+
+    connection.query(yourQuery, (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json(results); // Only send results, not the entire query object
+    });
+});
+
 module.exports = router;

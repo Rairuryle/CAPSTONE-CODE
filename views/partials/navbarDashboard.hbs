@@ -62,6 +62,26 @@
             </li>
             {{/if}}
 
+            {{#if isCSOorIBO}}
+            <li
+                class="nav-item nav-item-title nav-item-add-student ps-4 mt-3 {{#if (eq currentPath '/add-student-ibo')}}active{{/if}}">
+                <a href="/add-student-ibo" class="nav-link align-middle px-0">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-container me-4">
+                            {{#if (eq currentPath '/add-student-ibo')}}
+                            <img src="../img/add-student-filled.png" alt="Add Student Icon">
+                            {{else}}
+                            <img src="../img/add-student.png" alt="Add Student Icon">
+                            {{/if}}
+                        </div>
+                        <div class="text-container flex-grow-1 pt-1">
+                            <span class="title-link-sidebar fw-bold">ADD STUDENT</span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {{/if}}
+
             <li class="nav-item nav-item-title nav-item-list ps-4 mt-3 {{#if (eq currentPath '/list')}}active{{/if}}">
                 <a href="/list" class="nav-link align-middle px-0">
                     <div class="d-flex align-items-center">

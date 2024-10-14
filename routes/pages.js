@@ -154,11 +154,12 @@ router.get('/dashboard', (req, res) => {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const { isUSGorSAO } = isMainOrgs(organization);
-        const { isExtraOrgsTrue } = isExtraOrgs(organization);
+        const { isCSOorIBO, isExtraOrgsTrue } = isExtraOrgs(organization);
 
         res.render('dashboard', {
             adminData,
             isUSGorSAO,
+            isCSOorIBO,
             isExtraOrgsTrue,
             currentPath: '/dashboard',
             title: 'Dashboard | LSU HEU Events and Attendance Tracking Website'
@@ -194,6 +195,63 @@ router.get('/add-student', (req, res) => {
         res.redirect('/login');
     }
 });
+
+router.get('/add-student-ibo', (req, res) => {
+    if (req.session.isAuthenticated) {
+        const adminData = req.session.adminData;
+        const organization = adminData.organization;
+        const { isUSG } = isMainOrgs(organization);
+        const { isCSOorIBO, isExtraOrgsTrue } = isExtraOrgs(organization);
+
+        let errorMessage = '';
+
+        if (req.session.errorMessage) {
+            errorMessage = req.session.errorMessage;
+            delete req.session.errorMessage;
+        }
+
+        res.render('add-student-ibo', {
+            adminData,
+            isUSG,
+            isCSOorIBO,
+            isExtraOrgsTrue,
+            currentPath: '/add-student-ibo',
+            title: 'Add Student Account | LSU HEU Events and Attendance Tracking Website',
+            errorMessage: errorMessage
+        });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+// In /routes/pages.js
+router.get('/search-students', (req, res) => {
+    const searchQuery = req.query.q;
+    console.log('Search query:', searchQuery);
+
+    if (!searchQuery) return res.json([]);
+
+    const query = `
+        SELECT id_number, first_name, last_name
+        FROM student
+        WHERE id_number LIKE ? 
+        OR first_name LIKE ? 
+        OR last_name LIKE ?
+        LIMIT 10`;
+
+    db.query(query, [`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`], (err, results) => {
+        if (err) {
+            console.error('Server Error:', err);
+            return res.status(500).json({ message: 'Server Error' });
+        }
+        console.log('Results:', results.length ? results : 'No results found');
+        res.json(results);
+    });
+});
+
+
+
+
 
 router.get('/add-student-successful', (req, res) => {
     if (req.session.isAuthenticated) {
@@ -239,6 +297,7 @@ router.get('/list', (req, res) => {
 
         const {
             isCSOorSAO,
+            isCSOorIBO,
             isCSOorABOorSAO,
             isCSOorIBOorSAO,
             isExtraOrgsTrue
@@ -264,6 +323,7 @@ router.get('/list', (req, res) => {
                     isUSGorSAO,
                     isCollegeOrSAO,
                     isCSOorSAO,
+                    isCSOorIBO,
                     isCSOorABOorSAO,
                     isCSOorIBOorSAO,
                     isExtraOrgsTrue,
@@ -280,13 +340,12 @@ router.get('/list', (req, res) => {
     }
 });
 
-
 router.get('/spr-main', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
-        const { isExtraOrgsTrue } = isExtraOrgs(organization);
-        
+        const { isCSOorIBO, isExtraOrgsTrue } = isExtraOrgs(organization);
+
         const idNumber = req.query.id;
         console.log('ID Number:', idNumber);
 
@@ -301,6 +360,7 @@ router.get('/spr-main', (req, res) => {
                     const student = results[0];
                     res.render('spr-main', {
                         adminData,
+                        isCSOorIBO,
                         isExtraOrgsTrue,
                         student, // Pass the student data to the spr-main template
                         currentPath: '/spr-main',
@@ -310,8 +370,9 @@ router.get('/spr-main', (req, res) => {
                     // Render the page without student data if not found
                     res.render('spr-main', {
                         adminData,
+                        isCSOorIBO,
                         isExtraOrgsTrue,
-                        student: null, // No student found
+                        student: null,
                         currentPath: '/spr-main',
                         title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
                     });
@@ -321,8 +382,9 @@ router.get('/spr-main', (req, res) => {
             // Render the page without student data if no ID is provided
             res.render('spr-main', {
                 adminData,
+                isCSOorIBO,
                 isExtraOrgsTrue,
-                student: null, // No student found
+                student: null,
                 currentPath: '/spr-main',
                 title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
             });
