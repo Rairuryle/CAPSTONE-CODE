@@ -98,7 +98,7 @@ router.post('/add-student', (req, res) => {
     });
 });
 
-const connection = require('../db'); // Assuming you've already set up your MySQL connection in 'db.js'
+const connection = require('../db');
 
 // Route to get students
 router.get('/students', (req, res) => {
@@ -111,5 +111,47 @@ router.get('/students', (req, res) => {
         res.json(results); // Only send results, not the entire query object
     });
 });
+
+router.post('/add-students-to-ibo', (req, res) => {
+    console.log('Incoming request body:', req.body); // Log the request body
+    const { students, ibo_name } = req.body;
+
+    // Log received data
+    console.log('Students:', students);
+    console.log('IBO Name:', ibo_name);
+
+    // Validate students array
+    if (!students || !Array.isArray(students) || !students.length) {
+        return res.status(400).json({ success: false, message: 'Students array is missing or empty' });
+    }
+
+    if (!ibo_name) {
+        return res.status(400).json({ success: false, message: 'IBO name is missing' });
+    }
+
+    // Build a SQL query to update ibo_name for selected students
+    const placeholders = students.map(() => '?').join(',');
+    const query = `UPDATE student SET ibo_name = ? WHERE id_number IN (${placeholders})`;
+
+    // Prepare the parameters for the query
+    const parameters = [ibo_name, ...students];
+
+    // Log SQL query and parameters
+    console.log('SQL Query:', query);
+    console.log('Parameters:', parameters);
+
+    // Execute the query
+    db.query(query, parameters, (error, results) => {
+        if (error) {
+            console.error('Error updating students:', error);
+            return res.status(500).json({ success: false, message: 'Database error' });
+        }
+
+        // Successfully updated
+        res.json({ success: true, message: 'Students added to IBO successfully' });
+    });
+});
+
+
 
 module.exports = router;

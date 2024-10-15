@@ -171,7 +171,27 @@ body {
 }
 
 input:focus + #suggestionsList {
-  display: block; /* Show suggestions when input is focused */
+  display: block;
+}
+
+.vertical-line {
+  border-left: 1px solid gray;
+  height: 450px;
+}
+
+.added-members-container {
+  overflow-y: auto;
+  height: 22rem;
+}
+
+.remove-icon {
+  cursor: pointer;
+  color: red;
+  margin-left: 10px;
+}
+
+.member-item {
+  padding-top: 15px; /* Adjust the value as needed */
 }
 
 /* add student successful */

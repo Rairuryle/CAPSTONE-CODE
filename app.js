@@ -6,7 +6,7 @@ const exphbs = require('express-handlebars');
 const session = require('express-session');
 const authMiddleware = require('./middleware/authMiddleware'); // Import authentication middleware
 const bodyParser = require('body-parser'); // Parsing form data
-const fs = require('fs'); // File System module
+// const fs = require('fs'); // File System module
 
 dotenv.config({ path: './.env' });
 

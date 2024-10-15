@@ -224,7 +224,6 @@ router.get('/add-student-ibo', (req, res) => {
     }
 });
 
-// In /routes/pages.js
 router.get('/search-students', (req, res) => {
     const searchQuery = req.query.q;
     console.log('Search query:', searchQuery);
@@ -234,10 +233,8 @@ router.get('/search-students', (req, res) => {
     const query = `
         SELECT id_number, first_name, last_name
         FROM student
-        WHERE id_number LIKE ? 
-        OR first_name LIKE ? 
-        OR last_name LIKE ?
-        LIMIT 10`;
+        WHERE (id_number LIKE ? OR first_name LIKE ? OR last_name LIKE ?)
+        AND (ibo_name IS NULL OR ibo_name = '')`;
 
     db.query(query, [`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`], (err, results) => {
         if (err) {
@@ -248,9 +245,6 @@ router.get('/search-students', (req, res) => {
         res.json(results);
     });
 });
-
-
-
 
 
 router.get('/add-student-successful', (req, res) => {
@@ -310,7 +304,11 @@ router.get('/list', (req, res) => {
             } else {
                 // Filter students based on the selected group (either college, ABO, or IBO).
                 const filterStudents = (students, group) => {
-                    return students.filter(student => student.department_name === group || student.abo_name === group);
+                    return students.filter(student => 
+                        student.department_name === group || 
+                        student.abo_name === group || 
+                        student.ibo_name === group
+                    );
                 };
 
                 const selectedStudents = filterStudents(students, selectedGroup);
@@ -339,6 +337,7 @@ router.get('/list', (req, res) => {
         res.redirect('/login');
     }
 });
+
 
 router.get('/spr-main', (req, res) => {
     if (req.session.isAuthenticated) {
