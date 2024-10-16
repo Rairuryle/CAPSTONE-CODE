@@ -33,6 +33,7 @@ function getFlags(organization) {
         isCollegeOrSAORegister: ["CAS", "CBA", "CCSEA", "CTE", "CTHM"].includes(organization) || isSAO
     };
 }
+
 router.post('/add-student', (req, res) => {
     const {
         firstNameStudent,
@@ -152,6 +153,54 @@ router.post('/add-students-to-ibo', (req, res) => {
     });
 });
 
+// Search route to find a student
+router.get('/search', (req, res) => {
+    const searchQuery = req.query.searchStudentProfile; // This will now accept both id_number and names
+    const organization = req.session.adminData.organization;
 
+    const unrestrictedOrganizations = ["SAO", "USG", "CSO"];
+
+    if (!searchQuery) {
+        return res.status(400).json({ studentFound: false, message: 'Search query is required' });
+    }
+
+    const query = `
+        SELECT * FROM student 
+        WHERE id_number = ? 
+        OR first_name LIKE ? 
+        OR last_name LIKE ?
+    `;
+    const likeSearch = `%${searchQuery}%`; // Allow for partial matches
+
+    db.query(query, [searchQuery, likeSearch, likeSearch], (error, results) => {
+        if (error) {
+            console.error('Database error:', error);
+            return res.status(500).json({ studentFound: false });
+        }
+
+        if (results.length > 0) {
+            const studentData = results[0];
+            const departmentName = studentData.department_name;
+            const aboName = studentData.abo_name;
+            const iboName = studentData.ibo_name;
+
+            const canSearch = unrestrictedOrganizations.includes(organization) ||
+                departmentName === organization ||
+                aboName === organization ||
+                iboName === organization;
+
+            if (canSearch) {
+                req.session.departmentName = departmentName;
+                req.session.aboName = aboName;
+                req.session.iboName = iboName;
+                res.status(200).json({ studentFound: true, studentData });
+            } else {
+                res.status(403).json({ error: 'Organization mismatch' });
+            }
+        } else {
+            res.status(404).json({ studentFound: false });
+        }
+    });
+});
 
 module.exports = router;

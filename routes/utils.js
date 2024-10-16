@@ -20,6 +20,16 @@ const getUrlFlags = (url) => {
     };
 };
 
+function isLeadingOrgs(organization) {
+    const isSAO = organization === "SAO";
+    const isUSG = organization === "USG";
+    const isCSO = organization === "CSO";
+
+    const isUSGorCSOorSAO = isUSG || isCSO || isSAO;
+
+    return isUSGorCSOorSAO;
+}
+
 function isMainOrgs(organization, departmentName) {
     const isSAO = organization === "SAO";
     const isUSG = organization === "USG";
@@ -116,4 +126,4 @@ function isExtraOrgs(organization) {
     };
 }
 
-module.exports = { getUrlFlags, isMainOrgs, isExtraOrgs };
+module.exports = { getUrlFlags, isLeadingOrgs, isMainOrgs, isExtraOrgs };

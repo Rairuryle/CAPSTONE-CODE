@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mysql = require("mysql");
 const exphbs = require('express-handlebars');
-const { getUrlFlags, isMainOrgs, isExtraOrgs } = require('./utils');
+const { getUrlFlags, isLeadingOrgs, isMainOrgs, isExtraOrgs } = require('./utils');
 
 const app = express();
 
@@ -152,12 +152,14 @@ router.get('/register-successful', (req, res) => {
 router.get('/dashboard', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
+        const studentData = req.session.studentData;
         const organization = adminData.organization;
         const { isUSGorSAO } = isMainOrgs(organization);
         const { isCSOorIBO, isExtraOrgsTrue } = isExtraOrgs(organization);
 
         res.render('dashboard', {
             adminData,
+            studentData,
             isUSGorSAO,
             isCSOorIBO,
             isExtraOrgsTrue,
@@ -196,6 +198,23 @@ router.get('/add-student', (req, res) => {
     }
 });
 
+router.get('/add-student-successful', (req, res) => {
+    if (req.session.isAuthenticated) {
+        const adminData = req.session.adminData;
+        const organization = adminData.organization;
+        const { isExtraOrgsTrue } = isExtraOrgs(organization);
+
+        res.render('add-student-successful', {
+            adminData,
+            isExtraOrgsTrue,
+            currentPath: '/add-student-successful',
+            title: 'Add Student Account | LSU HEU Events and Attendance Tracking Website'
+        });
+    } else {
+        res.redirect('/login');
+    }
+});
+
 router.get('/add-student-ibo', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
@@ -224,6 +243,7 @@ router.get('/add-student-ibo', (req, res) => {
     }
 });
 
+// search students for add-student-ibo
 router.get('/search-students', (req, res) => {
     const searchQuery = req.query.q;
     console.log('Search query:', searchQuery);
@@ -246,41 +266,16 @@ router.get('/search-students', (req, res) => {
     });
 });
 
-
-router.get('/add-student-successful', (req, res) => {
-    if (req.session.isAuthenticated) {
-        const adminData = req.session.adminData;
-        const organization = adminData.organization;
-        const { isExtraOrgsTrue } = isExtraOrgs(organization);
-
-        res.render('add-student-successful', {
-            adminData,
-            isExtraOrgsTrue,
-            currentPath: '/add-student-successful',
-            title: 'Add Student Account | LSU HEU Events and Attendance Tracking Website'
-        });
-    } else {
-        res.redirect('/login');
-    }
-});
-
 router.get('/list', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const departmentName = req.session.departmentName;
 
-        const selectedGroup = req.query.groupList || organization;  // Use selected group if available, otherwise default to the admin's organization.
+        // Use selected group if available, otherwise default to the admin's organization.
+        const selectedGroup = req.query.groupList || organization;
 
-        const collegesAndABOs = {
-            CAS: ["JSWAP", "LABELS", "LSUPS", "POLISAYS"],
-            CBA: ["JFINEX", "JMEX", "JPIA"],
-            CCJE: [""],
-            CCSEA: ["ALGES", "ICpEP", "IIEE", "JIECEP", "LISSA", "PICE", "SOURCE", "UAPSA"],
-            CON: [""],
-            CTE: ["ECC", "GENTLE", "GEM-O", "LapitBayan", "LME", "SPEM", "SSS"],
-            CTHM: ["FHARO", "FTL", "SOTE"],
-        };
+        const isUSGorCSOorSAO = isLeadingOrgs(organization);
 
         const {
             isSAO,
@@ -290,6 +285,7 @@ router.get('/list', (req, res) => {
         } = isMainOrgs(organization, departmentName);
 
         const {
+            isCSO,
             isCSOorSAO,
             isCSOorIBO,
             isCSOorABOorSAO,
@@ -316,10 +312,12 @@ router.get('/list', (req, res) => {
                 res.render('list', {
                     adminData,
                     departmentName,
+                    isUSGorCSOorSAO,
                     isSAO,
                     isCollegeDepartment,
                     isUSGorSAO,
                     isCollegeOrSAO,
+                    isCSO,
                     isCSOorSAO,
                     isCSOorIBO,
                     isCSOorABOorSAO,
@@ -337,7 +335,6 @@ router.get('/list', (req, res) => {
         res.redirect('/login');
     }
 });
-
 
 router.get('/spr-main', (req, res) => {
     if (req.session.isAuthenticated) {

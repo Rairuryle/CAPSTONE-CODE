@@ -17,8 +17,9 @@
                             </div>
 
                             <div class="col d-flex align-items-center justify-content-end px-0">
-                                {{#if isUSGorSAO}}
+                                {{#if isUSGorCSOorSAO}}
                                 <form action="/list" method="GET" id="filterForm" class="d-flex w-100">
+                                    {{#if isUSGorSAO}}
                                     <select id="selectGroupListCollege"
                                         class="form-control list-dropdown border-secondary fw-bold pt-2"
                                         name="groupList">
@@ -38,6 +39,7 @@
                                         <option value="CTHM" {{#if (eq selectedGroup "CTHM" )}}selected{{/if}}>CTHM
                                         </option>
                                     </select>
+                                    {{/if}}
 
                                     <select id="selectGroupListABO"
                                         class="form-control list-dropdown border-secondary mx-2 fw-bold"

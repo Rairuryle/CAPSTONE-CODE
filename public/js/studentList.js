@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const isUSGorSAO = document.querySelector('#isUSGorSAO').value === "true";
+    const isUSGorCSOorSAO = document.querySelector('#isUSGorCSOorSAO').value === "true";
 
-    if (isUSGorSAO) {
+    if (isUSGorCSOorSAO) {
         const collegeSelect = document.getElementById('selectGroupListCollege');
         const aboSelect = document.getElementById('selectGroupListABO');
         const iboSelect = document.getElementById('selectGroupListIBO');
@@ -9,8 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Function to reset other selects and submit form
         function resetOtherSelects(selectedSelect) {
-            if (selectedSelect !== collegeSelect) {
-                collegeSelect.selectedIndex = 0; // Reset to default option
+            if (isUSGorSAO) {
+                if (selectedSelect !== collegeSelect) {
+                    collegeSelect.selectedIndex = 0; // Reset to default option
+                }
             }
             if (selectedSelect !== aboSelect) {
                 aboSelect.selectedIndex = 0; // Reset to default option
@@ -23,9 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Event listeners for each select
-        collegeSelect.addEventListener('change', function () {
-            resetOtherSelects(collegeSelect);
-        });
+        if (isUSGorSAO) {
+            collegeSelect.addEventListener('change', function () {
+                resetOtherSelects(collegeSelect);
+            });
+        }
 
         aboSelect.addEventListener('change', function () {
             resetOtherSelects(aboSelect);
@@ -129,9 +134,9 @@ document.addEventListener('DOMContentLoaded', function () {
     renderStudents(selectedStudents);
 
     const viewRecordButton = document.querySelector('.btn-view-record');
-    viewRecordButton.addEventListener('click', function() {
+    viewRecordButton.addEventListener('click', function () {
         const selectedIdNumber = selectedIDNumberContainer.innerText; // Get the selected ID number
         window.location.href = `/spr-main?id=${selectedIdNumber}`; // Redirect to spr-main with the ID in the query
     });
-    
+
 });

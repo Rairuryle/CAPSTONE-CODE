@@ -3,9 +3,10 @@
         <img src="../img/lsu-star-black.png" alt="LSU Corporate Logo" class="lsu-star-search-dashboard mx-3">
         <form class="d-flex w-50">
             <div class="input-group search-dashboard-group border w-100">
-                <input class="form-control border-0" type="search" placeholder="Search Student..." aria-label="Search">
+                <input id="searchStudentProfile" class="form-control border-0" type="search"
+                    placeholder="Search Student..." aria-label="Search">
                 <span class="input-group-text border-0 bg-white">
-                    <img src="../img/search.png" alt="Search">
+                    <img src="../img/search.png" id="searchButton" alt="Search">
                 </span>
             </div>
         </form>
@@ -15,3 +16,5 @@
         {{message}}
     </div>
 </nav>
+
+<script src="../js/searchStudentDashboard.js"></script>
