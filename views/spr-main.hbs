@@ -1,30 +1,97 @@
 <head>
-    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/spr.css">
 </head>
 
 <div class="container-fluid">
     <div class="row flex-nowrap">
-        {{> navbarDashboard}}
+        {{> navbar}}
 
         <div class="col-7 mt-3">
             {{> headerSearch}}
-            <div class="student-info">
+
+            <div class="spr-main-container mt-2">
                 {{#if student}}
-                <h2>Student Record for {{student.first_name}} {{student.last_name}}</h2>
-                <p>ID Number: {{student.id_number}}</p>
-                <p>Department: {{student.department_name}}</p>
-                <p>Course: {{student.course_name}}</p>
-                <p>Year Level: {{student.year_level}}</p>
-                <p>Exemption Status: {{student.exemption_status}}</p>
-                <p>Active Status: {{student.active_status}}</p>
-                <p>ABO: {{student.abo_name}}</p>
-                <p>IBO: {{student.ibo_name}}</p>
+
+                <div class="student-profile-container d-flex">
+                    <div class="col-6 me-2">
+                        <div class="card card-spr">
+                            <div class="card-body">
+                                <div class="card-title student-name fs-4 fw-bold mb-1">
+                                    {{student.first_name}} {{student.last_name}}
+                                </div>
+
+                                <div class="d-flex flex-wrap">
+                                    <span class="student-id-number-spr border px-3 fw-bold">{{student.id_number}}</span>
+                                    <span class="student-status-spr border mx-1 px-3">{{student.active_status}}</span>
+                                    <span class="student-status-spr border px-3">{{student.exemption_status}}</span>
+                                </div>
+
+                                <div class="d-flex flex-wrap mt-3 align-items-center">
+                                    <div class="d-flex flex-column">
+                                        <span class="student-profile-small-text">Department</span>
+                                        <span class="fs-5 fw-bold py-1">{{student.department_name}}</span>
+                                    </div>
+                                    <div class="vl ms-3"></div>
+                                    <div class="d-flex flex-column ms-3">
+                                        <span class="student-profile-small-text">Course</span>
+                                        <span class="fs-5 fw-bold py-1">{{student.course_name}}</span>
+                                    </div>
+                                    <div class="d-flex flex-column ms-4">
+                                        <span class="student-profile-small-text">Year</span>
+                                        <span class="fs-5 fw-bold py-1">{{student.year_level}}</span>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-wrap align-items-center mt-2">
+                                    <span class="org-text org-small-text me-2">ABO</span>
+                                    <span class="org-spr border px-3">{{student.abo_name}}</span>
+
+                                    <span class="org-text org-small-text ms-4 me-2">IBO</span>
+                                    <span class="org-spr border px-3">{{student.ibo_name}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="card card-spr">
+                            <div class="card-body">
+                                <div class="points-container d-flex justify-content-center flex-wrap">
+                                    <div class="col-5">
+                                        <div
+                                            class="semestral-points-container d-flex flex-wrap flex-column text-center border border-black fw-bold p-1 h-100">
+                                            <div
+                                                class="semester-indicator d-flex justify-content-center align-items-center py-3 px-2">
+                                                1ST SEMESTER
+                                            </div>
+                                            <div class="points-indicator fs-1 py-4">
+                                                50
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-5 ms-3">
+                                        <div
+                                            class="total-points-container d-flex flex-wrap flex-column text-center border border-black fw-bold p-1 h-100">
+                                            <div
+                                                class="total-points-indicator d-flex justify-content-center align-items-center py-3 px-2">
+                                                TOTAL POINTS ACQUIRED
+                                            </div>
+                                            <div class="points-indicator fs-1 py-4">
+                                                80
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {{else}}
                 <p>No student record found.</p>
                 {{/if}}
             </div>
-
-
+            <div class="participation-record-table-container"></div>
         </div>
 
         <div class="col mt-3">

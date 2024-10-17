@@ -1,0 +1,71 @@
+body {
+  background-color: var(--gray-shade);
+}
+
+.student-name {
+  text-transform: uppercase;
+}
+
+.student-id-number-spr {
+  background-color: #efefef;
+  border: 1px solid rgba(33, 58, 49, 0.3);
+}
+
+.student-status-spr,
+.org-spr {
+  background-color: var(--main-green);
+  color: white;
+}
+
+.student-id-number-spr,
+.student-status-spr {
+  border-radius: 20px;
+  font-size: 0.7rem;
+  padding-top: 0.2rem;
+  padding: 0.3rem;
+}
+
+.student-profile-small-text {
+  font-size: 0.8rem;
+}
+
+.vl {
+  border-left: 1px solid gray;
+  height: 35px;
+}
+
+.org-text {
+  line-height: 5px;
+}
+
+.org-small-text {
+  font-size: 0.7rem;
+}
+
+.org-spr {
+  border-radius: 20px;
+  font-size: 0.9rem;
+  padding: 0.1rem;
+  padding-top: 0.2rem;
+}
+
+.card-spr {
+  min-height: 100%;
+}
+
+.semestral-points-container,
+.total-points-container {
+  border-radius: 10px;
+  flex: 1; /* Makes the containers take up equal height */
+}
+
+.semester-indicator,
+.total-points-indicator {
+  border-bottom: 1px dashed gray;
+  font-size: 0.9rem;
+  flex: 1; /* Makes both indicators take equal height */
+}
+
+.points-container .col-5 {
+  flex: 1;
+}

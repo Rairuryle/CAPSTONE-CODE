@@ -2,74 +2,10 @@ body {
   background-color: var(--gray-shade);
 }
 
-.col-sidebar-container {
-  height: 97vh;
-  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2), 0 4px 2px 0 rgba(0, 0, 0, 0.19);
-  border-radius: 20px;
-  overflow: hidden;
-  position: sticky;
-  top: 0;
-}
-
-.title-group-sidebar img {
-  margin-left: -0.5rem;
-}
-
-.title-logo-dashboard {
-  font-size: 0.6rem;
-}
-
-.nav-pills {
-  margin-left: -1.5rem;
-}
-
-.nav-item img {
-  width: 1.3rem;
-}
-
-.nav-item-title {
-  width: 40rem;
-}
-
-.nav-item.active,
-.nav-item-title:hover {
-  background-color: var(--gray-shade);
-}
-
-.nav-item.active .title-link-sidebar {
-  opacity: 1;
-}
-
-.title-link-sidebar {
-  font-size: 0.9rem;
-  color: var(--main-green);
-  opacity: 0.7;
-}
-
-.search-dashboard-container {
-  border-radius: 10px;
-  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.19);
-}
-
-.lsu-star-search-dashboard {
-  width: 4rem;
-}
-
-.search-dashboard-group,
 .search-list-group,
 .search-ibo-group {
   border-radius: 10px;
   overflow: hidden;
-}
-
-.search-dashboard-group input {
-  letter-spacing: 1px;
-  background-color: #fcfcfc;
-  font-size: 0.8rem;
-}
-
-.header-profile-dashboard img {
-  width: 1.9rem;
 }
 
 /* dashboard */

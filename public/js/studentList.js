@@ -118,17 +118,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     sortSelect.addEventListener('change', function () {
         const sortValue = this.value;
+
         if (sortValue === "Name") {
             filteredStudents.sort((a, b) => a.last_name.localeCompare(b.last_name));
         } else if (sortValue === "ID Number") {
-            filteredStudents.sort((a, b) => a.id_number - b.id_number);
+            // Sort as string comparison (in case the id_number is stored as a string)
+            filteredStudents.sort((a, b) => a.id_number.localeCompare(b.id_number));
         } else if (sortValue === "Course") {
             filteredStudents.sort((a, b) => a.course_name.localeCompare(b.course_name));
         } else if (sortValue === "Year") {
             filteredStudents.sort((a, b) => a.year_level - b.year_level);
         }
+
         renderStudents(filteredStudents);
     });
+
 
     searchInput.addEventListener('input', filterStudents);
     renderStudents(selectedStudents);

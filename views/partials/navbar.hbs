@@ -1,3 +1,7 @@
+<head>
+    <link rel="stylesheet" href="../css/navbar.css">
+</head>
+
 <div class="col-sidebar-container col-auto col-2 px-sm-2 px-0 ms-2 bg-white mt-2">
     <div class="col-sidebar d-flex flex-column align-items-center align-items-sm-start mx-3 mt-4 pt-2 pb-5 h-100">
         <div
@@ -113,6 +117,32 @@
             </li>
 
             <li class="nav-item nav-item-title mt-auto ps-4">
+                {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-edit'))}}
+                {{#if (eq currentPath '/spr-main')}}
+                <a href="/spr-edit" class="nav-link align-middle px-0">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-container me-4">
+                            <img src="../img/edit-mode.png" alt="Edit Mode Icon">
+                        </div>
+                        <div class="text-container flex-grow-1 pt-1">
+                            <span class="title-link-sidebar title-link-sidebar-dashboard fw-bold">EDIT MODE</span>
+                        </div>
+                    </div>
+                </a>
+                {{else}}
+                <a href="/spr-main" class="nav-link align-middle px-0">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-container me-4">
+                            <img src="../img/edit-mode.png" alt="Edit Mode Icon">
+                        </div>
+                        <div class="text-container flex-grow-1 pt-1">
+                            <span class="title-link-sidebar title-link-sidebar-dashboard fw-bold">EXIT EDIT MODE</span>
+                        </div>
+                    </div>
+                </a>
+                {{/if}}
+                {{/if}}
+
                 <a href="/logout" class="nav-link align-middle px-0">
                     <div class="d-flex align-items-center">
                         <div class="icon-container me-4">
