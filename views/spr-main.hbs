@@ -6,12 +6,13 @@
     <div class="row flex-nowrap">
         {{> navbar}}
 
-        <div class="col-7 mt-3">
+        <div class="col-7 spr-parent-container mt-3 ms-1">
             {{> headerSearch}}
 
-            <div class="spr-main-container mt-2">
-                {{#if student}}
+            {{#if student}}
 
+            <div class="spr-main-container mt-2">
+                {{!-- student profile --}}
                 <div class="student-profile-container d-flex">
                     <div class="col-6 me-2">
                         <div class="card card-spr">
@@ -22,7 +23,7 @@
 
                                 <div class="d-flex flex-wrap">
                                     <span class="student-id-number-spr border px-3 fw-bold">{{student.id_number}}</span>
-                                    <span class="student-status-spr border mx-1 px-3">{{student.active_status}}</span>
+                                    <span class="student-status-spr border mx-2 px-3">{{student.active_status}}</span>
                                     <span class="student-status-spr border px-3">{{student.exemption_status}}</span>
                                 </div>
 
@@ -87,11 +88,243 @@
                         </div>
                     </div>
                 </div>
-                {{else}}
-                <p>No student record found.</p>
-                {{/if}}
             </div>
-            <div class="participation-record-table-container"></div>
+
+            {{!-- spr table --}}
+            <div class="participation-record-table-container mt-4">
+                {{!-- attendance table --}}
+                <div class="attendance-table-container">
+                    <span class="attendance-table-label border px-4 py-2">ATTENDANCE</span>
+                    <div class="attendance-table-header d-flex fw-bold mt-3 border-bottom border-2 pb-1">
+                        <div class="col-3 ps-2">
+                            <span>DATE</span>
+                        </div>
+                        <div class="col-2">
+                            <span>AM</span>
+                        </div>
+                        <div class="col-3">
+                            <span>PM</span>
+                        </div>
+                        <div class="col-4">
+                            <span>OFFICER IN-CHARGE</span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="attendance-table-information d-flex align-items-center border-bottom border-2 mt-3 pb-3">
+                        <div class="col-3 ps-2">
+                            <span>August 8, 2024</span>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-check form-check-inline ms-2">
+                                <input class="form-check-input" type="checkbox" id="attendanceCheckboxAMIN" value="IN">
+                                <label class="form-check-label" for="attendanceCheckboxAMIN">IN</label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-check form-check-inline ms-2">
+                                <input class="form-check-input" type="checkbox" id="attendanceCheckboxPMIN" value="IN">
+                                <label class="form-check-label" for="attendanceCheckboxPMIN">IN</label>
+                            </div>
+                            <div class="form-check form-check-inline ms-2">
+                                <input class="form-check-input" type="checkbox" id="attendanceCheckboxPMOUT"
+                                    value="OUT">
+                                <label class="form-check-label" for="attendanceCheckboxPMOUT">OUT</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <span class="officer-in-charge officer-attendance-recorder ps-3">{{adminData.first_name}}
+                                {{adminData.last_name}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{!-- activity table --}}
+                <div class="activity-table-container mt-4">
+                    <span class="activity-table-label border px-4 py-2">ACTIVITIES</span>
+                    <div class="activity-actions-row d-flex mt-3 w-100">
+                        <select name="selectEventDay" id="selectEventDay"
+                            class="select-event-day border-gray bg-transparent fw-bold">
+                            <option disabled="disabled" selected="selected">Select Day</option>
+                            <option value="Day 1">Day 1</option>
+                            <option value="Day 2">Day 2</option>
+                        </select>
+                        <div class="d-flex align-items-center ms-auto">
+                            <img src="../img/document-filter.png" alt="Sort" class="ps-2" style="height: 20px;">
+                            <select id="sortActivities"
+                                class="form-control sort-activities bg-transparent border-0 fw-bold ps-1"
+                                name="sortActivities">
+                                <option value="" disabled selected>Sort By</option>
+                                <option value="Activity" {{#if (eq selectedSort "Activity" )}}selected{{/if}}>Sort By
+                                    Activity
+                                </option>
+                                <option value="Date" {{#if (eq selectedSort "Date" )}}selected{{/if}}>Sort
+                                    By Date</option>
+                                <option value="Role" {{#if (eq selectedSort "Role" )}}selected{{/if}}>Sort By
+                                    Role</option>
+                                <option value="Points" {{#if (eq selectedSort "Points" )}}selected{{/if}}>Sort By Points
+                                </option>
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <form class="w-100" id="searchForm">
+                                <div class="input-group search-activity-group border border-gray border-3"
+                                    style="max-height:2rem;">
+                                    <input class="form-control border-0 search-activity-field" type="search"
+                                        aria-label="Search" id="searchInput">
+                                    <span class="input-group-text border-0">
+                                        <img src="../img/search.png" alt="Search">
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="activity-table-header d-flex fw-bold mt-3 border-bottom pb-1">
+                        <div class="col-4 col-activity-name">
+                            <span>ACTIVITY NAME</span>
+                        </div>
+                        <div class="col-2 ms-4 me-1">
+                            <span>DATE</span>
+                        </div>
+                        <div class="col-3 col-role">
+                            <span>ROLE</span>
+                        </div>
+                        <div class="col-1 ms-4 me-2">
+                            <span>POINTS</span>
+                        </div>
+                        <div class="col-2 officer-activity-recorder-header">
+                            <span>OFFICER IN-CHARGE</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-table-information-container mt-2">
+                        <div
+                            class="activity-table-information activity-table-information-odd d-flex align-items-center py-2">
+                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
+                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
+                            <div class="col-3 col-role">
+                                <select name="assignRole" id="assignRole" class="assign-role">
+                                    <option disabled="disabled" selected="selected">Assign Role</option>
+                                    <option value="INDIV. Participant">INDIV. Participant</option>
+                                    <option value="TEAM Participant">Team Participant</option>
+                                    <option value="PROG. Spectator">PROG. Spectator</option>
+                                    <option value="OTH. Spectator">OTH. Spectator</option>
+                                </select>
+                            </div>
+                            <div class="col-1 ms-4 me-2">5</div>
+                            <div class="col-2">
+                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
+                                    {{adminData.last_name}}</span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="activity-table-information activity-table-information-even d-flex align-items-center py-2">
+                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
+                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
+                            <div class="col-3 col-role">
+                                <select name="assignRole" id="assignRole" class="assign-role">
+                                    <option disabled="disabled" selected="selected">Assign Role</option>
+                                    <option value="INDIV. Participant">INDIV. Participant</option>
+                                    <option value="TEAM Participant">Team Participant</option>
+                                    <option value="PROG. Spectator">PROG. Spectator</option>
+                                    <option value="OTH. Spectator">OTH. Spectator</option>
+                                </select>
+                            </div>
+                            <div class="col-1 ms-4 me-2">5</div>
+                            <div class="col-2">
+                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
+                                    {{adminData.last_name}}</span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="activity-table-information activity-table-information-odd d-flex align-items-center py-2">
+                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
+                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
+                            <div class="col-3 col-role">
+                                <select name="assignRole" id="assignRole" class="assign-role">
+                                    <option disabled="disabled" selected="selected">Assign Role</option>
+                                    <option value="INDIV. Participant">INDIV. Participant</option>
+                                    <option value="TEAM Participant">Team Participant</option>
+                                    <option value="PROG. Spectator">PROG. Spectator</option>
+                                    <option value="OTH. Spectator">OTH. Spectator</option>
+                                </select>
+                            </div>
+                            <div class="col-1 ms-4 me-2">5</div>
+                            <div class="col-2">
+                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
+                                    {{adminData.last_name}}</span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="activity-table-information activity-table-information-even d-flex align-items-center py-2">
+                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
+                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
+                            <div class="col-3 col-role">
+                                <select name="assignRole" id="assignRole" class="assign-role">
+                                    <option disabled="disabled" selected="selected">Assign Role</option>
+                                    <option value="INDIV. Participant">INDIV. Participant</option>
+                                    <option value="TEAM Participant">Team Participant</option>
+                                    <option value="PROG. Spectator">PROG. Spectator</option>
+                                    <option value="OTH. Spectator">OTH. Spectator</option>
+                                </select>
+                            </div>
+                            <div class="col-1 ms-4 me-2">5</div>
+                            <div class="col-2">
+                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
+                                    {{adminData.last_name}}</span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="activity-table-information activity-table-information-odd d-flex align-items-center py-2">
+                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
+                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
+                            <div class="col-3 col-role">
+                                <select name="assignRole" id="assignRole" class="assign-role">
+                                    <option disabled="disabled" selected="selected">Assign Role</option>
+                                    <option value="INDIV. Participant">INDIV. Participant</option>
+                                    <option value="TEAM Participant">Team Participant</option>
+                                    <option value="PROG. Spectator">PROG. Spectator</option>
+                                    <option value="OTH. Spectator">OTH. Spectator</option>
+                                </select>
+                            </div>
+                            <div class="col-1 ms-4 me-2">5</div>
+                            <div class="col-2">
+                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
+                                    {{adminData.last_name}}</span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="activity-table-information activity-table-information-even d-flex align-items-center py-2">
+                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
+                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
+                            <div class="col-3 col-role">
+                                <select name="assignRole" id="assignRole" class="assign-role">
+                                    <option disabled="disabled" selected="selected">Assign Role</option>
+                                    <option value="INDIV. Participant">INDIV. Participant</option>
+                                    <option value="TEAM Participant">Team Participant</option>
+                                    <option value="PROG. Spectator">PROG. Spectator</option>
+                                    <option value="OTH. Spectator">OTH. Spectator</option>
+                                </select>
+                            </div>
+                            <div class="col-1 ms-4 me-2">5</div>
+                            <div class="col-2">
+                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
+                                    {{adminData.last_name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{else}}
+            <p>No student record found.</p>
+            {{/if}}
         </div>
 
         <div class="col mt-3">

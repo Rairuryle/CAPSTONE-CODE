@@ -203,10 +203,12 @@ router.get('/add-student-successful', (req, res) => {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const { isExtraOrgsTrue } = isExtraOrgs(organization);
+        const addedStudentID = req.query.addedStudentID;
 
         res.render('add-student-successful', {
             adminData,
             isExtraOrgsTrue,
+            addedStudentID,
             currentPath: '/add-student-successful',
             title: 'Add Student Account | LSU HEU Events and Attendance Tracking Website'
         });

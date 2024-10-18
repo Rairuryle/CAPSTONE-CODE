@@ -85,7 +85,8 @@ router.post('/add-student', (req, res) => {
                     });
                 } else {
                     console.log(results);
-                    res.redirect('/add-student-successful');
+                    // Pass the student ID to the success page
+                    res.redirect(`/add-student-successful?addedStudentID=${IDNumberStudent}`);
                 }
             });
         } else {
@@ -98,6 +99,7 @@ router.post('/add-student', (req, res) => {
         }
     });
 });
+
 
 const connection = require('../db');
 

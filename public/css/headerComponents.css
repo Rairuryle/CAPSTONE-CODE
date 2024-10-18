@@ -19,5 +19,10 @@
 }
 
 .header-profile-dashboard img {
-  width: 1.9rem;
+  width: 1.5rem;
+}
+
+.officer-name {
+  font-size: 0.9rem;
+  text-align: right;
 }

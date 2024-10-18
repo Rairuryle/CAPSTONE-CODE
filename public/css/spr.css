@@ -2,6 +2,10 @@ body {
   background-color: var(--gray-shade);
 }
 
+.spr-parent-container {
+  min-width: 52rem;
+}
+
 .student-name {
   text-transform: uppercase;
 }
@@ -12,13 +16,16 @@ body {
 }
 
 .student-status-spr,
-.org-spr {
+.org-spr,
+.attendance-table-label,
+.activity-table-label {
   background-color: var(--main-green);
   color: white;
 }
 
 .student-id-number-spr,
-.student-status-spr {
+.student-status-spr,
+.attendance-table-label {
   border-radius: 20px;
   font-size: 0.7rem;
   padding-top: 0.2rem;
@@ -51,6 +58,8 @@ body {
 
 .card-spr {
   min-height: 100%;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.1);
 }
 
 .semestral-points-container,
@@ -63,9 +72,108 @@ body {
 .total-points-indicator {
   border-bottom: 1px dashed gray;
   font-size: 0.9rem;
-  flex: 1; /* Makes both indicators take equal height */
+  flex: 1;
 }
 
 .points-container .col-5 {
   flex: 1;
+}
+
+.attendance-table-label,
+.activity-table-label {
+  border-radius: 10px;
+  padding: 0.1rem;
+  padding-top: 0.2rem;
+  font-size: 0.8rem;
+}
+
+.form-check-input {
+  font-size: 1.2rem;
+  margin-top: 0;
+  border: 2px solid var(--main-green);
+}
+
+.form-check-input:checked {
+  background-color: var(--main-green);
+  border-color: var(--main-green);
+}
+
+.form-check-label {
+  font-size: 0.8rem;
+}
+
+.officer-in-charge {
+  border: 2px solid var(--main-green);
+  border-radius: 20px;
+  display: block;
+}
+
+.select-event-day {
+  border-radius: 10px;
+  font-size: 0.8rem;
+  padding-left: 1rem;
+  padding-right: 1.8rem;
+  background-image: url("../img/arrow-dropdown.png");
+  background-position: right 0.5rem center;
+  background-size: 0.9rem 0.9rem;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.sort-activities {
+  font-size: 0.8rem;
+}
+
+.search-activity-group {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.search-activity-field {
+  background-color: var(--gray-shade);
+  font-size: 0.8rem;
+  padding-top: 0.1rem;
+}
+
+.input-group-text img {
+  height: 1rem;
+}
+.attendance-table-header,
+.activity-table-header,
+.attendance-table-information,
+.activity-table-information {
+  font-size: 0.9rem;
+}
+
+.activity-table-information-even {
+  background-color: rgba(60, 98, 85, 0.15);
+}
+
+.col-activity-name {
+  width: 11rem;
+}
+
+.col-role {
+  width: 9.5rem;
+}
+
+.assign-role {
+  border-radius: 20px;
+  padding: 0.3rem;
+  width: 9.5rem;
+}
+
+.officer-activity-recorder-header,
+.officer-activity-recorder {
+  width: 13rem;
+}
+
+.officer-activity-recorder,
+.officer-attendance-recorder {
+  padding-top: 0.2rem;
+  padding-bottom: 0.1rem;
+  line-height: 15px;
 }
