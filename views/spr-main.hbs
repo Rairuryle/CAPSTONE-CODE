@@ -14,7 +14,7 @@
             <div class="spr-main-container mt-2">
                 {{!-- student profile --}}
                 <div class="student-profile-container d-flex">
-                    <div class="col-6 me-2">
+                    <div class="col-6 me-1">
                         <div class="card card-spr">
                             <div class="card-body">
                                 <div class="card-title student-name fs-4 fw-bold mb-1">
@@ -155,7 +155,7 @@
                                 class="form-control sort-activities bg-transparent border-0 fw-bold ps-1"
                                 name="sortActivities">
                                 <option value="" disabled selected>Sort By</option>
-                                <option value="Activity" {{#if (eq selectedSort "Activity" )}}selected{{/if}}>Sort By
+                                <option value="Activity" {{#if (eq selectedSort "Activity" )}}selected{{/if}}> Sort By
                                     Activity
                                 </option>
                                 <option value="Date" {{#if (eq selectedSort "Date" )}}selected{{/if}}>Sort
@@ -204,7 +204,7 @@
                             <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
                             <div class="col-2 ms-4 me-1">November 4, 2024</div>
                             <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role">
+                                <select name="assignRole" id="assignRole" class="assign-role indiv-participant">
                                     <option disabled="disabled" selected="selected">Assign Role</option>
                                     <option value="INDIV. Participant">INDIV. Participant</option>
                                     <option value="TEAM Participant">Team Participant</option>
@@ -212,7 +212,7 @@
                                     <option value="OTH. Spectator">OTH. Spectator</option>
                                 </select>
                             </div>
-                            <div class="col-1 ms-4 me-2">5</div>
+                            <div class="col-1 ms-4 me-2">15 points</div>
                             <div class="col-2">
                                 <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
                                     {{adminData.last_name}}</span>
@@ -224,7 +224,7 @@
                             <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
                             <div class="col-2 ms-4 me-1">November 4, 2024</div>
                             <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role">
+                                <select name="assignRole" id="assignRole" class="assign-role team-participant">
                                     <option disabled="disabled" selected="selected">Assign Role</option>
                                     <option value="INDIV. Participant">INDIV. Participant</option>
                                     <option value="TEAM Participant">Team Participant</option>
@@ -232,7 +232,7 @@
                                     <option value="OTH. Spectator">OTH. Spectator</option>
                                 </select>
                             </div>
-                            <div class="col-1 ms-4 me-2">5</div>
+                            <div class="col-1 ms-4 me-2">20 points</div>
                             <div class="col-2">
                                 <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
                                     {{adminData.last_name}}</span>
@@ -244,7 +244,7 @@
                             <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
                             <div class="col-2 ms-4 me-1">November 4, 2024</div>
                             <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role">
+                                <select name="assignRole" id="assignRole" class="assign-role prog-spectator">
                                     <option disabled="disabled" selected="selected">Assign Role</option>
                                     <option value="INDIV. Participant">INDIV. Participant</option>
                                     <option value="TEAM Participant">Team Participant</option>
@@ -252,7 +252,7 @@
                                     <option value="OTH. Spectator">OTH. Spectator</option>
                                 </select>
                             </div>
-                            <div class="col-1 ms-4 me-2">5</div>
+                            <div class="col-1 ms-4 me-2">10 points</div>
                             <div class="col-2">
                                 <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
                                     {{adminData.last_name}}</span>
@@ -264,7 +264,7 @@
                             <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
                             <div class="col-2 ms-4 me-1">November 4, 2024</div>
                             <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role">
+                                <select name="assignRole" id="assignRole" class="assign-role oth-spectator">
                                     <option disabled="disabled" selected="selected">Assign Role</option>
                                     <option value="INDIV. Participant">INDIV. Participant</option>
                                     <option value="TEAM Participant">Team Participant</option>
@@ -272,47 +272,7 @@
                                     <option value="OTH. Spectator">OTH. Spectator</option>
                                 </select>
                             </div>
-                            <div class="col-1 ms-4 me-2">5</div>
-                            <div class="col-2">
-                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
-                                    {{adminData.last_name}}</span>
-                            </div>
-                        </div>
-
-                        <div
-                            class="activity-table-information activity-table-information-odd d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
-                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
-                            <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role">
-                                    <option disabled="disabled" selected="selected">Assign Role</option>
-                                    <option value="INDIV. Participant">INDIV. Participant</option>
-                                    <option value="TEAM Participant">Team Participant</option>
-                                    <option value="PROG. Spectator">PROG. Spectator</option>
-                                    <option value="OTH. Spectator">OTH. Spectator</option>
-                                </select>
-                            </div>
-                            <div class="col-1 ms-4 me-2">5</div>
-                            <div class="col-2">
-                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
-                                    {{adminData.last_name}}</span>
-                            </div>
-                        </div>
-
-                        <div
-                            class="activity-table-information activity-table-information-even d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
-                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
-                            <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role">
-                                    <option disabled="disabled" selected="selected">Assign Role</option>
-                                    <option value="INDIV. Participant">INDIV. Participant</option>
-                                    <option value="TEAM Participant">Team Participant</option>
-                                    <option value="PROG. Spectator">PROG. Spectator</option>
-                                    <option value="OTH. Spectator">OTH. Spectator</option>
-                                </select>
-                            </div>
-                            <div class="col-1 ms-4 me-2">5</div>
+                            <div class="col-1 ms-4 me-2">5 points</div>
                             <div class="col-2">
                                 <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
                                     {{adminData.last_name}}</span>
@@ -327,8 +287,246 @@
             {{/if}}
         </div>
 
-        <div class="col mt-3">
+        <div class="col col-sidebar mt-3">
             {{> headerOfficer}}
+
+            <div class="sidebar d-flex flex-column">
+                {{!-- events --}}
+                <div class="events-container p-2">
+                    <div class="events-select-actions">
+                        <select name="selectEventScope" id="selectEventScope"
+                            class="select-event-scope w-100 px-3 py-2 fw-bold">
+                            <option disabled="disabled" selected="selected">Select Event</option>
+                            {{!-- institutional select --}}
+                            {{#if isUSGorCollegeOrSAO}}
+                            <option value="Institutional">INSTITUTIONAL</option>
+                            {{/if}}
+
+                            {{!-- start of college select --}}
+                            {{#if isCollegeOrSAO}}
+                            <optgroup label="College Departments">
+                                {{#if (or (eq organization "CAS") (eq organization "SAO"))}}
+                                <option value="CAS">CAS</option>
+                                {{/if}}
+                                {{#if (or (eq organization "CBA") (eq organization "SAO"))}}
+                                <option value="CBA">CBA</option>
+                                {{/if}}
+                                {{#if (or (eq organization "CCJE") (eq organization "SAO"))}}
+                                <option value="CCJE">CCJE</option>
+                                {{/if}}
+                                {{#if (or (eq organization "CCSEA") (eq organization "SAO"))}}
+                                <option value="CCSEA">CCSEA</option>
+                                {{/if}}
+                                {{#if (or (eq organization "CON") (eq organization "SAO"))}}
+                                <option value="CON">CON</option>
+                                {{/if}}
+                                {{#if (or (eq organization "CTE") (eq organization "SAO"))}}
+                                <option value="CTE">CTE</option>
+                                {{/if}}
+                                {{#if (or (eq organization "CTHM") (eq organization "SAO"))}}
+                                <option value="CTHM">CTHM</option>
+                                {{/if}}
+                            </optgroup>
+                            {{/if}}
+                            {{!-- end of college select --}}
+
+                            {{!-- start of abo select --}}
+                            {{#if isCSOorABOorSAO}}
+                            {{!-- start of cas abo --}}
+                            {{#if isCAS}}
+                            <optgroup label="CAS ABO">
+                                {{#if (or (eq organization "JSWAP") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="JSWAP">JSWAP</option>
+                                {{/if}}
+                                {{#if (or (eq organization "LABELS") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="LABELS">LABELS</option>
+                                {{/if}}
+                                {{#if (or (eq organization "LSUPS") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="LSUPS">LSUPS</option>
+                                {{/if}}
+                                {{#if (or (eq organization "POLISAYS") (eq organization "CSO") (eq organization
+                                "SAO"))}}
+                                <option value="POLISAYS">POLISAYS</option>
+                                {{/if}}
+                            </optgroup>
+                            {{/if}}
+                            {{!-- end of cas abo --}}
+
+                            {{!-- start of cba abo --}}
+                            {{#if isCBA}}
+                            <optgroup label="CBA ABO">
+                                {{#if (or (eq organization "JFINEX") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="JFINEX">JFINEX</option>
+                                {{/if}}
+                                {{#if (or (eq organization "JMEX") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="JMEX">JMEX</option>
+                                {{/if}}
+                                {{#if (or (eq organization "JPIA") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="JPIA">JPIA</option>
+                                {{/if}}
+                            </optgroup>
+                            {{/if}}
+                            {{!-- end of cba abo --}}
+
+                            {{!-- start of ccsea abo --}}
+                            {{#if isCCSEA}}
+                            <optgroup label="CCSEA ABO">
+                                {{#if (or (eq organization "ALGES") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="ALGES">ALGES</option>
+                                {{/if}}
+                                {{#if (or (eq organization "ICpEP") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="ICpEP">ICpEP</option>
+                                {{/if}}
+                                {{#if (or (eq organization "IIEE") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="IIEE">IIEE</option>
+                                {{/if}}
+                                {{#if (or (eq organization "JIECEP") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="JIECEP">JIECEP</option>
+                                {{/if}}
+                                {{#if (or (eq organization "LISSA") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="LISSA">LISSA</option>
+                                {{/if}}
+                                {{#if (or (eq organization "PICE") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="PICE">PICE</option>
+                                {{/if}}
+                                {{#if (or (eq organization "SOURCE") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="SOURCE">SOURCE</option>
+                                {{/if}}
+                                {{#if (or (eq organization "UAPSA") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="UAPSA">UAPSA</option>
+                                {{/if}}
+                            </optgroup>
+                            {{/if}}
+                            {{!-- end of ccsea abo --}}
+
+                            {{!-- start of cte abo --}}
+                            {{#if isCTE}}
+                            <optgroup label="CTE ABO">
+                                {{#if (or (eq organization "ECC") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="ECC">ECC</option>
+                                {{/if}}
+                                {{#if (or (eq organization "GENTLE") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="GENTLE">GENTLE</option>
+                                {{/if}}
+                                {{#if (or (eq organization "GEM-O") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="GEM-O">GEM-O</option>
+                                {{/if}}
+                                {{#if (or (eq organization "LapitBayan") (eq organization "CSO") (eq organization
+                                "SAO"))}}
+                                <option value="LapitBayan">LapitBayan</option>
+                                {{/if}}
+                                {{#if (or (eq organization "LME") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="LME">LME</option>
+                                {{/if}}
+                                {{#if (or (eq organization "SPEM") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="SPEM">SPEM</option>
+                                {{/if}}
+                                {{#if (or (eq organization "SSS") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="SSS">SSS</option>
+                                {{/if}}
+                            </optgroup>
+                            {{/if}}
+                            {{!-- end of cte abo --}}
+
+                            {{!-- start of cthm abo --}}
+                            {{#if isCTHM}}
+                            <optgroup label="CTHM ABO">
+                                {{#if (or (eq organization "FHARO") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="FHARO">FHARO</option>
+                                {{/if}}
+                                {{#if (or (eq organization "FTL") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="FTL">FTL</option>
+                                {{/if}}
+                                {{#if (or (eq organization "SOTE") (eq organization "CSO") (eq organization "SAO"))}}
+                                <option value="SOTE">SOTE</option>
+                                {{/if}}
+                            </optgroup>
+                            {{/if}}
+                            {{!-- end of cthm abo --}}
+                            {{/if}}
+                            {{!-- end of abo select --}}
+                            <option value="IBO">IBO</option>
+                        </select>
+                        <div class="timeframe-select d-flex mt-2">
+                            <div class="col">
+                                <select name="selectYear" id="selectYear"
+                                    class="select-year fw-bold border border-black">
+                                    <option disabled="disabled" selected="selected">Select Year</option>
+                                    <option value="2024">2024-2025</option>
+                                    <option value="2025">2025-2026</option>
+                                    <option value="2026">2026-2027</option>
+                                    <option value="2027">2027-2028</option>
+                                </select>
+                            </div>
+                            <div class="col ms-2">
+                                <select name="selectSem" id="selectSem" class="select-sem fw-bold border border-black">
+                                    <option disabled="disabled" selected="selected">Select Sem</option>
+                                    <option value="1st Sem">1st Sem</option>
+                                    <option value="2nd Sem">2nd Sem</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="events-display-container d-flex flex-column justify-content-center mt-3">
+                        <h5 class="fw-bold text-center">INSTITUTIONAL EVENTS</h5>
+                        <div class="card event-card mb-1">
+                            <div class="card-body event-card-body py-2">
+                                <span class="card-title fw-bold">PASIMULA</span> <br>
+                                <span class="card-text card-event-date">August 5-8</span>
+                            </div>
+                        </div>
+                        <div class="card event-card mb-1">
+                            <div class="card-body event-card-body py-2">
+                                <span class="card-title fw-bold">PANAGHUGPONG</span> <br>
+                                <span class="card-text card-event-date">August 5-8</span>
+                            </div>
+                        </div>
+                        <div class="card event-card mb-1">
+                            <div class="card-body event-card-body py-2">
+                                <span class="card-title fw-bold">PANAGLAMBIGIT</span> <br>
+                                <span class="card-text card-event-date">August 5-8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{!-- import file --}}
+                <div class="import-file-container mt-3">
+                    <div class="card import-file-card">
+                        <div class="card-body import-file-card-body d-flex justify-content-center align-items-center">
+                            <img src="../img/import.png" alt="Import File Icon">
+                            <span class="px-2 import-file-text">IMPORT FILE</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{!-- points --}}
+                <div class="points-container mt-3">
+                    <div class="card points-card">
+                        <div class="card-body points-card-body">
+                            <div class="row d-flex align-items-center justify-content-center">
+                                <div class="col d-flex flex-column align-items-center justify-content-center">
+                                    <span class="text-center fw-bold activity-subtotal-text">Activity<br>Subtotal</span>
+                                    <h3 class="fw-bold mt-2">13</h3>
+                                </div>
+                                <div class="col-1 d-flex justify-content-center m-0 p-0">
+                                    <div class="vl"></div>
+                                </div>
+                                <div class="col d-flex flex-column align-items-center justify-content-center">
+                                    <span
+                                        class="text-center fw-bold attendance-subtotal-text">Attendance<br>Subtotal</span>
+                                    <h3 class="fw-bold mt-2">13</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <button class="btn btn-success btn-verify-points w-75 m-auto mt-1">Verify
+                                    Points</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -113,6 +113,7 @@ router.get('/register', (req, res) => {
 
         res.render('register', {
             adminData,
+            organization,
             departmentName,
             isSAO,
             isCollegeDepartment,
@@ -187,6 +188,7 @@ router.get('/add-student', (req, res) => {
 
         res.render('add-student', {
             adminData,
+            organization,
             isUSG,
             isExtraOrgsTrue,
             currentPath: '/add-student',
@@ -207,6 +209,7 @@ router.get('/add-student-successful', (req, res) => {
 
         res.render('add-student-successful', {
             adminData,
+            organization,
             isExtraOrgsTrue,
             addedStudentID,
             currentPath: '/add-student-successful',
@@ -233,6 +236,7 @@ router.get('/add-student-ibo', (req, res) => {
 
         res.render('add-student-ibo', {
             adminData,
+            organization,
             isUSG,
             isCSOorIBO,
             isExtraOrgsTrue,
@@ -302,9 +306,9 @@ router.get('/list', (req, res) => {
             } else {
                 // Filter students based on the selected group (either college, ABO, or IBO).
                 const filterStudents = (students, group) => {
-                    return students.filter(student => 
-                        student.department_name === group || 
-                        student.abo_name === group || 
+                    return students.filter(student =>
+                        student.department_name === group ||
+                        student.abo_name === group ||
                         student.ibo_name === group
                     );
                 };
@@ -313,6 +317,7 @@ router.get('/list', (req, res) => {
 
                 res.render('list', {
                     adminData,
+                    organization,
                     departmentName,
                     isUSGorCSOorSAO,
                     isSAO,
@@ -342,7 +347,56 @@ router.get('/spr-main', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
-        const { isCSOorIBO, isExtraOrgsTrue } = isExtraOrgs(organization);
+        const departmentName = req.session.departmentName;
+        console.log('Department Name:', departmentName);
+
+        const isUSGorCSOorSAO = isLeadingOrgs(organization);
+
+        const {
+            isSAO,
+            isCollegeDepartment,
+            isUSGorSAO,
+            isCollegeOrSAO,
+            isUSGorCollegeOrSAO,
+            isMainOrgsTrue
+        } = isMainOrgs(organization, departmentName);
+
+        const {
+            isCSO,
+            isCSOorSAO,
+            isCSOorIBO,
+            isCSOorABOorSAO,
+            isCSOorIBOorSAO,
+            isExtraOrgsTrue
+        } = isExtraOrgs(organization);
+
+        const CAS_ABO = ["JSWAP", "LABELS", "LSUPS", "POLISAYS"];
+        const CBA_ABO = ["JFINEX", "JMEX", "JPIA"];
+        const CCSEA_ABO = ["ALGES", "ICpEP", "IIEE", "JIECEP", "LISSA", "PICE", "SOURCE", "UAPSA"];
+        const CTE_ABO = ["ECC", "GENTLE", "GEM-O", "LapitBayan", "LME", "SPEM", "SSS"];
+        const CTHM_ABO = ["FHARO", "FTL", "SOTE"];
+
+        const CAS_College = ["CAS"];
+        const CBA_College = ["CBA"];
+        const CCJE_College = ["CCJE"];
+        const CCSEA_College = ["CCSEA"];
+        const CON_College = ["CON"];
+        const CTE_College = ["CTE"];
+        const CTHM_College = ["CTHM"];
+
+        const isCAS = CAS_ABO.includes(organization) || isCSOorSAO;
+        const isCBA = CBA_ABO.includes(organization) || isCSOorSAO;
+        const isCCSEA = CCSEA_ABO.includes(organization) || isCSOorSAO;
+        const isCTE = CTE_ABO.includes(organization) || isCSOorSAO;
+        const isCTHM = CTHM_ABO.includes(organization) || isCSOorSAO;
+
+        const isCASCollege = CAS_College.includes(organization) || isSAO;
+        const isCBACollege = CBA_College.includes(organization) || isSAO;
+        const isCCJECollege = CCJE_College.includes(organization) || isSAO;
+        const isCCSEACollege = CCSEA_College.includes(organization) || isSAO;
+        const isCONCollege = CON_College.includes(organization) || isSAO;
+        const isCTECollege = CTE_College.includes(organization) || isSAO;
+        const isCTHMCollege = CTHM_College.includes(organization) || isSAO;
 
         const idNumber = req.query.id;
         console.log('ID Number:', idNumber);
@@ -358,8 +412,26 @@ router.get('/spr-main', (req, res) => {
                     const student = results[0];
                     res.render('spr-main', {
                         adminData,
+                        organization,
+                        departmentName,
+                        isUSGorCSOorSAO,
+                        isSAO,
+                        isCollegeDepartment,
+                        isUSGorSAO,
+                        isCollegeOrSAO,
+                        isUSGorCollegeOrSAO,
+                        isMainOrgsTrue,
+                        isCSO,
+                        isCSOorSAO,
                         isCSOorIBO,
+                        isCSOorABOorSAO,
+                        isCSOorIBOorSAO,
                         isExtraOrgsTrue,
+                        isCAS,
+                        isCBA,
+                        isCCSEA,
+                        isCTE,
+                        isCTHM,
                         student, // Pass the student data to the spr-main template
                         currentPath: '/spr-main',
                         title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
@@ -368,7 +440,20 @@ router.get('/spr-main', (req, res) => {
                     // Render the page without student data if not found
                     res.render('spr-main', {
                         adminData,
+                        organization,
+                        departmentName,
+                        isUSGorCSOorSAO,
+                        isSAO,
+                        isCollegeDepartment,
+                        isUSGorSAO,
+                        isCollegeOrSAO,
+                        isUSGorCollegeOrSAO,
+                        isMainOrgsTrue,
+                        isCSO,
+                        isCSOorSAO,
                         isCSOorIBO,
+                        isCSOorABOorSAO,
+                        isCSOorIBOorSAO,
                         isExtraOrgsTrue,
                         student: null,
                         currentPath: '/spr-main',
@@ -380,7 +465,20 @@ router.get('/spr-main', (req, res) => {
             // Render the page without student data if no ID is provided
             res.render('spr-main', {
                 adminData,
+                organization,
+                departmentName,
+                isUSGorCSOorSAO,
+                isSAO,
+                isCollegeDepartment,
+                isUSGorSAO,
+                isCollegeOrSAO,
+                isUSGorCollegeOrSAO,
+                isMainOrgsTrue,
+                isCSO,
+                isCSOorSAO,
                 isCSOorIBO,
+                isCSOorABOorSAO,
+                isCSOorIBOorSAO,
                 isExtraOrgsTrue,
                 student: null,
                 currentPath: '/spr-main',

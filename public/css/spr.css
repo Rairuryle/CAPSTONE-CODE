@@ -57,6 +57,7 @@ body {
 }
 
 .card-spr {
+  max-width: 99.5%;
   min-height: 100%;
   border-radius: 10px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.1);
@@ -163,6 +164,7 @@ body {
 .assign-role {
   border-radius: 20px;
   padding: 0.3rem;
+  padding-top: 0.4rem;
   width: 9.5rem;
 }
 
@@ -173,7 +175,127 @@ body {
 
 .officer-activity-recorder,
 .officer-attendance-recorder {
-  padding-top: 0.2rem;
-  padding-bottom: 0.1rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.2rem;
   line-height: 15px;
+}
+
+.team-participant,
+.prog-spectator {
+  background-color: red;
+}
+
+.indiv-participant,
+.oth-spectator {
+  background-color: blue;
+}
+
+.indiv-participant,
+.team-participant,
+.prog-spectator,
+.oth-spectator {
+  color: white;
+  border: 0;
+}
+
+.col-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 1000;
+}
+
+.col-sidebar {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.events-container {
+  border: 1px dashed black;
+  border-radius: 15px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 21.5rem;
+}
+
+.events-display-container {
+  flex-shrink: 1;
+}
+
+.events-container * {
+  max-width: 100%;
+}
+
+.select-event-scope {
+  background-color: var(--main-green);
+  color: white;
+  border-radius: 8px;
+  background-image: url("../img/arrow-dropdown-white.png");
+  background-position: right 0.5rem center;
+  background-size: 0.9rem 0.9rem;
+  background-repeat: no-repeat;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select-year,
+.select-sem {
+  color: var(--main-green);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  padding: 0.3rem 2.2rem 0.2rem 1rem;
+  background-image: url("../img/arrow-dropdown.png");
+  background-position: right 0.5rem center;
+  background-size: 0.9rem 0.9rem;
+  background-repeat: no-repeat;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.event-card {
+  border-radius: 15px;
+  position: relative;
+  box-shadow: 0 2px 1px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.card-event-date {
+  color: gray;
+  font-size: 0.9rem;
+}
+
+.event-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 15px;
+  height: 100%;
+  background-color: #4fc49a;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.import-file-card,
+.points-card {
+  border: 1px dashed black;
+  border-radius: 15px;
+}
+
+.import-file-card img {
+  width: 1.1rem;
+}
+
+.import-file-text {
+  font-size: 0.8rem;
+}
+
+.activity-subtotal-text,
+.attendance-subtotal-text {
+  font-size: 0.9rem;
+}
+
+.btn-verify-points {
+  background-color: var(--main-green);
 }

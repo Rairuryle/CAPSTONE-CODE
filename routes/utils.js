@@ -40,6 +40,7 @@ function isMainOrgs(organization, departmentName) {
     const isUSGorSAO = isUSG || isSAO;
     const isCollegeOrSAO = isCollege || isSAO;
     const isMainOrgsTrue = isUSG || isSAO || isCollege;
+    const isUSGorCollegeOrSAO = isUSG || isCollegeDepartment || isSAO;
 
     return {
         isUSG,
@@ -49,6 +50,7 @@ function isMainOrgs(organization, departmentName) {
         isUSGorCollege,
         isUSGorSAO,
         isCollegeOrSAO,
+        isUSGorCollegeOrSAO,
         isMainOrgsTrue
     };
 }
