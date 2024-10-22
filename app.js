@@ -50,6 +50,19 @@ app.engine('hbs', exphbs.engine({
         },
         json: (context) => {
             return JSON.stringify(context);
+        },
+        // Date helper to format a date as MM-DD-YYYY
+        formatDate: function (date) {
+            const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
+            return new Date(date).toLocaleDateString('en-US', options);
+        },
+        // Helper to calculate the number of days between two dates
+        calculateDays: function (startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
         }
     }
 }));
@@ -76,6 +89,8 @@ app.use('/', require('./routes/pages'));
 app.use('/auth', require('./routes/auth'));
 app.use('/dashboard', authMiddleware);
 app.use('/student', require('./routes/student'));
+app.use('/event', require('./routes/event')); // This mounts the event routes under /event
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 

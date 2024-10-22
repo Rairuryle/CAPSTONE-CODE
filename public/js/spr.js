@@ -1,4 +1,0 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Your code here
-    console.log('Document is fully loaded');
-});

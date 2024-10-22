@@ -1,0 +1,38 @@
+<div class="modal fade" id="addEventsModal" tabindex="-1" aria-labelledby="addEventsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0 pb-2">
+                <h1 class="modal-title fw-bold fs-3 mt-1" id="addEventsModalLabel">
+                    {{#if isUSG}}
+                    Add <span id="eventScopeModal" name="event_scope">Institutional</span> Event
+                    {{else}}
+                    Add <span id="eventScopeModal" name="event_scope">{{adminData.organization}}</span> Event
+                    {{/if}}
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body mt-0 pt-0">
+                <form action="/event/add-event" method="POST">
+                    <input type="hidden" name="student_id" value="{{student.id_number}}">
+                    <input type="hidden" id="event_scope" name="event_scope"
+                        value="{{#if isUSG}}INSTITUTIONAL{{else}}{{adminData.organization}}{{/if}}">
+                    <div class="event-information">
+                        <input type="text" id="eventNameInput" name="event_name"
+                            class="event-name-input event-input text-center p-2 ps-3 w-100" placeholder="Event Name"
+                            required>
+                        <div class="event-date-container d-flex justify-content-between align-items-center mt-2 w-100">
+                            <input type="date" id="startDateEvent" name="event_date_start"
+                                class="eventdate add-event-inputs event-input text-center p-2 ps-3 w-100" required />
+                            <p class="date-dash text-center pt-2 px-3">-</p>
+                            <input type="date" id="endDateEvent" name="event_date_end"
+                                class="eventdate add-event-inputs event-input text-center p-2 ps-3 w-100" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0">
+                        <button type="submit" class="btn btn-success btn-add-event-submit px-5">Add Event</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

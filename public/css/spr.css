@@ -198,14 +198,14 @@ body {
   border: 0;
 }
 
-.col-sidebar {
+.col-spr-sidebar {
   position: sticky;
   top: 0;
   height: 100vh;
   z-index: 1000;
 }
 
-.col-sidebar {
+.col-spr-sidebar {
   width: 100%;
   overflow-x: hidden;
 }
@@ -239,6 +239,10 @@ body {
   -moz-appearance: none;
 }
 
+.automatic-event-scope {
+  cursor: default;
+}
+
 .select-year,
 .select-sem {
   color: var(--main-green);
@@ -252,6 +256,14 @@ body {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+.event-scope-title {
+  font-size: 1.1rem;
+}
+
+.add-event-img {
+  width: 1.2rem;
 }
 
 .event-card {
@@ -298,4 +310,14 @@ body {
 
 .btn-verify-points {
   background-color: var(--main-green);
+}
+
+.event-input {
+  border: 1px solid gray;
+  border-radius: 20px;
+}
+
+.btn-add-event-submit {
+  background-color: var(--main-green);
+  border-radius: 20px;
 }

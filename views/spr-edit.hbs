@@ -317,7 +317,18 @@
                     </div>
 
                     <div class="events-display-container d-flex flex-column justify-content-center mt-3">
-                        <h5 class="fw-bold text-center"><span id="eventScopeLabel"></span> EVENTS</h5>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h5 class="fw-bold event-scope-title ps-1">
+                                {{#if isUSG}} <span>INSTITUTIONAL</span> EVENTS
+                                {{else}}
+                                <span class="text-uppercase">{{adminData.organization}}</span> EVENTS
+                                {{/if}}
+
+                            </h5>
+                            <button class="btn m-0 p-0" data-bs-toggle="modal" data-bs-target="#addEventsModal">
+                                <img src="../img/add-spr.png" alt="Add Event" class="add-event-img pb-3">
+                            </button>
+                        </div>
                         {{#each events}}
                         <div class="card event-card mb-1">
                             <div class="card-body event-card-body py-2">
@@ -368,7 +379,12 @@
                 </div>
             </div>
         </div>
+
+        {{!-- modals --}}
+        {{> modals/addEventModal}}
+
+
     </div>
 </div>
 
-<script src="../js/sprMain.js"></script>
+<script src="../js/sprEdit.js"></script>

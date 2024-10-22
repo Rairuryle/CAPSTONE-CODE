@@ -128,4 +128,14 @@ function isExtraOrgs(organization) {
     };
 }
 
-module.exports = { getUrlFlags, isLeadingOrgs, isMainOrgs, isExtraOrgs };
+function otherCombinations(organization) {
+    const isSAO = organization === "SAO";
+    const isCollegeDepartment = ["CAS", "CBA", "CCJE", "CCSEA", "CON", "CTE", "CTHM"].includes(organization);
+    const isCSO = organization === "CSO";
+
+    const isCollegeOrCSOorSAO = isSAO || isCollegeDepartment || isCSO;
+
+    return isCollegeOrCSOorSAO;
+}
+
+module.exports = { getUrlFlags, isLeadingOrgs, isMainOrgs, isExtraOrgs, otherCombinations };

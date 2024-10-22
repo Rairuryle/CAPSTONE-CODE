@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mysql = require("mysql");
 const exphbs = require('express-handlebars');
-const { getUrlFlags, isLeadingOrgs, isMainOrgs, isExtraOrgs } = require('./utils');
+const { getUrlFlags, isLeadingOrgs, isMainOrgs, isExtraOrgs, otherCombinations } = require('./utils');
 
 const app = express();
 
@@ -277,6 +277,7 @@ router.get('/list', (req, res) => {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const departmentName = req.session.departmentName;
+        console.log('Department Name:', departmentName);
 
         // Use selected group if available, otherwise default to the admin's organization.
         const selectedGroup = req.query.groupList || organization;
@@ -343,6 +344,19 @@ router.get('/list', (req, res) => {
     }
 });
 
+// Helper function to fetch events (you can place this outside of both routes)
+const fetchEvents = (callback) => {
+    // Adjust the query to fetch events sorted by date in descending order
+    const eventQuery = 'SELECT * FROM event ORDER BY event_date_start DESC'; // Add ORDER BY clause
+    db.query(eventQuery, (err, eventResults) => {
+        if (err) {
+            console.error('Error fetching events:', err);
+            return callback([]); // Return an empty array in case of error
+        }
+        callback(eventResults);
+    });
+};
+
 router.get('/spr-main', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
@@ -353,6 +367,88 @@ router.get('/spr-main', (req, res) => {
         const isUSGorCSOorSAO = isLeadingOrgs(organization);
 
         const {
+            isUSG,
+            isSAO,
+            isCollegeDepartment,
+            isUSGorSAO,
+            isCollegeOrSAO,
+            isUSGorCollegeOrSAO,
+            isMainOrgsTrue
+        } = isMainOrgs(organization, departmentName);
+
+        const {
+            isCSO,
+            isCSOorSAO,
+            isCSOorIBO,
+            isCSOorABOorSAO,
+            isCSOorIBOorSAO,
+            isExtraOrgsTrue
+        } = isExtraOrgs(organization);
+
+        const idNumber = req.query.id;
+        console.log('ID Number:', idNumber);
+
+        const renderMainPage = (student, events) => {
+            res.render('spr-main', {
+                adminData,
+                organization,
+                departmentName,
+                isUSGorCSOorSAO,
+                isCollegeOrCSOorSAO: otherCombinations(organization),
+                isUSG,
+                isSAO,
+                isCollegeDepartment,
+                isUSGorSAO,
+                isCollegeOrSAO,
+                isUSGorCollegeOrSAO,
+                isMainOrgsTrue,
+                isCSO,
+                isCSOorSAO,
+                isCSOorIBO,
+                isCSOorABOorSAO,
+                isCSOorIBOorSAO,
+                isExtraOrgsTrue,
+                student,
+                events, // Pass the events to the template
+                currentPath: '/spr-main',
+                title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
+            });
+        };
+
+        if (idNumber) {
+            const query = 'SELECT * FROM student WHERE id_number = ?';
+            db.query(query, [idNumber], (err, results) => {
+                if (err) {
+                    return res.status(500).send('Database error');
+                }
+
+                const student = results.length > 0 ? results[0] : null;
+
+                // Fetch events and then render the page
+                fetchEvents((events) => {
+                    renderMainPage(student, events);
+                });
+            });
+        } else {
+            // If no ID number, fetch events and render the page without student data
+            fetchEvents((events) => {
+                renderMainPage(null, events);
+            });
+        }
+    } else {
+        res.redirect('/login');
+    }
+});
+
+
+router.get('/spr-edit', (req, res) => {
+    if (req.session.isAuthenticated) {
+        const adminData = req.session.adminData;
+        const organization = adminData.organization;
+        const departmentName = req.session.departmentName;
+
+        const {
+            isUSG,
             isSAO,
             isCollegeDepartment,
             isUSGorSAO,
@@ -376,98 +472,24 @@ router.get('/spr-main', (req, res) => {
         const CTE_ABO = ["ECC", "GENTLE", "GEM-O", "LapitBayan", "LME", "SPEM", "SSS"];
         const CTHM_ABO = ["FHARO", "FTL", "SOTE"];
 
-        const CAS_College = ["CAS"];
-        const CBA_College = ["CBA"];
-        const CCJE_College = ["CCJE"];
-        const CCSEA_College = ["CCSEA"];
-        const CON_College = ["CON"];
-        const CTE_College = ["CTE"];
-        const CTHM_College = ["CTHM"];
-
+        // Check if organization belongs to certain groups
         const isCAS = CAS_ABO.includes(organization) || isCSOorSAO;
         const isCBA = CBA_ABO.includes(organization) || isCSOorSAO;
         const isCCSEA = CCSEA_ABO.includes(organization) || isCSOorSAO;
         const isCTE = CTE_ABO.includes(organization) || isCSOorSAO;
         const isCTHM = CTHM_ABO.includes(organization) || isCSOorSAO;
 
-        const isCASCollege = CAS_College.includes(organization) || isSAO;
-        const isCBACollege = CBA_College.includes(organization) || isSAO;
-        const isCCJECollege = CCJE_College.includes(organization) || isSAO;
-        const isCCSEACollege = CCSEA_College.includes(organization) || isSAO;
-        const isCONCollege = CON_College.includes(organization) || isSAO;
-        const isCTECollege = CTE_College.includes(organization) || isSAO;
-        const isCTHMCollege = CTHM_College.includes(organization) || isSAO;
-
         const idNumber = req.query.id;
         console.log('ID Number:', idNumber);
 
-        if (idNumber) {
-            const query = 'SELECT * FROM student WHERE id_number = ?';
-            db.query(query, [idNumber], (err, results) => {
-                if (err) {
-                    return res.status(500).send('Database error');
-                }
-
-                if (results.length > 0) {
-                    const student = results[0];
-                    res.render('spr-main', {
-                        adminData,
-                        organization,
-                        departmentName,
-                        isUSGorCSOorSAO,
-                        isSAO,
-                        isCollegeDepartment,
-                        isUSGorSAO,
-                        isCollegeOrSAO,
-                        isUSGorCollegeOrSAO,
-                        isMainOrgsTrue,
-                        isCSO,
-                        isCSOorSAO,
-                        isCSOorIBO,
-                        isCSOorABOorSAO,
-                        isCSOorIBOorSAO,
-                        isExtraOrgsTrue,
-                        isCAS,
-                        isCBA,
-                        isCCSEA,
-                        isCTE,
-                        isCTHM,
-                        student, // Pass the student data to the spr-main template
-                        currentPath: '/spr-main',
-                        title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
-                    });
-                } else {
-                    // Render the page without student data if not found
-                    res.render('spr-main', {
-                        adminData,
-                        organization,
-                        departmentName,
-                        isUSGorCSOorSAO,
-                        isSAO,
-                        isCollegeDepartment,
-                        isUSGorSAO,
-                        isCollegeOrSAO,
-                        isUSGorCollegeOrSAO,
-                        isMainOrgsTrue,
-                        isCSO,
-                        isCSOorSAO,
-                        isCSOorIBO,
-                        isCSOorABOorSAO,
-                        isCSOorIBOorSAO,
-                        isExtraOrgsTrue,
-                        student: null,
-                        currentPath: '/spr-main',
-                        title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
-                    });
-                }
-            });
-        } else {
-            // Render the page without student data if no ID is provided
-            res.render('spr-main', {
+        const renderEditPage = (student, events) => {
+            res.render('spr-edit', {
                 adminData,
                 organization,
                 departmentName,
-                isUSGorCSOorSAO,
+                isUSGorCSOorSAO: isLeadingOrgs(organization),
+                isCollegeOrCSOorSAO: otherCombinations(organization),
+                isUSG,
                 isSAO,
                 isCollegeDepartment,
                 isUSGorSAO,
@@ -480,16 +502,55 @@ router.get('/spr-main', (req, res) => {
                 isCSOorABOorSAO,
                 isCSOorIBOorSAO,
                 isExtraOrgsTrue,
-                student: null,
-                currentPath: '/spr-main',
-                title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
+                isCAS,
+                isCBA,
+                isCCSEA,
+                isCTE,
+                isCTHM,
+                student,
+                events,
+                currentPath: '/spr-edit',
+                title: 'Student Participation Record Edit Mode | LSU HEU Events and Attendance Tracking Website'
+            });
+        };
+
+        const fetchEvents = (callback) => {
+            // Adjust the query to fetch events sorted by date in descending order
+            const eventQuery = 'SELECT * FROM event ORDER BY event_date_start DESC'; // Add ORDER BY clause
+            db.query(eventQuery, (err, eventResults) => {
+                if (err) {
+                    console.error('Error fetching events:', err);
+                    return callback([]); // Return an empty array in case of error
+                }
+                callback(eventResults);
+            });
+        };
+
+
+        if (idNumber) {
+            const query = 'SELECT * FROM student WHERE id_number = ?';
+            db.query(query, [idNumber], (err, results) => {
+                if (err) {
+                    return res.status(500).send('Database error');
+                }
+
+                const student = results.length > 0 ? results[0] : null;
+
+                // Fetch events and then render the page
+                fetchEvents((events) => {
+                    renderEditPage(student, events);
+                });
+            });
+        } else {
+            // If no ID number, fetch events and render the page without student data
+            fetchEvents((events) => {
+                renderEditPage(null, events);
             });
         }
     } else {
         res.redirect('/login');
     }
 });
-
 
 // router.get('/university-events-admin', (req, res) => {
 //     if (req.session.isAuthenticated) {

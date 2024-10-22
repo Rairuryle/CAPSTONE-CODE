@@ -119,7 +119,8 @@
             <li class="nav-item nav-item-title mt-auto ps-4">
                 {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-edit'))}}
                 {{#if (eq currentPath '/spr-main')}}
-                <a href="/spr-edit" class="nav-link align-middle px-0">
+                {{#unless isCSOorSAO}}
+                <a href="/spr-edit?id={{student.id_number}}" class="nav-link align-middle px-0">
                     <div class="d-flex align-items-center">
                         <div class="icon-container me-3">
                             <img src="../img/edit-mode.png" alt="Edit Mode Icon">
@@ -129,8 +130,9 @@
                         </div>
                     </div>
                 </a>
+                {{/unless}}
                 {{else}}
-                <a href="/spr-main" class="nav-link align-middle px-0">
+                <a href="/spr-main?id={{student.id_number}}" class="nav-link align-middle px-0">
                     <div class="d-flex align-items-center">
                         <div class="icon-container me-3">
                             <img src="../img/edit-mode.png" alt="Edit Mode Icon">
