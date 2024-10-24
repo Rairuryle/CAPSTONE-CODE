@@ -293,6 +293,7 @@ router.get('/list', (req, res) => {
 
         const {
             isCSO,
+            isABOorIBO,
             isCSOorSAO,
             isCSOorIBO,
             isCSOorABOorSAO,
@@ -326,6 +327,7 @@ router.get('/list', (req, res) => {
                     isUSGorSAO,
                     isCollegeOrSAO,
                     isCSO,
+                    isABOorIBO,
                     isCSOorSAO,
                     isCSOorIBO,
                     isCSOorABOorSAO,
@@ -346,8 +348,7 @@ router.get('/list', (req, res) => {
 
 // Helper function to fetch events (you can place this outside of both routes)
 const fetchEvents = (callback) => {
-    // Adjust the query to fetch events sorted by date in descending order
-    const eventQuery = 'SELECT * FROM event ORDER BY event_date_start DESC'; // Add ORDER BY clause
+    const eventQuery = 'SELECT * FROM event ORDER BY event_date_start DESC';
     db.query(eventQuery, (err, eventResults) => {
         if (err) {
             console.error('Error fetching events:', err);
@@ -357,12 +358,49 @@ const fetchEvents = (callback) => {
     });
 };
 
+const filterEvents = (events, departmentName, aboName, iboName, selectedScope) => {
+    const institutionalEvents = events.filter(event => event.event_scope === 'INSTITUTIONAL');
+    const collegeEvents = events.filter(event => event.event_scope === departmentName);
+    const aboEvents = events.filter(event => event.event_scope === aboName);
+    const iboEvents = events.filter(event => event.event_scope === iboName);
+
+    // Determine which events to return based on selectedScope
+    let filteredEvents;
+    if (selectedScope === 'INSTITUTIONAL') {
+        filteredEvents = institutionalEvents;
+    } else if (selectedScope === departmentName) {
+        filteredEvents = collegeEvents;
+    } else if (selectedScope === aboName) {
+        filteredEvents = aboEvents;
+    } else if (selectedScope === iboName) {
+        filteredEvents = iboEvents;
+    } else {
+        // Default to show all events if no scope selected
+        filteredEvents = events;
+    }
+
+    return {
+        institutionalEvents,
+        collegeEvents,
+        aboEvents,
+        iboEvents,
+        filteredEvents // Include the filtered events for use in the view
+    };
+};
+
+
+
+// Route for spr-main
 router.get('/spr-main', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const departmentName = req.session.departmentName;
+        const aboName = req.session.aboName;
+        const iboName = req.session.iboName;
         console.log('Department Name:', departmentName);
+        console.log('ABO:', aboName);
+        console.log('IBO:', iboName);
 
         const isUSGorCSOorSAO = isLeadingOrgs(organization);
 
@@ -378,6 +416,7 @@ router.get('/spr-main', (req, res) => {
 
         const {
             isCSO,
+            isABOorIBO,
             isCSOorSAO,
             isCSOorIBO,
             isCSOorABOorSAO,
@@ -388,7 +427,14 @@ router.get('/spr-main', (req, res) => {
         const idNumber = req.query.id;
         console.log('ID Number:', idNumber);
 
+        const selectedScope = req.query.scope || '';
+
+
         const renderMainPage = (student, events) => {
+            console.log('Selected Scope:', selectedScope);
+
+            const { filteredEvents } = filterEvents(events, departmentName, aboName, iboName, selectedScope);
+
             res.render('spr-main', {
                 adminData,
                 organization,
@@ -403,13 +449,14 @@ router.get('/spr-main', (req, res) => {
                 isUSGorCollegeOrSAO,
                 isMainOrgsTrue,
                 isCSO,
+                isABOorIBO,
                 isCSOorSAO,
                 isCSOorIBO,
                 isCSOorABOorSAO,
                 isCSOorIBOorSAO,
                 isExtraOrgsTrue,
                 student,
-                events, // Pass the events to the template
+                filteredEvents, // Pass the filtered events to the template
                 currentPath: '/spr-main',
                 title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
             });
@@ -440,12 +487,18 @@ router.get('/spr-main', (req, res) => {
     }
 });
 
-
+// Route for spr-edit
 router.get('/spr-edit', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const departmentName = req.session.departmentName;
+        const aboName = req.session.aboName;
+        const iboName = req.session.iboName;
+
+        console.log('Department Name', departmentName);
+        console.log('ABO:', aboName);
+        console.log('IBO:', iboName);
 
         const {
             isUSG,
@@ -472,7 +525,6 @@ router.get('/spr-edit', (req, res) => {
         const CTE_ABO = ["ECC", "GENTLE", "GEM-O", "LapitBayan", "LME", "SPEM", "SSS"];
         const CTHM_ABO = ["FHARO", "FTL", "SOTE"];
 
-        // Check if organization belongs to certain groups
         const isCAS = CAS_ABO.includes(organization) || isCSOorSAO;
         const isCBA = CBA_ABO.includes(organization) || isCSOorSAO;
         const isCCSEA = CCSEA_ABO.includes(organization) || isCSOorSAO;
@@ -483,6 +535,10 @@ router.get('/spr-edit', (req, res) => {
         console.log('ID Number:', idNumber);
 
         const renderEditPage = (student, events) => {
+            const selectedScope = req.query.scope || ''; // Get the selected event scope from the query parameter
+            console.log('Selected Scope:', selectedScope);
+            const { filteredEvents } = filterEvents(events, departmentName, aboName, iboName, selectedScope);
+
             res.render('spr-edit', {
                 adminData,
                 organization,
@@ -508,24 +564,11 @@ router.get('/spr-edit', (req, res) => {
                 isCTE,
                 isCTHM,
                 student,
-                events,
+                filteredEvents, // Pass the filtered events to the template
                 currentPath: '/spr-edit',
                 title: 'Student Participation Record Edit Mode | LSU HEU Events and Attendance Tracking Website'
             });
         };
-
-        const fetchEvents = (callback) => {
-            // Adjust the query to fetch events sorted by date in descending order
-            const eventQuery = 'SELECT * FROM event ORDER BY event_date_start DESC'; // Add ORDER BY clause
-            db.query(eventQuery, (err, eventResults) => {
-                if (err) {
-                    console.error('Error fetching events:', err);
-                    return callback([]); // Return an empty array in case of error
-                }
-                callback(eventResults);
-            });
-        };
-
 
         if (idNumber) {
             const query = 'SELECT * FROM student WHERE id_number = ?';
@@ -551,6 +594,7 @@ router.get('/spr-edit', (req, res) => {
         res.redirect('/login');
     }
 });
+
 
 // router.get('/university-events-admin', (req, res) => {
 //     if (req.session.isAuthenticated) {
