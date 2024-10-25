@@ -317,9 +317,9 @@
                     </div>
 
                     <div class="events-display-container d-flex flex-column justify-content-center mt-3">
-                        <h5 class="fw-bold text-center"><span id="eventScopeLabel"></span> EVENTS</h5>
+                        <h5 class="fw-bold text-center"><span id="eventScopeLabel"></span></h5>
                         {{#each filteredEvents}}
-                        <div class="card event-card mb-1" data-scope="{{this.event_scope}}">
+                        <div class="card event-card mb-1" data-scope="{{this.event_scope}}" style="display:none;">
                             <div class="card-body event-card-body py-2">
                                 <span class="card-title fw-bold">{{this.event_name}}</span> <br>
                                 <span class="card-text card-event-date">

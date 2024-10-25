@@ -142,6 +142,7 @@ body {
 .input-group-text img {
   height: 1rem;
 }
+
 .attendance-table-header,
 .activity-table-header,
 .attendance-table-information,
@@ -220,6 +221,10 @@ body {
 
 .events-display-container {
   flex-shrink: 1;
+}
+
+.event-scope-label {
+  font-size: 1.15rem;
 }
 
 .events-container * {
@@ -320,4 +325,24 @@ body {
 .btn-add-event-submit {
   background-color: var(--main-green);
   border-radius: 20px;
+}
+
+.to-verify-dropdown {
+  border-radius: 20px;
+  background-image: url("../img/arrow-dropdown.png");
+  background-position: right 0.5rem center;
+  background-size: 0.9rem 0.9rem;
+  background-repeat: no-repeat;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.event-date,
+.activity-date-in-event {
+  border-radius: 20px;
+}
+
+.add-more-activities:hover {
+  background-color: rgb(241, 240, 240);
 }

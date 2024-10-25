@@ -1,95 +1,65 @@
-const selectEventScope = document.getElementById('selectEventScope');
-const eventScopeAutomatic = document.getElementById('eventScopeAutomatic');
-const eventScopeLabel = document.getElementById('eventScopeLabel');
+document.addEventListener('DOMContentLoaded', function () {
+    const isCollegeOrCSOorSAO = document.querySelector('#isCollegeOrCSOorSAO').value === "true";
+    const isUSG = document.querySelector('#isUSG').value === "true";
 
-// Function to update the label
-function updateEventScopeLabel(value) {
-    eventScopeLabel.textContent = value.toUpperCase();
-}
+    function handleSelectEventScope() {
+        document.getElementById('selectEventScope').addEventListener('change', function () {
+            const selectedScope = this.value;
+            const eventScopeLabel = document.getElementById('eventScopeLabel');
+            const eventCards = document.querySelectorAll('.event-card');
+    
+            console.log('Selected Scope: ', selectedScope);
+    
+            // Update the label to display the selected scope or hide it when no scope is selected
+            if (selectedScope) {
+                eventScopeLabel.textContent = selectedScope.toUpperCase() + ' EVENTS';
+            } else {
+                eventScopeLabel.textContent = ''; // Hide the label when no scope is selected
+            }
+    
+            // Show or hide event cards based on the selected scope
+            eventCards.forEach(card => {
+                const eventScope = card.getAttribute('data-scope');
+    
+                // Show cards matching the selected scope or hide all if no scope is selected
+                if (selectedScope && eventScope === selectedScope) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }    
 
-// Check for automatic event scope (when there's no dropdown, just input field)
-if (eventScopeAutomatic) {
-    updateEventScopeLabel(eventScopeAutomatic.value);
-}
-
-// Handle select dropdown change
-if (selectEventScope) {
-    selectEventScope.addEventListener('change', function () {
-        const selectedValue = selectEventScope.value;
-        updateEventScopeLabel(selectedValue);
-    });
-}
-
-// Function to filter event cards based on event scope
-function filterEventCards(event_scope) {
-    const eventCards = document.querySelectorAll('.event-card');
-
-    eventCards.forEach(card => {
-        const eventScope = card.getAttribute('data-scope');
-
-        if (!event_scope || eventScope === event_scope) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
-const isCollegeOrCSOorSAO = document.querySelector('#isCollegeOrCSOorSAO').value === "true";
-const isUSG = document.querySelector('#isUSG').value === "true";
-
-function handleSelectEventScope() {
-    document.getElementById('selectEventScope').addEventListener('change', function () {
-        const selectedScope = this.value;
+    function handleUSGOrOtherScope() {
         const eventScopeLabel = document.getElementById('eventScopeLabel');
         const eventCards = document.querySelectorAll('.event-card');
+        const adminOrganization = document.getElementById('adminOrganization').textContent;
 
-        console.log('Selected Scope: ', selectedScope);
-        console.log('Event Scope Label: ', eventScopeLabel);
+        let scope;
+        if (isUSG) {
+            scope = 'INSTITUTIONAL';
+        } else {
+            scope = adminOrganization;
+        }
 
-        // Update the label to display the selected scope
-        eventScopeLabel.textContent = selectedScope ? selectedScope : 'All';
+        // Update the label
+        eventScopeLabel.textContent = scope.toUpperCase() + ' EVENTS';
 
         eventCards.forEach(card => {
             const eventScope = card.getAttribute('data-scope');
 
-            if (!selectedScope || eventScope === selectedScope) {
-                card.style.display = 'block'; 
+            if (eventScope === scope) {
+                card.style.display = 'block';
             } else {
                 card.style.display = 'none';
             }
         });
-    });
-}
-
-function handleUSGOrOtherScope() {
-    const eventScopeLabel = document.getElementById('eventScopeLabel');
-    const eventCards = document.querySelectorAll('.event-card');
-    const adminOrganization = document.getElementById('adminOrganization').textContent;
-
-    let scope;
-    if (isUSG) {
-        scope = 'INSTITUTIONAL';
-    } else {
-        scope = adminOrganization;
     }
 
-    // Update the label
-    eventScopeLabel.textContent = scope;
-
-    eventCards.forEach(card => {
-        const eventScope = card.getAttribute('data-scope');
-
-        if (eventScope === scope) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
-if (isCollegeOrCSOorSAO) {
-    handleSelectEventScope();
-} else {
-    handleUSGOrOtherScope();
-}
+    if (isCollegeOrCSOorSAO) {
+        handleSelectEventScope();
+    } else {
+        handleUSGOrOtherScope();
+    }
+});

@@ -318,19 +318,14 @@
 
                     <div class="events-display-container d-flex flex-column justify-content-center mt-3">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h5 class="fw-bold event-scope-title ps-1">
-                                {{#if isUSG}} <span>INSTITUTIONAL</span> EVENTS
-                                {{else}}
-                                <span class="text-uppercase">{{adminData.organization}}</span> EVENTS
-                                {{/if}}
+                            <h5 class="fw-bold ps-2 event-scope-label"><span id="eventScopeLabel"></span></h5>
 
-                            </h5>
                             <button class="btn m-0 p-0" data-bs-toggle="modal" data-bs-target="#addEventsModal">
                                 <img src="../img/add-spr.png" alt="Add Event" class="add-event-img pb-3">
                             </button>
                         </div>
                         {{#each filteredEvents}}
-                        <div class="card event-card mb-1">
+                        <div class="card event-card mb-1" data-scope="{{this.event_scope}}">
                             <div class="card-body event-card-body py-2">
                                 <span class="card-title fw-bold">{{this.event_name}}</span> <br>
                                 <span class="card-text card-event-date">

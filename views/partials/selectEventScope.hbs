@@ -1,113 +1,39 @@
 {{#if isCollegeOrCSOorSAO}}
 {{#if (eq currentPath '/spr-edit')}}
 <input type="text" class="select-event-scope automatic-event-scope w-100 px-3 py-2 fw-bold" name="eventScope"
-    id="eventScope" value="{{adminData.organization}}" readonly>
+    id="eventScope" value="{{organization}}" readonly>
 {{else}}
 <select name="selectEventScope" id="selectEventScope" class="select-event-scope w-100 px-3 py-2 fw-bold">
     <option disabled="disabled" selected="selected">Select Event Scope</option>
-    {{!-- institutional select --}}
+
     <option value="INSTITUTIONAL">INSTITUTIONAL</option>
 
-    {{!-- start of college select --}}
     {{#if isCollegeOrSAO}}
     <optgroup label="College Departments">
-        {{#if (or (eq organization "CAS") (eq organization "SAO"))}}
-        <option value="CAS">CAS</option>
-        {{/if}}
-        {{#if (or (eq organization "CBA") (eq organization "SAO"))}}
-        <option value="CBA">CBA</option>
-        {{/if}}
-        {{#if (or (eq organization "CCJE") (eq organization "SAO"))}}
-        <option value="CCJE">CCJE</option>
-        {{/if}}
-        {{#if (or (eq organization "CCSEA") (eq organization "SAO"))}}
-        <option value="CCSEA">CCSEA</option>
-        {{/if}}
-        {{#if (or (eq organization "CON") (eq organization "SAO"))}}
-        <option value="CON">CON</option>
-        {{/if}}
-        {{#if (or (eq organization "CTE") (eq organization "SAO"))}}
-        <option value="CTE">CTE</option>
-        {{/if}}
-        {{#if (or (eq organization "CTHM") (eq organization "SAO"))}}
-        <option value="CTHM">CTHM</option>
+        {{#if (or (eq departmentName organization) (eq organization "SAO"))}}
+        <option value="{{departmentName}}">{{departmentName}}</option>
         {{/if}}
     </optgroup>
     {{/if}}
-    {{!-- end of college select --}}
 
-    {{!-- start of abo select --}}
-    {{!-- start of cas abo --}}
     {{#unless isCollegeDepartment}}
-    <optgroup label="CAS ABO">
-        <option value="JSWAP">JSWAP</option>
-        <option value="LABELS">LABELS</option>
-        <option value="LSUPS">LSUPS</option>
-        <option value="POLISAYS">POLISAYS</option>
+    <optgroup label="ABO">
+        {{#if (or (eq aboName organization) (eq organization "CSO") (eq organization "SAO"))}}
+        <option value="{{aboName}}">{{aboName}}</option>
+        {{/if}}
     </optgroup>
-    {{!-- end of cas abo --}}
 
-    {{!-- start of cba abo --}}
-    <optgroup label="CBA ABO">
-        <option value="JFINEX">JFINEX</option>
-        <option value="JMEX">JMEX</option>
-        <option value="JPIA">JPIA</option>
-    </optgroup>
-    {{!-- end of cba abo --}}
-
-    {{!-- start of ccsea abo --}}
-    <optgroup label="CCSEA ABO">
-        <option value="ALGES">ALGES</option>
-        <option value="ICpEP">ICpEP</option>
-        <option value="IIEE">IIEE</option>
-        <option value="JIECEP">JIECEP</option>
-        <option value="LISSA">LISSA</option>
-        <option value="PICE">PICE</option>
-        <option value="SOURCE">SOURCE</option>
-        <option value="UAPSA">UAPSA</option>
-    </optgroup>
-    {{!-- end of ccsea abo --}}
-
-    {{!-- start of cte abo --}}
-    <optgroup label="CTE ABO">
-        <option value="ECC">ECC</option>
-        <option value="GENTLE">GENTLE</option>
-        <option value="GEM-O">GEM-O</option>
-        <option value="LapitBayan">LapitBayan</option>
-        <option value="LME">LME</option>
-        <option value="SPEM">SPEM</option>
-        <option value="SSS">SSS</option>
-    </optgroup>
-    {{!-- end of cte abo --}}
-
-    {{!-- start of cthm abo --}}
-    <optgroup label="CTHM ABO">
-        <option value="FHARO">FHARO</option>
-        <option value="FTL">FTL</option>
-        <option value="SOTE">SOTE</option>
-    </optgroup>
-    {{!-- end of cthm abo --}}
-    {{!-- end of abo select --}}
-
-    {{!-- start of ibo select --}}
     <optgroup label="IBO">
-        <option value="Compatriots">Compatriots</option>
-        <option value="Cosplay Corps">Cosplay Corps</option>
-        <option value="Green Leaders">Green Leaders</option>
-        <option value="Kainos">Kainos</option>
-        <option value="Meeples">Meeples</option>
-        <option value="Micromantics">Micromantics</option>
-        <option value="Red Cross Youth">Red Cross Youth</option>
-        <option value="Soul Whisperers">Soul Whisperers</option>
-        <option value="Vanguard E-sports">Vanguard E-sports</option>
+        {{#if (or (eq iboName organization) (eq organization "CSO") (eq organization "SAO"))}}
+        <option value="{{iboName}}">{{iboName}}</option>
+        {{/if}}
     </optgroup>
     {{/unless}}
-    {{!-- end of ibo select --}}
 </select>
 {{/if}}
 {{else if isUSG}}
 <input type="text" class="select-event-scope automatic-event-scope w-100 px-3 py-2 fw-bold" name="eventScope"
-    id="eventScopeAutomatic" value="Institutional" readonly>
+    id="eventScopeAutomatic" value="INSTITUTIONAL" readonly>
 {{else}}
 <input type="text" class="select-event-scope automatic-event-scope w-100 px-3 py-2 fw-bold" name="eventScope"
     id="eventScopeAutomatic" value="{{adminData.organization}}" readonly>

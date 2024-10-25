@@ -45,6 +45,9 @@ app.engine('hbs', exphbs.engine({
             }
             return false;
         },
+        and: function (a, b) {
+            return a && b;
+        },
         indexIsEven: function (index) {
             return index % 2 === 0;
         },

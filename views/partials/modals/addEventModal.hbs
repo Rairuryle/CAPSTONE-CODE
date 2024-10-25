@@ -1,6 +1,6 @@
 <div class="modal fade" id="addEventsModal" tabindex="-1" aria-labelledby="addEventsModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content px-3">
             <div class="modal-header border-bottom-0 pb-2">
                 <h1 class="modal-title fw-bold fs-3 mt-1" id="addEventsModalLabel">
                     {{#if isUSG}}
@@ -22,10 +22,43 @@
                             required>
                         <div class="event-date-container d-flex justify-content-between align-items-center mt-2 w-100">
                             <input type="date" id="startDateEvent" name="event_date_start"
-                                class="eventdate add-event-inputs event-input text-center p-2 ps-3 w-100" required />
+                                class="event-date text-center p-2 ps-3 w-100" required />
                             <p class="date-dash text-center pt-2 px-3">-</p>
                             <input type="date" id="endDateEvent" name="event_date_end"
-                                class="eventdate add-event-inputs event-input text-center p-2 ps-3 w-100" required />
+                                class="event-date text-center p-2 ps-3 w-100" required />
+                        </div>
+                    </div>
+
+                    <div class="activity-information mt-4">
+                        <div class="activity-header d-flex justify-content-between border-bottom border-2 pb-2">
+                            <span>Activities</span>
+                            <div class="to-verify d-flex">
+                                <span>To Verify</span>
+                                <select name="to_verify" id="toVerifyDropdown"
+                                    class="to-verify-dropdown ms-2 me-1 ps-3 pe-5">
+                                    <option disabled="disabled" selected="selected"></option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    data-bs-title="Select the number of activities that must be participated for a student to be verified"></i>
+                            </div>
+                        </div>
+                        <div class="add-activities-container mt-2">
+                            <div class="activity-entry d-flex justify-content-between border border-2 mb-1 p-2">
+                                <input type="text" name="activity_name[]" id="activityName" class="border-0 w-75"
+                                    placeholder="Activity Name">
+                                <input type="date" id="activityDate" name="activity_date[]"
+                                    class="activity-date-in-event px-2 py-1" />
+                            </div>
+                            <button type="button"
+                                class="btn add-more-activities d-flex align-items-center border border-2 mt-2 p-2 w-100">
+                                <img src="../img/add-more-activities.png" alt="Add More Activities">
+                                <span class="ms-2" style="color: gray; font-size: 0.9rem;">Add More</span>
+                            </button>
                         </div>
                     </div>
                     <div class="modal-footer border-top-0">

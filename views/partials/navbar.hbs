@@ -29,12 +29,12 @@
                 </a>
             </li>
 
-            <li
-                class="nav-item nav-item-title nav-item-records ps-4 mt-3 {{#if (eq currentPath '/spr-main')}}active{{/if}}">
+            <li class="nav-item nav-item-title nav-item-records ps-4 mt-3 
+                {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-edit'))}}active{{/if}}">
                 <a href="/spr-main" class="nav-link align-middle px-0">
                     <div class="d-flex align-items-center">
                         <div class="icon-container me-3">
-                            {{#if (eq currentPath '/spr-main')}}
+                            {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-edit'))}}
                             <img src="../img/record-filled.png" alt="Records Icon">
                             {{else}}
                             <img src="../img/record.png" alt="Records Icon">
