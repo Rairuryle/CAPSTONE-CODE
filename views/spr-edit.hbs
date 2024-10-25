@@ -11,84 +11,7 @@
 
             {{#if student}}
 
-            <div class="spr-main-container mt-2">
-                {{!-- student profile --}}
-                <div class="student-profile-container d-flex">
-                    <div class="col-6 me-1">
-                        <div class="card card-spr">
-                            <div class="card-body">
-                                <div class="card-title student-name fs-4 fw-bold mb-1">
-                                    {{student.first_name}} {{student.last_name}}
-                                </div>
-
-                                <div class="d-flex flex-wrap">
-                                    <span class="student-id-number-spr border px-3 fw-bold">{{student.id_number}}</span>
-                                    <span class="student-status-spr border mx-2 px-3">{{student.active_status}}</span>
-                                    <span class="student-status-spr border px-3">{{student.exemption_status}}</span>
-                                </div>
-
-                                <div class="d-flex flex-wrap mt-3 align-items-center">
-                                    <div class="d-flex flex-column">
-                                        <span class="student-profile-small-text">Department</span>
-                                        <span class="fs-5 fw-bold py-1">{{student.department_name}}</span>
-                                    </div>
-                                    <div class="vl ms-3"></div>
-                                    <div class="d-flex flex-column ms-3">
-                                        <span class="student-profile-small-text">Course</span>
-                                        <span class="fs-5 fw-bold py-1">{{student.course_name}}</span>
-                                    </div>
-                                    <div class="d-flex flex-column ms-4">
-                                        <span class="student-profile-small-text">Year</span>
-                                        <span class="fs-5 fw-bold py-1">{{student.year_level}}</span>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex flex-wrap align-items-center mt-2">
-                                    <span class="org-text org-small-text me-2">ABO</span>
-                                    <span class="org-spr border px-3">{{student.abo_name}}</span>
-
-                                    <span class="org-text org-small-text ms-4 me-2">IBO</span>
-                                    <span class="org-spr border px-3">{{student.ibo_name}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6">
-                        <div class="card card-spr">
-                            <div class="card-body">
-                                <div class="points-container d-flex justify-content-center flex-wrap">
-                                    <div class="col-5">
-                                        <div
-                                            class="semestral-points-container d-flex flex-wrap flex-column text-center border border-black fw-bold p-1 h-100">
-                                            <div
-                                                class="semester-indicator d-flex justify-content-center align-items-center py-3 px-2">
-                                                1ST SEMESTER
-                                            </div>
-                                            <div class="points-indicator fs-1 py-4">
-                                                50
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-5 ms-3">
-                                        <div
-                                            class="total-points-container d-flex flex-wrap flex-column text-center border border-black fw-bold p-1 h-100">
-                                            <div
-                                                class="total-points-indicator d-flex justify-content-center align-items-center py-3 px-2">
-                                                TOTAL POINTS ACQUIRED
-                                            </div>
-                                            <div class="points-indicator fs-1 py-4">
-                                                80
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {{> studentProfile}}
 
             {{!-- spr table --}}
             <div class="participation-record-table-container mt-4">
@@ -141,7 +64,10 @@
 
                 {{!-- activity table --}}
                 <div class="activity-table-container mt-4">
-                    <span class="activity-table-label border px-4 py-2">ACTIVITIES</span>
+                    <div class="d-flex align-items-center">
+                        <span class="activity-table-label border px-4 py-2">ACTIVITIES</span>
+                        <img src="../img/add-spr.png" alt="Add Activity" class="add-activity-icon ms-2">
+                    </div>
                     <div class="activity-actions-row d-flex mt-3 w-100">
                         <select name="selectEventDay" id="selectEventDay"
                             class="select-event-day border-gray bg-transparent fw-bold">
@@ -213,15 +139,17 @@
                                 </select>
                             </div>
                             <div class="col-1 ms-4 me-2">15 points</div>
-                            <div class="col-2">
-                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
+                            <div class="col-2 d-flex justify-content-between col-officer-in-charge">
+                                <span
+                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{adminData.first_name}}
                                     {{adminData.last_name}}</span>
+                                <img src="../img/edit.png" alt="Edit Activity" class="ms-2">
                             </div>
                         </div>
 
                         <div
                             class="activity-table-information activity-table-information-even d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
+                            <div class="col-4 col-activity-name">Dress to Impress</div>
                             <div class="col-2 ms-4 me-1">November 4, 2024</div>
                             <div class="col-3 col-role">
                                 <select name="assignRole" id="assignRole" class="assign-role ps-2 team-participant">
@@ -233,15 +161,17 @@
                                 </select>
                             </div>
                             <div class="col-1 ms-4 me-2">20 points</div>
-                            <div class="col-2">
-                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
+                            <div class="col-2 d-flex justify-content-between col-officer-in-charge">
+                                <span
+                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{adminData.first_name}}
                                     {{adminData.last_name}}</span>
+                                <img src="../img/edit.png" alt="Edit Activity" class="ms-2">
                             </div>
                         </div>
 
                         <div
                             class="activity-table-information activity-table-information-odd d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
+                            <div class="col-4 col-activity-name">Jigsawlympics</div>
                             <div class="col-2 ms-4 me-1">November 4, 2024</div>
                             <div class="col-3 col-role">
                                 <select name="assignRole" id="assignRole" class="assign-role ps-2 prog-spectator">
@@ -253,15 +183,17 @@
                                 </select>
                             </div>
                             <div class="col-1 ms-4 me-2">10 points</div>
-                            <div class="col-2">
-                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
+                            <div class="col-2 d-flex justify-content-between col-officer-in-charge">
+                                <span
+                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{adminData.first_name}}
                                     {{adminData.last_name}}</span>
+                                <img src="../img/edit.png" alt="Edit Activity" class="ms-2">
                             </div>
                         </div>
 
                         <div
                             class="activity-table-information activity-table-information-even d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
+                            <div class="col-4 col-activity-name">Deal Or No Deal</div>
                             <div class="col-2 ms-4 me-1">November 4, 2024</div>
                             <div class="col-3 col-role">
                                 <select name="assignRole" id="assignRole" class="assign-role ps-2 oth-spectator">
@@ -273,9 +205,11 @@
                                 </select>
                             </div>
                             <div class="col-1 ms-4 me-2">5 points</div>
-                            <div class="col-2">
-                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
+                            <div class="col-2 d-flex justify-content-between col-officer-in-charge">
+                                <span
+                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{adminData.first_name}}
                                     {{adminData.last_name}}</span>
+                                <img src="../img/edit.png" alt="Edit Activity" class="ms-2">
                             </div>
                         </div>
                     </div>
@@ -326,8 +260,12 @@
                         </div>
                         {{#each filteredEvents}}
                         <div class="card event-card mb-1" data-scope="{{this.event_scope}}">
-                            <div class="card-body event-card-body py-2">
-                                <span class="card-title fw-bold">{{this.event_name}}</span> <br>
+                            <div class="card-body event-card-body d-flex flex-column py-2">
+                                <div class="d-flex justify-content-between">
+                                    <span class="card-title fw-bold">{{this.event_name}}</span>
+                                    <img src="../img/edit.png" alt="Edit Event" class="edit-event-icon me-2">
+                                </div>
+
                                 <span class="card-text card-event-date">
                                     {{formatDate this.event_date_start}} - {{formatDate this.event_date_end}}
                                 </span>
@@ -377,7 +315,7 @@
 
         {{!-- modals --}}
         {{> modals/addEventModal}}
-
+        {{> modals/editStudentProfileModal}}
 
     </div>
 </div>

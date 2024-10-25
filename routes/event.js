@@ -19,26 +19,23 @@ const getDaysDifference = (startDate, endDate) => {
 };
 
 router.post('/add-event', (req, res) => {
-    const { event_name, event_date_start, event_date_end, event_scope, student_id } = req.body;
+    const { event_name, event_date_start, event_date_end, event_scope, student_id, to_verify } = req.body;
 
-    // Access activity names and dates correctly
     const activity_name = req.body['activity_name[]'] ? [].concat(req.body['activity_name[]']) : [];
     const activity_date = req.body['activity_date[]'] ? [].concat(req.body['activity_date[]']) : [];
 
+    console.log('Request Body:', req.body);
 
-
-    console.log('Request Body:', req.body); // Log the entire request body
-
-    if (!event_name || !event_date_start || !event_date_end || !event_scope || !student_id) {
+    if (!event_name || !event_date_start || !event_date_end || !event_scope || !student_id || !to_verify) {
         return res.status(400).send('Please provide all required fields');
     }
 
     const event_days = getDaysDifference(event_date_start, event_date_end);
 
-    const sqlEvent = `INSERT INTO event (event_name, event_date_start, event_date_end, event_days, event_scope)
-                      VALUES (?, ?, ?, ?, ?)`;
+    const sqlEvent = `INSERT INTO event (event_name, event_date_start, event_date_end, event_days, event_scope, to_verify)
+                      VALUES (?, ?, ?, ?, ?, ?)`;
 
-    db.query(sqlEvent, [event_name, event_date_start, event_date_end, event_days, event_scope], (err, eventResult) => {
+    db.query(sqlEvent, [event_name, event_date_start, event_date_end, event_days, event_scope, to_verify], (err, eventResult) => {
         if (err) {
             console.error('Error inserting event into database:', err);
             return res.status(500).send('Error adding event');
@@ -46,12 +43,9 @@ router.post('/add-event', (req, res) => {
 
         const eventId = eventResult.insertId;
         console.log('Event ID:', eventId);
-
-        // Log activity data
         console.log('Activity Names:', activity_name);
         console.log('Activity Dates:', activity_date);
 
-        // If activity_name and activity_date are provided, insert into activity table
         if (activity_name.length > 0 && activity_date.length > 0) {
             const activityQueries = activity_name.map((name, index) => {
                 if (name && activity_date[index]) {
@@ -81,7 +75,8 @@ router.post('/add-event', (req, res) => {
             event_date_start,
             event_date_end,
             event_days,
-            event_scope
+            event_scope,
+            to_verify
         };
 
         req.session.studentId = student_id;

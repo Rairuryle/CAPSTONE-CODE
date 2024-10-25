@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add more activities
     let activityIndex = 1;
 
-    // Function to clone activity entry
     const cloneActivityEntry = (originalEntry) => {
         const newEntry = originalEntry.cloneNode(true);
     
@@ -94,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateActivityDateRestrictions();
     });
 
+    
     // event scope
     function handleUSGOrOtherScope() {
         const eventScopeLabel = document.getElementById('eventScopeLabel');

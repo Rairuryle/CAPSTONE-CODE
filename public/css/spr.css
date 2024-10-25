@@ -2,12 +2,44 @@ body {
   background-color: var(--gray-shade);
 }
 
+/* select design */
+.select-event-day,
+.select-year,
+.select-sem,
+.to-verify-dropdown,
+#editDepartmentNameDropdown,
+#editCourseNameDropdown,
+#editYearLevelDropdown {
+  background-image: url("../img/arrow-dropdown.png");
+  background-repeat: no-repeat;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select-event-scope,
+.edit-active-status,
+.edit-exemption-status,
+#aboNameDropdown,
+#iboNameDropdown {
+  background-image: url("../img/arrow-dropdown-white.png");
+  background-repeat: no-repeat;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
 .spr-parent-container {
   min-width: 52rem;
 }
 
 .student-name {
   text-transform: uppercase;
+}
+
+.student-name img {
+  width: 1.3rem;
+  height: 1.3rem;
 }
 
 .student-id-number-spr {
@@ -21,6 +53,11 @@ body {
 .activity-table-label {
   background-color: var(--main-green);
   color: white;
+}
+
+.add-activity-icon {
+  width: 1.3rem;
+  height: 1.3rem;
 }
 
 .student-id-number-spr,
@@ -114,14 +151,9 @@ body {
   font-size: 0.8rem;
   padding-left: 1rem;
   padding-right: 1.8rem;
-  background-image: url("../img/arrow-dropdown.png");
   background-position: right 0.5rem center;
   background-size: 0.9rem 0.9rem;
-  background-repeat: no-repeat;
   background-color: transparent;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 
 .sort-activities {
@@ -169,8 +201,11 @@ body {
   width: 9.5rem;
 }
 
-.officer-activity-recorder-header,
-.officer-activity-recorder {
+.col-officer-in-charge {
+  width: 13rem;
+}
+
+.officer-activity-recorder-header {
   width: 13rem;
 }
 
@@ -235,13 +270,8 @@ body {
   background-color: var(--main-green);
   color: white;
   border-radius: 8px;
-  background-image: url("../img/arrow-dropdown-white.png");
   background-position: right 0.5rem center;
   background-size: 0.9rem 0.9rem;
-  background-repeat: no-repeat;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 
 .automatic-event-scope {
@@ -254,13 +284,8 @@ body {
   border-radius: 8px;
   font-size: 0.9rem;
   padding: 0.3rem 2.2rem 0.2rem 1rem;
-  background-image: url("../img/arrow-dropdown.png");
   background-position: right 0.5rem center;
   background-size: 0.9rem 0.9rem;
-  background-repeat: no-repeat;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 
 .event-scope-title {
@@ -294,6 +319,11 @@ body {
   border-bottom-right-radius: 10px;
 }
 
+.edit-event-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
 .import-file-card,
 .points-card {
   border: 1px dashed black;
@@ -322,20 +352,16 @@ body {
   border-radius: 20px;
 }
 
-.btn-add-event-submit {
+.btn-add-event-submit,
+.btn-edit-student-profile-submit {
   background-color: var(--main-green);
   border-radius: 20px;
 }
 
 .to-verify-dropdown {
   border-radius: 20px;
-  background-image: url("../img/arrow-dropdown.png");
   background-position: right 0.5rem center;
   background-size: 0.9rem 0.9rem;
-  background-repeat: no-repeat;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 
 .event-date,
@@ -345,4 +371,51 @@ body {
 
 .add-more-activities:hover {
   background-color: rgb(241, 240, 240);
+}
+
+.modal-body-edit-student-profile {
+  margin-top: -1.2rem;
+}
+
+.edit-name-group,
+.edit-id-number-group {
+  border-radius: 10px;
+}
+
+#editStudentName,
+#editStudentName::placeholder {
+  color: var(--main-green);
+  font-size: 1.4rem;
+  opacity: 1;
+}
+
+.edit-id-number-group *,
+.edit-id-number-group *:focus {
+  background-color: rgba(33, 58, 49, 0.2);
+}
+
+.edit-active-status,
+.edit-exemption-status {
+  background-color: var(--main-green);
+  font-size: 0.9rem;
+  padding: 0.3rem 1rem 0.2rem 1rem;
+  color: white;
+  border-radius: 20px;
+  background-position: right 0.3rem center;
+  background-size: 0.9rem 0.9rem;
+}
+
+#editDepartmentNameDropdown,
+#editCourseNameDropdown,
+#editYearLevelDropdown {
+  border-radius: 10px;
+  color: var(--main-green);
+  background-position: right 0.3rem center;
+  background-size: 1.2rem 1.2rem;
+}
+
+#aboNameDropdown,
+#iboNameDropdown {
+  background-position: right 0.7rem center;
+  background-size: 0.9rem 0.9rem;
 }
