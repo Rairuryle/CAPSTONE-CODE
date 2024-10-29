@@ -66,7 +66,9 @@
                 <div class="activity-table-container mt-4">
                     <div class="d-flex align-items-center">
                         <span class="activity-table-label border px-4 py-2">ACTIVITIES</span>
-                        <img src="../img/add-spr.png" alt="Add Activity" class="add-activity-icon ms-2">
+                        <button class="btn m-0 p-0" data-bs-toggle="modal" data-bs-target="#addActivitiesModal">
+                            <img src="../img/add-spr.png" alt="Add Activity" class="add-activity-icon ms-2">
+                        </button>
                     </div>
                     <div class="activity-actions-row d-flex mt-3 w-100">
                         <select name="selectEventDay" id="selectEventDay"
@@ -263,7 +265,13 @@
                             <div class="card-body event-card-body d-flex flex-column py-2">
                                 <div class="d-flex justify-content-between">
                                     <span class="card-title fw-bold">{{this.event_name}}</span>
-                                    <img src="../img/edit.png" alt="Edit Event" class="edit-event-icon me-2">
+                                    <button class="btn m-0 p-0 edit-event-btn" data-bs-toggle="modal"
+                                        data-bs-target="#editEventsModal" data-event-name="{{this.event_name}}"
+                                        data-event-start="{{formatDate this.event_date_start 'YYYY-MM-DD'}}"
+                                        data-event-end="{{formatDate this.event_date_end 'YYYY-MM-DD'}}">
+
+                                        <img src="../img/edit.png" alt="Edit Event" class="edit-event-icon me-2">
+                                    </button>
                                 </div>
 
                                 <span class="card-text card-event-date">
@@ -272,6 +280,7 @@
                             </div>
                         </div>
                         {{/each}}
+
                     </div>
                 </div>
 
@@ -314,9 +323,11 @@
         </div>
 
         {{!-- modals --}}
-        {{> modals/addEventModal}}
         {{> modals/editStudentProfileModal}}
-
+        {{> modals/addEventsModal}}
+        {{> modals/editEventsModal}}
+        {{> modals/deleteEventsModal}}
+        {{> modals/addActivitiesModal}}
     </div>
 </div>
 

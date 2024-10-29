@@ -68,21 +68,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const cloneActivityEntry = (originalEntry) => {
         const newEntry = originalEntry.cloneNode(true);
-    
+
         const activityNameInput = newEntry.querySelector('input[name^="activity_name"]');
         const activityDateInput = newEntry.querySelector('input[name^="activity_date"]');
-    
+
         // Update the new activity input names and ids
         activityNameInput.name = `activity_name[]`;
         activityDateInput.name = `activity_date[]`;
-    
+
         // Clear the new inputs
         activityNameInput.value = '';
         activityDateInput.value = '';
-    
+
         return newEntry;
     };
-    
+
     document.querySelector('.add-more-activities').addEventListener('click', function () {
         const originalEntry = document.querySelector('.activity-entry');
         const newEntry = cloneActivityEntry(originalEntry);
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateActivityDateRestrictions();
     });
 
-    
+
     // event scope
     function handleUSGOrOtherScope() {
         const eventScopeLabel = document.getElementById('eventScopeLabel');
@@ -123,4 +123,43 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     handleUSGOrOtherScope();
+
+
+    // edit events button
+    const editButtons = document.querySelectorAll(".edit-event-btn");
+
+    editButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const eventName = this.getAttribute("data-event-name");
+            let eventStart = this.getAttribute("data-event-start");
+            let eventEnd = this.getAttribute("data-event-end");
+
+            // Convert dates to 'YYYY-MM-DD' format without using `toISOString()`
+            eventStart = new Date(eventStart);
+            eventEnd = new Date(eventEnd);
+
+            const formattedStartDate = `${eventStart.getFullYear()}-${String(eventStart.getMonth() + 1).padStart(2, '0')}-${String(eventStart.getDate()).padStart(2, '0')}`;
+            const formattedEndDate = `${eventEnd.getFullYear()}-${String(eventEnd.getMonth() + 1).padStart(2, '0')}-${String(eventEnd.getDate()).padStart(2, '0')}`;
+
+            document.getElementById("editEventNameInput").value = eventName;
+            document.getElementById("editStartDateEvent").value = formattedStartDate;
+            document.getElementById("editEndDateEvent").value = formattedEndDate;
+
+            console.log("Formatted Event Start Date:", formattedStartDate); // For confirmation
+            console.log("Formatted Event End Date:", formattedEndDate);     // For confirmation
+        });
+    });
+
+    const editEventNameInput = document.getElementById("editEventNameInput");
+    const deleteEventButtons = document.querySelectorAll(".btn-delete-event");
+
+    deleteEventButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const eventNames = document.querySelectorAll(".event-name-to-delete");
+            eventNames.forEach(eventName => {
+                eventName.textContent = editEventNameInput.value;
+            });
+        });
+    });
+
 });

@@ -353,6 +353,7 @@ body {
 }
 
 .btn-add-event-submit,
+.btn-edit-event-submit,
 .btn-edit-student-profile-submit {
   background-color: var(--main-green);
   border-radius: 20px;
@@ -418,4 +419,50 @@ body {
 #iboNameDropdown {
   background-position: right 0.7rem center;
   background-size: 0.9rem 0.9rem;
+}
+
+#editEventNameInput,
+#editEventNameInput::placeholder,
+#editStartDateEvent,
+#editStartDateEvent::placeholder,
+#editEndDateEvent,
+#editEndDateEvent::placeholder {
+  color: var(--main-green);
+}
+
+#editEventNameInput,
+.btn-delete-event {
+  border-radius: 20px;
+}
+
+.btn-delete-event,
+.btn-delete-event:hover {
+  border: 1px solid red;
+  color: red;
+}
+
+.btn-delete-event {
+  background-color: transparent;
+}
+
+.btn-delete-event:hover {
+  background-color: rgb(241, 233, 233);
+}
+
+#eventNameToDelete {
+  border: 1px solid gray;
+  border-radius: 20px;
+  padding: 0.8rem 2rem 0.6rem 2rem;
+}
+
+#deleteEventsModalLabel {
+  letter-spacing: 2px;
+}
+
+.btn-edit-event-cancel {
+  color: var(--main-green);
+}
+
+.btn-delete-event-submit {
+  border-radius: 20px;
 }
