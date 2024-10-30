@@ -1,0 +1,41 @@
+<div class="modal fade" id="addActivitiesModal" tabindex="-1" aria-labelledby="addActivitiesModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content px-3">
+            <div class="modal-header border-bottom-0 pb-2">
+                <h1 class="modal-title fw-bold fs-3 mt-1" id="addActivitiesModalLabel">
+                    Add Activity
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body mt-0 pt-0">
+                <form>
+                    <span>Pasimula</span><br>
+                    <span>August 3 - 5, 2024</span>
+
+                    <div class="activity-information mt-4">
+                        <div class="activity-header d-flex justify-content-between border-bottom border-2 pb-2">
+                            <span>Activities</span>
+                        </div>
+                        <div class="add-activities-container mt-2">
+                            <div class="activity-entry d-flex justify-content-between border border-2 mb-1 p-2">
+                                <input type="text" name="activity_name[]" id="activityName" class="border-0 w-75"
+                                    placeholder="Activity Name">
+                                <input type="date" id="activityDate" name="activity_date[]"
+                                    class="activity-date-in-activity px-2 py-1" />
+                            </div>
+                            <button type="button"
+                                class="btn add-more-activities d-flex align-items-center border border-2 mt-2 p-2 w-100">
+                                <img src="../img/add-more-activities.png" alt="Add More Activities">
+                                <span class="ms-2" style="color: gray; font-size: 0.9rem;">Add More</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0">
+                        <button type="submit" class="btn btn-success btn-add-activity-submit px-5">Add Activity</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

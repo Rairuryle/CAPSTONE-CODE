@@ -1,0 +1,28 @@
+<div class="modal fade" id="editActivitiesModal" tabindex="-1" aria-labelledby="editActivitiesModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content px-3">
+            <div class="modal-header border-bottom-0 pb-2">
+                <h1 class="modal-title fw-bold fs-3 mt-1" id="editActivitiesModalLabel">Edit Activity</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body mt-0 pt-0">
+                <input type="text" id="editActivityNameInput" name="activity_name"
+                    class="activity-name-input text-center p-2 ps-3 w-100" placeholder="Edit Activity Name">
+                <input type="date" id="editActivityDate" name="event_date_start"
+                    class="activity-date text-center mt-3 p-2 ps-3 w-100" />
+            </div>
+
+            <div class="modal-footer border-top-0 justify-content-between mt-2">
+                <button class="btn btn-delete-activity d-flex align-items-center px-3" data-bs-toggle="modal"
+                    data-bs-target="#deleteActivitiesModal">
+                    <img src="../img/delete.png" alt="Delete Icon" style="width: 0.9rem;">
+                    <span class="ps-1" style="font-size: 0.9rem;">Delete Event</span>
+                </button>
+                <button type="submit" class="btn btn-success btn-edit-event-submit px-5">Save
+                    Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
