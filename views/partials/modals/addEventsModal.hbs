@@ -16,6 +16,9 @@
                     <input type="hidden" name="student_id" value="{{student.id_number}}">
                     <input type="hidden" id="event_scope" name="event_scope"
                         value="{{#if isUSG}}INSTITUTIONAL{{else}}{{adminData.organization}}{{/if}}">
+                    <input type="hidden" name="academic_year" value="{{selectedYear}}">
+                    <input type="hidden" name="semester" value="{{selectedSemester}}">
+
                     <div class="event-information">
                         <input type="text" id="eventNameInput" name="event_name"
                             class="event-name-input event-input text-center p-2 ps-3 w-100" placeholder="Event Name"

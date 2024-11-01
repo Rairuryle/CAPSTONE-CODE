@@ -156,13 +156,16 @@ router.get('/dashboard', (req, res) => {
         const studentData = req.session.studentData;
         const organization = adminData.organization;
         const { isUSGorSAO } = isMainOrgs(organization);
-        const { isCSOorIBO, isExtraOrgsTrue } = isExtraOrgs(organization);
+        const { isIBO, isCSOorIBO, isCSOorABOorSAO, isExtraOrgsTrue } = isExtraOrgs(organization);
+
 
         res.render('dashboard', {
             adminData,
             studentData,
             isUSGorSAO,
+            isIBO,
             isCSOorIBO,
+            isCSOorABOorSAO,
             isExtraOrgsTrue,
             currentPath: '/dashboard',
             title: 'Dashboard | LSU HEU Events and Attendance Tracking Website'
@@ -177,7 +180,7 @@ router.get('/add-student', (req, res) => {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const { isUSG } = isMainOrgs(organization);
-        const { isExtraOrgsTrue } = isExtraOrgs(organization);
+        const { isIBO, isExtraOrgsTrue } = isExtraOrgs(organization);
 
         let errorMessage = '';
 
@@ -190,6 +193,7 @@ router.get('/add-student', (req, res) => {
             adminData,
             organization,
             isUSG,
+            isIBO,
             isExtraOrgsTrue,
             currentPath: '/add-student',
             title: 'Add Student Account | LSU HEU Events and Attendance Tracking Website',
@@ -204,12 +208,13 @@ router.get('/add-student-successful', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
-        const { isExtraOrgsTrue } = isExtraOrgs(organization);
+        const { isIBO, isExtraOrgsTrue } = isExtraOrgs(organization);
         const addedStudentID = req.query.addedStudentID;
 
         res.render('add-student-successful', {
             adminData,
             organization,
+            isIBO,
             isExtraOrgsTrue,
             addedStudentID,
             currentPath: '/add-student-successful',
@@ -225,7 +230,7 @@ router.get('/add-student-ibo', (req, res) => {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const { isUSG } = isMainOrgs(organization);
-        const { isCSOorIBO, isExtraOrgsTrue } = isExtraOrgs(organization);
+        const { isIBO, isCSOorIBO, isExtraOrgsTrue } = isExtraOrgs(organization);
 
         let errorMessage = '';
 
@@ -238,6 +243,7 @@ router.get('/add-student-ibo', (req, res) => {
             adminData,
             organization,
             isUSG,
+            isIBO,
             isCSOorIBO,
             isExtraOrgsTrue,
             currentPath: '/add-student-ibo',
@@ -293,6 +299,7 @@ router.get('/list', (req, res) => {
 
         const {
             isCSO,
+            isIBO,
             isABOorIBO,
             isCSOorSAO,
             isCSOorIBO,
@@ -327,6 +334,7 @@ router.get('/list', (req, res) => {
                     isUSGorSAO,
                     isCollegeOrSAO,
                     isCSO,
+                    isIBO,
                     isABOorIBO,
                     isCSOorSAO,
                     isCSOorIBO,
@@ -416,6 +424,7 @@ router.get('/spr-main', (req, res) => {
 
         const {
             isCSO,
+            isIBO,
             isABOorIBO,
             isCSOorSAO,
             isCSOorIBO,
@@ -451,6 +460,7 @@ router.get('/spr-main', (req, res) => {
                 isUSGorCollegeOrSAO,
                 isMainOrgsTrue,
                 isCSO,
+                isIBO,
                 isABOorIBO,
                 isCSOorSAO,
                 isCSOorIBO,
@@ -498,10 +508,11 @@ router.get('/spr-edit', (req, res) => {
         const aboName = req.session.aboName;
         const iboName = req.session.iboName;
 
-        console.log('Department Name', departmentName);
+        console.log('Department Name:', departmentName);
         console.log('ABO:', aboName);
         console.log('IBO:', iboName);
 
+        // Determine organization flags
         const {
             isUSG,
             isSAO,
@@ -514,6 +525,7 @@ router.get('/spr-edit', (req, res) => {
 
         const {
             isCSO,
+            isIBO,
             isCSOorSAO,
             isCSOorIBO,
             isCSOorABOorSAO,
@@ -521,22 +533,27 @@ router.get('/spr-edit', (req, res) => {
             isExtraOrgsTrue
         } = isExtraOrgs(organization);
 
-        const CAS_ABO = ["JSWAP", "LABELS", "LSUPS", "POLISAYS"];
-        const CBA_ABO = ["JFINEX", "JMEX", "JPIA"];
-        const CCSEA_ABO = ["ALGES", "ICpEP", "IIEE", "JIECEP", "LISSA", "PICE", "SOURCE", "UAPSA"];
-        const CTE_ABO = ["ECC", "GENTLE", "GEM-O", "LapitBayan", "LME", "SPEM", "SSS"];
-        const CTHM_ABO = ["FHARO", "FTL", "SOTE"];
-
-        const isCAS = CAS_ABO.includes(organization) || isCSOorSAO;
-        const isCBA = CBA_ABO.includes(organization) || isCSOorSAO;
-        const isCCSEA = CCSEA_ABO.includes(organization) || isCSOorSAO;
-        const isCTE = CTE_ABO.includes(organization) || isCSOorSAO;
-        const isCTHM = CTHM_ABO.includes(organization) || isCSOorSAO;
+        // Fetch selected academic year and semester from query parameters
+        const selectedYear = req.query.academic_year || "Select Year";
+        const selectedSemester = req.query.semester || "Select Sem"; // Default semester text
 
         const idNumber = req.query.id;
+        const eventId = req.query.event_id; // Get the event_id from the query
         console.log('ID Number:', idNumber);
+        console.log('Event ID:', eventId); // Log the event ID
 
-        const renderEditPage = (student, events) => {
+        // Helper function to fetch academic years
+        const fetchAcademicYears = (callback) => {
+            db.query('SELECT academic_year FROM academic_year ORDER BY academic_year DESC', (err, results) => {
+                if (err) {
+                    return callback(err, null);
+                }
+                callback(null, results);
+            });
+        };
+
+        // Function to render the edit page
+        const renderEditPage = (student, events, academicYears, activities) => {
             const selectedScope = req.query.scope || ''; // Get the selected event scope from the query parameter
             console.log('Selected Scope:', selectedScope);
             const { filteredEvents } = filterEvents(events, departmentName, aboName, iboName, selectedScope);
@@ -557,296 +574,74 @@ router.get('/spr-edit', (req, res) => {
                 isUSGorCollegeOrSAO,
                 isMainOrgsTrue,
                 isCSO,
+                isIBO,
                 isCSOorSAO,
                 isCSOorIBO,
                 isCSOorABOorSAO,
                 isCSOorIBOorSAO,
                 isExtraOrgsTrue,
-                isCAS,
-                isCBA,
-                isCCSEA,
-                isCTE,
-                isCTHM,
                 student,
                 filteredEvents, // Pass the filtered events to the template
+                academicYears,   // Pass the academic years to the template
+                activities,      // Pass the activities to the template
+                selectedYear,
+                selectedSemester,
                 currentPath: '/spr-edit',
                 title: 'Student Participation Record Edit Mode | LSU HEU Events and Attendance Tracking Website'
             });
         };
 
         if (idNumber) {
-            const query = 'SELECT * FROM student WHERE id_number = ?';
-            db.query(query, [idNumber], (err, results) => {
+            // Fetch student data based on the ID number
+            const studentQuery = 'SELECT * FROM student WHERE id_number = ?';
+            db.query(studentQuery, [idNumber], (err, studentResults) => {
                 if (err) {
-                    return res.status(500).send('Database error');
+                    return res.status(500).send('Database error while fetching student data');
                 }
 
-                const student = results.length > 0 ? results[0] : null;
+                const student = studentResults.length > 0 ? studentResults[0] : null;
 
-                // Fetch events and then render the page
+                // Fetch events and activities
                 fetchEvents((events) => {
-                    renderEditPage(student, events);
+                    if (eventId) {
+                        // Fetch activities if event_id is present
+                        const activitiesQuery = 'SELECT * FROM activity WHERE event_id = ?';
+                        db.query(activitiesQuery, [eventId], (err, activityResults) => {
+                            if (err) {
+                                return res.status(500).send('Database error while fetching activities');
+                            }
+                            fetchAcademicYears((err, academicYears) => {
+                                if (err) {
+                                    return res.status(500).send('Database error while fetching academic years');
+                                }
+                                renderEditPage(student, events, academicYears, activityResults); // Pass activities to the render function
+                            });
+                        });
+                    } else {
+                        // If no event_id, just render the page without activities
+                        fetchAcademicYears((err, academicYears) => {
+                            if (err) {
+                                return res.status(500).send('Database error while fetching academic years');
+                            }
+                            renderEditPage(student, events, academicYears, []); // Pass empty activities array
+                        });
+                    }
                 });
             });
         } else {
-            // If no ID number, fetch events and render the page without student data
+            // If no ID number, fetch events and academic years, then render the page without student data
             fetchEvents((events) => {
-                renderEditPage(null, events);
+                fetchAcademicYears((err, academicYears) => {
+                    if (err) {
+                        return res.status(500).send('Database error while fetching academic years');
+                    }
+                    renderEditPage(null, events, academicYears, []); // Pass empty activities array
+                });
             });
         }
     } else {
         res.redirect('/login');
     }
 });
-
-
-// router.get('/university-events-admin', (req, res) => {
-//     if (req.session.isAuthenticated) {
-//         const idNumber = req.query.id_number;
-//         const adminData = req.session.adminData;
-//         const organization = adminData.organization;
-//         const departmentName = req.session.departmentName;
-//         const aboName = req.session.aboName;
-//         const iboName = req.session.iboName;
-//         const eventData = req.session.eventData;
-
-//         const {
-//             isUSG,
-//             isSAO,
-//             isCollege,
-//             isUSGorSAO,
-//             isCollegeOrSAO,
-//             isMainOrgsTrue
-//         } = isMainOrgs(organization, departmentName);
-
-//         const {
-//             ABO,
-//             IBO,
-//             isCSO,
-//             isABO,
-//             isIBO,
-//             isABOorIBO,
-//             isCSOorABO,
-//             isCSOorIBO,
-//             isCSOorSAO,
-//             isABOorSAO,
-//             isIBOorSAO,
-//             isCSOorABOorSAO,
-//             isCSOorIBOorSAO,
-//             isExtraOrgsTrue
-//         } = isExtraOrgs(organization);
-
-//         const {
-//             isAdminURL,
-//             isStudentURL,
-//             isEditURL,
-//             isRecordPage,
-//             isAdminPageURL
-//         } = getUrlFlags(req.url);
-
-//         db.query('SELECT * FROM event', (error, events) => {
-//             if (error) {
-//                 console.log(error);
-//                 res.redirect('/dashboard');
-//             } else {
-//                 const institutionalEvents = events.filter(event => event.event_scope === 'INSTITUTIONAL');
-//                 const collegeEvents = events.filter(event => event.event_scope === departmentName);
-//                 const aboEvents = events.filter(event => event.event_scope === aboName);
-//                 const iboEvents = events.filter(event => event.event_scope === iboName);
-
-//                 db.query('SELECT * FROM student WHERE id_number = ?', [idNumber], (error, results) => {
-//                     if (error) {
-//                         console.log(error);
-//                         res.redirect('/dashboard');
-//                     } else {
-//                         if (results.length > 0) {
-//                             const studentData = results[0];
-//                             res.render('university-events-admin', {
-//                                 adminData,
-//                                 studentData,
-//                                 departmentName,
-//                                 isUSG,
-//                                 isSAO,
-//                                 isCollege,
-//                                 isUSGorSAO,
-//                                 isCollegeOrSAO,
-//                                 isMainOrgsTrue,
-//                                 ABO,
-//                                 IBO,
-//                                 isCSO,
-//                                 isABO,
-//                                 isIBO,
-//                                 isABOorIBO,
-//                                 isCSOorABO,
-//                                 isCSOorIBO,
-//                                 isCSOorSAO,
-//                                 isABOorSAO,
-//                                 isIBOorSAO,
-//                                 isCSOorABOorSAO,
-//                                 isCSOorIBOorSAO,
-//                                 isExtraOrgsTrue,
-//                                 isAdminURL,
-//                                 isEditURL,
-//                                 isAdminPageURL,
-//                                 isStudentURL,
-//                                 isRecordPage,
-//                                 eventData,
-//                                 institutionalEvents,
-//                                 collegeEvents,
-//                                 aboEvents,
-//                                 iboEvents,
-//                                 idNumber: idNumber,
-//                                 events: events.map(event => ({
-//                                     ...event,
-//                                     formattedStartDate: event.event_date_start.toLocaleDateString(),
-//                                     formattedEndDate: event.event_date_end.toLocaleDateString(),
-//                                 })),
-//                                 title: 'Admin Main Page | LSU Events and Attendance Tracking Website',
-//                             });
-//                         } else {
-//                             res.redirect('/dashboard');
-//                         }
-//                     }
-//                 });
-//             }
-//         });
-//     } else {
-//         res.redirect('/login');
-//     }
-// });
-
-// router.get('/university-events-edit', (req, res) => {
-//     if (req.session.isAuthenticated) {
-//         const idNumber = req.query.id_number;
-//         const adminData = req.session.adminData;
-//         const organization = adminData.organization;
-//         const departmentName = req.session.departmentName;
-//         const aboName = req.session.aboName;
-//         const iboName = req.session.iboName;
-//         const eventData = req.session.eventData;
-
-//         const {
-//             isUSG,
-//             isSAO,
-//             isCollege,
-//             isUSGorCollege,
-//             isUSGorSAO,
-//             isCollegeOrSAO,
-//             isMainOrgsTrue
-//         } = isMainOrgs(organization, departmentName);
-
-//         const {
-//             ABO,
-//             IBO,
-//             isCSO,
-//             isABO,
-//             isIBO,
-//             isABOorIBO,
-//             isCSOorABO,
-//             isCSOorIBO,
-//             isCSOorSAO,
-//             isABOorSAO,
-//             isIBOorSAO,
-//             isCSOorABOorSAO,
-//             isCSOorIBOorSAO,
-//             isExtraOrgsTrue
-//         } = isExtraOrgs(organization);
-
-//         const {
-//             isAdminURL,
-//             isStudentURL,
-//             isEditURL,
-//             isRecordPage,
-//             isAdminPageURL
-//         } = getUrlFlags(req.url);
-
-//         db.query('SELECT * FROM event', (error, events) => {
-//             if (error) {
-//                 console.log(error);
-//                 res.redirect('/dashboard');
-//             } else {
-//                 const institutionalEvents = events.filter(event => event.event_scope === 'INSTITUTIONAL');
-//                 const collegeEvents = events.filter(event => event.event_scope === departmentName);
-//                 const aboEvents = events.filter(event => event.event_scope === aboName);
-//                 const iboEvents = events.filter(event => event.event_scope === iboName);
-
-//                 db.query('SELECT * FROM student WHERE id_number = ?', [idNumber], (error, results) => {
-//                     if (error) {
-//                         console.log(error);
-//                         res.redirect('/dashboard');
-//                     } else {
-//                         if (results.length > 0) {
-//                             const studentData = results[0];
-//                             res.render('university-events-edit', {
-//                                 adminData,
-//                                 studentData,
-//                                 departmentName,
-//                                 isUSG,
-//                                 isSAO,
-//                                 isCollege,
-//                                 isUSGorCollege,
-//                                 isUSGorSAO,
-//                                 isCollegeOrSAO,
-//                                 isMainOrgsTrue,
-//                                 ABO,
-//                                 IBO,
-//                                 isCSO,
-//                                 isABO,
-//                                 isIBO,
-//                                 isABOorIBO,
-//                                 isCSOorABO,
-//                                 isCSOorIBO,
-//                                 isCSOorSAO,
-//                                 isABOorSAO,
-//                                 isIBOorSAO,
-//                                 isCSOorABOorSAO,
-//                                 isCSOorIBOorSAO,
-//                                 isExtraOrgsTrue,
-//                                 isAdminURL,
-//                                 isEditURL,
-//                                 isAdminPageURL,
-//                                 isStudentURL,
-//                                 isRecordPage,
-//                                 eventData,
-//                                 institutionalEvents,
-//                                 collegeEvents,
-//                                 aboEvents,
-//                                 iboEvents,
-//                                 events: events.map(event => ({
-//                                     ...event,
-//                                     formattedStartDate: event.event_date_start.toLocaleDateString(),
-//                                     formattedEndDate: event.event_date_end.toLocaleDateString(),
-//                                 })),
-//                                 title: 'Admin Edit Page | LSU Events and Attendance Tracking Website',
-//                             });
-//                         } else {
-//                             res.redirect('/dashboard');
-//                         }
-//                     }
-//                 });
-//             }
-//         });
-//     } else {
-//         res.redirect('/login');
-//     }
-// });
-
-// router.get('/college-events', (req, res) => {
-//     if (req.session.isAuthenticated) {
-//         const departmentName = req.session.departmentName;
-
-//         db.query('SELECT * FROM event WHERE event_scope = ?', [departmentName], (error, events) => {
-//             if (error) {
-//                 console.log(error);
-//                 res.status(500).json({ error: 'Error fetching college events' });
-//             } else {
-//                 res.status(200).json({ collegeEvents: events });
-//             }
-//         });
-//     } else {
-//         res.status(401).json({ error: 'Unauthorized' });
-//     }
-// });
-
 
 module.exports = router;

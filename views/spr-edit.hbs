@@ -238,14 +238,21 @@
                             <div class="col dropdown">
                                 <button class="btn dropdown-toggle select-year fw-bold border border-black px-3"
                                     type="button" id="selectYearDropdown" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    Select Year
+                                    aria-expanded="false" style="width: 8.4rem;">
+                                    {{selectedYear}}
                                 </button>
 
                                 <ul class="dropdown-menu dropdown-menu-year text-center w-100"
                                     aria-labelledby="selectYearDropdown">
-                                    <li><a class="dropdown-item" href="#">2023-2024</a></li>
-                                    <li><a class="dropdown-item" href="#">2022-2023</a></li>
+                                    {{#each academicYears}}
+                                    <li>
+                                        <!-- Set onclick event to call updateDropdownText -->
+                                        <button class="dropdown-item" type="button"
+                                            onclick="updateDropdownText('{{this.academic_year}}')">
+                                            {{this.academic_year}}
+                                        </button>
+                                    </li>
+                                    {{/each}}
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
@@ -260,15 +267,17 @@
 
                             <div class="col dropdown ms-2">
                                 <button class="btn dropdown-toggle select-sem fw-bold border border-black px-3"
-                                    type="button" id="selectSemDropdown" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    Select Sem
+                                    type="button" id="selectSemDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                    style="width: 7.7rem;">
+                                    {{selectedSemester}}
                                 </button>
 
                                 <ul class="dropdown-menu dropdown-menu-sem text-center w-100"
                                     aria-labelledby="selectSemDropdown">
-                                    <li><a class="dropdown-item" href="#">1st Sem</a></li>
-                                    <li><a class="dropdown-item" href="#">2nd Sem</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateSemesterText('1st Sem')">1st
+                                            Sem</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateSemesterText('2nd Sem')">2nd
+                                            Sem</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -283,7 +292,8 @@
                             </button>
                         </div>
                         {{#each filteredEvents}}
-                        <div class="card event-card mb-1" data-scope="{{this.event_scope}}">
+                        <div class="card event-card mb-1" data-scope="{{this.event_scope}}"
+                            onclick="showEventDetails({{this.event_id}})">
                             <div class="card-body event-card-body d-flex flex-column py-2">
                                 <div class="d-flex justify-content-between">
                                     <span class="card-title fw-bold">{{this.event_name}}</span>
@@ -291,20 +301,31 @@
                                         data-bs-target="#editEventsModal" data-event-name="{{this.event_name}}"
                                         data-event-start="{{formatDate this.event_date_start 'YYYY-MM-DD'}}"
                                         data-event-end="{{formatDate this.event_date_end 'YYYY-MM-DD'}}">
-
                                         <img src="../img/edit.png" alt="Edit Event" class="edit-event-icon me-2">
                                     </button>
                                 </div>
-
                                 <span class="card-text card-event-date">
                                     {{formatDate this.event_date_start}} - {{formatDate this.event_date_end}}
                                 </span>
                             </div>
                         </div>
                         {{/each}}
-
                     </div>
                 </div>
+
+                {{#if activities.length}}
+                <h3>Associated Activities</h3>
+                <ul>
+                    {{#each activities}}
+                    <li>{{this.activity_name}} on {{formatDate this.activity_date}}</li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                <p>No associated activities found for this event.</p>
+                {{/if}}
+
+
+
 
                 {{!-- import file --}}
                 <div class="import-file-container mt-3">

@@ -145,8 +145,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("editStartDateEvent").value = formattedStartDate;
             document.getElementById("editEndDateEvent").value = formattedEndDate;
 
-            console.log("Formatted Event Start Date:", formattedStartDate); // For confirmation
-            console.log("Formatted Event End Date:", formattedEndDate);     // For confirmation
+            console.log("Formatted Event Start Date:", formattedStartDate);
+            console.log("Formatted Event End Date:", formattedEndDate);
         });
     });
 
@@ -162,4 +162,86 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    document.getElementById("addYearForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const startYear = document.getElementById("academicYear").value;
+        if (!startYear) return;
+
+        const academicYearData = { academic_year: startYear };
+
+        try {
+            const response = await fetch('/event/academic_year', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(academicYearData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error adding year: ' + response.statusText);
+            }
+
+            // Optional: Handle the response from the server
+            const result = await response.json();
+            console.log(result.message);
+
+            location.reload();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            document.getElementById("academicYear").value = "";
+
+            const addYearModal = bootstrap.Modal.getInstance(document.getElementById("addYearModal"));
+            addYearModal.hide();
+        }
+    });
+
+    window.updateDropdownText = function(selectedYear) {
+        const dropdownButton = document.getElementById('selectYearDropdown');
+        dropdownButton.innerHTML = selectedYear;
+
+        const url = new URL(window.location.href);
+        const idParam = url.searchParams.get('id');
+        if (idParam) {
+            url.searchParams.set('id', idParam);
+        }
+        url.searchParams.set('academic_year', selectedYear);
+        window.location.href = url.toString();
+    }
+
+    window.updateSemesterText = function(selectedSem) {
+        const dropdownButton = document.getElementById('selectSemDropdown');
+        dropdownButton.innerHTML = selectedSem;
+
+        const url = new URL(window.location.href);
+        const academicYear = url.searchParams.get('academic_year');
+        if (academicYear) {
+            url.searchParams.set('academic_year', academicYear);
+        }
+        url.searchParams.set('semester', selectedSem);
+        window.location.href = url.toString();
+    }
+
+    // Function to show event details when an event card is clicked
+    window.showEventDetails = function(eventId) {
+        console.log("showEventDetails called with eventId:", eventId); // Debugging line
+        loadEventDetails(eventId);
+    }
+    
+    // Function to load event details and redirect
+    function loadEventDetails(eventId) {
+        const currentYear = document.getElementById('selectYearDropdown').innerText || "Select Year";
+        const currentSemester = document.getElementById('selectSemDropdown').innerText || "Select Sem";
+        const studentId = getStudentIdFromUrl();
+
+        window.location.href = `/spr-edit?id=${studentId}&event_id=${eventId}&academic_year=${currentYear}&semester=${currentSemester}`;
+    }
+
+    // Helper function to extract the student ID from the URL
+    function getStudentIdFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('id');
+    }
 });

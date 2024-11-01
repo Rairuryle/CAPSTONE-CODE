@@ -18,6 +18,14 @@
                 {{!-- attendance table --}}
                 <div class="attendance-table-container">
                     <span class="attendance-table-label border px-4 py-2">ATTENDANCE</span>
+                    <div class="attendance-actions-row d-flex mt-3 w-100">
+                        <select name="selectEventDay" id="selectEventDay"
+                            class="select-event-day border-gray bg-transparent fw-bold py-2">
+                            <option disabled="disabled" selected="selected">Select Event Day</option>
+                            <option value="Day 1">Day 1</option>
+                            <option value="Day 2">Day 2</option>
+                        </select>
+                    </div>
                     <div class="attendance-table-header d-flex fw-bold mt-3 border-bottom border-2 pb-1">
                         <div class="col-3 ps-2">
                             <span>DATE</span>
@@ -64,14 +72,8 @@
 
                 {{!-- activity table --}}
                 <div class="activity-table-container mt-4">
-                    <span class="activity-table-label border px-4 py-2">ACTIVITIES</span>
                     <div class="activity-actions-row d-flex mt-3 w-100">
-                        <select name="selectEventDay" id="selectEventDay"
-                            class="select-event-day border-gray bg-transparent fw-bold">
-                            <option disabled="disabled" selected="selected">Select Day</option>
-                            <option value="Day 1">Day 1</option>
-                            <option value="Day 2">Day 2</option>
-                        </select>
+                        <span class="activity-table-label border px-4 py-2">ACTIVITIES</span>
                         <div class="d-flex align-items-center ms-auto">
                             <img src="../img/document-filter.png" alt="Sort" class="ps-2" style="height: 20px;">
                             <select id="sortActivities"

@@ -19,23 +19,23 @@ const getDaysDifference = (startDate, endDate) => {
 };
 
 router.post('/add-event', (req, res) => {
-    const { event_name, event_date_start, event_date_end, event_scope, student_id, to_verify } = req.body;
+    const { event_name, event_date_start, event_date_end, event_scope, student_id, to_verify, academic_year, semester } = req.body;
 
     const activity_name = req.body['activity_name[]'] ? [].concat(req.body['activity_name[]']) : [];
     const activity_date = req.body['activity_date[]'] ? [].concat(req.body['activity_date[]']) : [];
 
     console.log('Request Body:', req.body);
 
-    if (!event_name || !event_date_start || !event_date_end || !event_scope || !student_id || !to_verify) {
+    if (!event_name || !event_date_start || !event_date_end || !event_scope || !student_id || !to_verify || !academic_year || !semester) {
         return res.status(400).send('Please provide all required fields');
     }
 
     const event_days = getDaysDifference(event_date_start, event_date_end);
 
-    const sqlEvent = `INSERT INTO event (event_name, event_date_start, event_date_end, event_days, event_scope, to_verify)
-                      VALUES (?, ?, ?, ?, ?, ?)`;
+    const sqlEvent = `INSERT INTO event (event_name, event_date_start, event_date_end, event_days, event_scope, to_verify, academic_year, semester)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-    db.query(sqlEvent, [event_name, event_date_start, event_date_end, event_days, event_scope, to_verify], (err, eventResult) => {
+    db.query(sqlEvent, [event_name, event_date_start, event_date_end, event_days, event_scope, to_verify, academic_year, semester], (err, eventResult) => {
         if (err) {
             console.error('Error inserting event into database:', err);
             return res.status(500).send('Error adding event');
@@ -76,7 +76,9 @@ router.post('/add-event', (req, res) => {
             event_date_end,
             event_days,
             event_scope,
-            to_verify
+            to_verify,
+            academic_year,
+            semester
         };
 
         req.session.studentId = student_id;
@@ -85,6 +87,25 @@ router.post('/add-event', (req, res) => {
         res.redirect(`/spr-edit?id=${student_id}`);
     });
 });
+
+
+router.post('/academic_year', async (req, res) => {
+    const { academic_year } = req.body; //
+
+    if (!academic_year) {
+        return res.status(400).json({ error: 'Academic year is required.' });
+    }
+
+    try {
+        await db.query('INSERT INTO academic_year (academic_year) VALUES (?)', [academic_year]);
+
+        res.status(201).json({ message: 'Academic year added successfully' });
+    } catch (error) {
+        console.error('Error adding academic year:', error);
+        res.status(500).json({ error: 'An error occurred while adding the academic year.' });
+    }
+});
+
 
 
 module.exports = router;

@@ -50,6 +50,34 @@ body {
   height: 35rem;
 }
 
+.attendance-guidelines-link,
+.help-link {
+  color: var(--main-green);
+}
+
+.btn-attendance-guidelines:hover,
+.btn-help:hover {
+  color: rgb(68, 104, 91);
+}
+
+.btn-attendance-guidelines,
+.btn-help {
+  border-radius: 40px;
+}
+
+.btn-attendance-guidelines img,
+.btn-help img {
+  width: 25%;
+  margin-left: -2rem;
+  margin-top: -0.2rem;
+  margin-bottom: -1rem;
+}
+
+.btn-attendance-guidelines span,
+.btn-help span {
+  font-size: 1.1rem;
+}
+
 .logo-link-landing img {
   width: 2rem;
 }
@@ -93,6 +121,20 @@ body {
 
 .title-one-contact a:hover {
   text-decoration: underline;
+}
+
+.contact-container {
+  color: white;
+}
+
+.btn-orgs-contact {
+  color: white;
+  border-radius: 20px;
+  cursor: default !important;
+}
+
+.row-contact span {
+  font-size: 1.1rem;
 }
 
 .row-contact a {

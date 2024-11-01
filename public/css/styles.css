@@ -94,9 +94,9 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--main-green);
+  background: var(--tertiary-green);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #1c5240;
 }
