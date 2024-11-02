@@ -22,9 +22,11 @@
                         <select name="selectEventDay" id="selectEventDay"
                             class="select-event-day border-gray bg-transparent fw-bold py-2">
                             <option disabled="disabled" selected="selected">Select Event Day</option>
-                            <option value="Day 1">Day 1</option>
-                            <option value="Day 2">Day 2</option>
+                            {{#each (range 1 eventDays)}}
+                            <option value="{{this}}">Day {{this}}</option>
+                            {{/each}}
                         </select>
+
                     </div>
                     <div class="attendance-table-header d-flex fw-bold mt-3 border-bottom border-2 pb-1">
                         <div class="col-3 ps-2">
@@ -41,10 +43,12 @@
                         </div>
                     </div>
 
-                    <div
-                        class="attendance-table-information d-flex align-items-center border-bottom border-2 mt-3 pb-3">
+                    {{#if attendance.length}}
+                    {{#each attendance}}
+                    <div class=" attendance-table-information d-flex align-items-center border-bottom border-2 mt-3
+                        pb-3" data-day="{{this.attendance_day}}">
                         <div class="col-3 ps-2">
-                            <span>August 8, 2024</span>
+                            <span>{{this.attendance_date}}</span>
                         </div>
                         <div class="col-2">
                             <div class="form-check form-check-inline ms-2">
@@ -64,10 +68,14 @@
                             </div>
                         </div>
                         <div class="col-4">
-                            <span class="officer-in-charge officer-attendance-recorder ps-3">{{adminData.first_name}}
-                                {{adminData.last_name}}</span>
+                            <span class="officer-in-charge officer-attendance-recorder ps-3">{{../adminData.first_name}}
+                                {{../adminData.last_name}}</span>
                         </div>
                     </div>
+                    {{/each}}
+                    {{else}}
+                    <p>No attendance record found.</p>
+                    {{/if}}
                 </div>
 
                 {{!-- activity table --}}
@@ -92,7 +100,8 @@
                                     Role</option>
                                 <option value="Points" {{#if (eq selectedSort "Points" )}}selected{{/if}}>Sort By Points
                                 </option>
-                                <option value="Officer" {{#if (eq selectedSort "Officer" )}}selected{{/if}}>Sort By Officer
+                                <option value="Officer" {{#if (eq selectedSort "Officer" )}}selected{{/if}}>Sort By
+                                    Officer
                                 </option>
                             </select>
                         </div>
@@ -131,8 +140,8 @@
                     <div class="activity-table-information-container mt-2">
                         {{#if activities.length}}
                         {{#each activities}}
-                        <div
-                            class="activity-table-information activity-table-information-odd d-flex align-items-center py-2">
+                        <div class="activity-table-information activity-table-information-odd d-flex align-items-center py-2"
+                            data-day="{{this.activity_day}}">
                             <div class="col-4 col-activity-name">{{this.activity_name}}</div>
                             <div class="col-2 ms-4 me-1">{{formatDate this.activity_date}}</div>
                             <div class="col-3 col-role">
@@ -157,74 +166,8 @@
                         </div>
                         {{/each}}
                         {{else}}
-                        <p>No associated activities found for this event.</p>
+                        <p>No associated activities found.</p>
                         {{/if}}
-
-                        {{!-- <div
-                            class="activity-table-information activity-table-information-even d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Dress to Impress</div>
-                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
-                            <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role ps-2 team-participant">
-                                    <option disabled="disabled" selected="selected">Assign Role</option>
-                                    <option value="INDIV. Participant">INDIV. Participant</option>
-                                    <option value="TEAM Participant">Team Participant</option>
-                                    <option value="PROG. Spectator">PROG. Spectator</option>
-                                    <option value="OTH. Spectator">OTH. Spectator</option>
-                                </select>
-                            </div>
-                            <div class="col-1 ms-4 me-2">20 points</div>
-                            <div class="col-2 d-flex justify-content-between col-officer-in-charge">
-                                <span
-                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{adminData.first_name}}
-                                    {{adminData.last_name}}</span>
-                                <img src="../img/edit.png" alt="Edit Activity" class="ms-2">
-                            </div>
-                        </div>
-
-                        <div
-                            class="activity-table-information activity-table-information-odd d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Jigsawlympics</div>
-                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
-                            <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role ps-2 prog-spectator">
-                                    <option disabled="disabled" selected="selected">Assign Role</option>
-                                    <option value="INDIV. Participant">INDIV. Participant</option>
-                                    <option value="TEAM Participant">Team Participant</option>
-                                    <option value="PROG. Spectator">PROG. Spectator</option>
-                                    <option value="OTH. Spectator">OTH. Spectator</option>
-                                </select>
-                            </div>
-                            <div class="col-1 ms-4 me-2">10 points</div>
-                            <div class="col-2 d-flex justify-content-between col-officer-in-charge">
-                                <span
-                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{adminData.first_name}}
-                                    {{adminData.last_name}}</span>
-                                <img src="../img/edit.png" alt="Edit Activity" class="ms-2">
-                            </div>
-                        </div>
-
-                        <div
-                            class="activity-table-information activity-table-information-even d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Deal Or No Deal</div>
-                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
-                            <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role ps-2 oth-spectator">
-                                    <option disabled="disabled" selected="selected">Assign Role</option>
-                                    <option value="INDIV. Participant">INDIV. Participant</option>
-                                    <option value="TEAM Participant">Team Participant</option>
-                                    <option value="PROG. Spectator">PROG. Spectator</option>
-                                    <option value="OTH. Spectator">OTH. Spectator</option>
-                                </select>
-                            </div>
-                            <div class="col-1 ms-4 me-2">5 points</div>
-                            <div class="col-2 d-flex justify-content-between col-officer-in-charge">
-                                <span
-                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{adminData.first_name}}
-                                    {{adminData.last_name}}</span>
-                                <img src="../img/edit.png" alt="Edit Activity" class="ms-2">
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -246,7 +189,7 @@
                             <div class="col dropdown">
                                 <button class="btn dropdown-toggle select-year fw-bold border border-black px-3"
                                     type="button" id="selectYearDropdown" data-bs-toggle="dropdown"
-                                    aria-expanded="false" style="width: 7.75rem;">
+                                    aria-expanded="false" style="width: 8rem;">
                                     {{selectedYear}}
                                 </button>
 
@@ -276,7 +219,7 @@
                             <div class="col dropdown ms-2">
                                 <button class="btn dropdown-toggle select-sem fw-bold border border-black px-3"
                                     type="button" id="selectSemDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                    style="width: 7.75rem;">
+                                    style="width: 8rem;">
                                     {{selectedSemester}}
                                 </button>
 
@@ -299,9 +242,13 @@
                                 <img src="../img/add-spr.png" alt="Add Event" class="add-event-img pb-3">
                             </button>
                         </div>
+                        {{#if noEvents}}
+                        <p>No events found.</p>
+                        {{else}}
                         {{#each filteredEvents}}
                         <div class="card event-card mb-1" data-scope="{{this.event_scope}}"
-                            onclick="showEventDetails({{this.event_id}})">
+                            data-event-days="{{this.event_days}}"
+                            onclick="showEventDetails({{this.event_id}}, {{this.event_days}})">
                             <div class="card-body event-card-body d-flex flex-column py-2">
                                 <div class="d-flex justify-content-between">
                                     <span class="card-title fw-bold">{{this.event_name}}</span>
@@ -319,6 +266,8 @@
                             </div>
                         </div>
                         {{/each}}
+
+                        {{/if}}
                     </div>
                 </div>
 
@@ -381,6 +330,7 @@
 <script src="../js/spr/eventScope.js"></script>
 <script src="../js/spr/addYear.js"></script>
 <script src="../js/spr/dateUtils.js"></script>
+<script src="../js/spr/eventDays.js"></script>
 <script src="../js/spr/addMoreActivities.js"></script>
 <script src="../js/spr/editDeleteButtons.js"></script>
 <script src="../js/spr/disableElements.js"></script>

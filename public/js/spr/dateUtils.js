@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // date picker
-    // Function to update activity date min and max based on event dates
     function updateActivityDateRestrictions() {
         const startDate = document.getElementById('startDateEvent').value;
         const endDate = document.getElementById('endDateEvent').value;

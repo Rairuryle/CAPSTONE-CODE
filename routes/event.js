@@ -24,8 +24,6 @@ router.post('/add-event', (req, res) => {
     const activity_name = req.body['activity_name[]'] ? [].concat(req.body['activity_name[]']) : [];
     const activity_date = req.body['activity_date[]'] ? [].concat(req.body['activity_date[]']) : [];
 
-    console.log('Request Body:', req.body);
-
     if (!event_name || !event_date_start || !event_date_end || !event_scope || !student_id || !to_verify || !academic_year || !semester) {
         return res.status(400).send('Please provide all required fields');
     }
@@ -42,16 +40,34 @@ router.post('/add-event', (req, res) => {
         }
 
         const eventId = eventResult.insertId;
-        console.log('Event ID:', eventId);
-        console.log('Activity Names:', activity_name);
-        console.log('Activity Dates:', activity_date);
 
+        // Add attendance records for each day within event date range
+        let currentDate = new Date(event_date_start);
+        const endDate = new Date(event_date_end);
+        const attendanceQueries = [];
+
+        // Initialize attendance day counter
+        let attendanceDayCounter = 1;
+
+        while (currentDate <= endDate) {
+            const attendanceDate = new Date(currentDate).toISOString().split('T')[0]; // Format as YYYY-MM-DD
+            const sqlAttendance = 'INSERT INTO attendance (attendance_date, event_id, attendance_day) VALUES (?, ?, ?)';
+            attendanceQueries.push(db.query(sqlAttendance, [attendanceDate, eventId, attendanceDayCounter]));
+            attendanceDayCounter++; // Increment the attendance day
+            currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+        }
+
+        // Insert activities if provided
         if (activity_name.length > 0 && activity_date.length > 0) {
             const activityQueries = activity_name.map((name, index) => {
                 if (name && activity_date[index]) {
+                    const activityDate = new Date(activity_date[index]);
+                    const startDate = new Date(event_date_start);
+                    const dayDifference = Math.ceil((activityDate - startDate) / (1000 * 60 * 60 * 24)) + 1; // +1 to make it 1-based index
+
                     return {
-                        query: 'INSERT INTO activity (activity_name, activity_date, event_id) VALUES (?, ?, ?)',
-                        params: [name, activity_date[index], eventId],
+                        query: 'INSERT INTO activity (activity_name, activity_date, event_id, activity_day) VALUES (?, ?, ?, ?)',
+                        params: [name, activity_date[index], eventId, dayDifference],
                     };
                 }
                 return null;
@@ -62,12 +78,10 @@ router.post('/add-event', (req, res) => {
                     if (err) {
                         console.error('Error inserting activity into database:', err);
                     } else {
-                        console.log('Activity inserted successfully:', { name: params[0], date: params[1] });
+                        console.log('Activity inserted successfully:', { name: params[0], date: params[1], day: params[3] });
                     }
                 });
             });
-        } else {
-            console.log('No activities to insert.');
         }
 
         req.session.eventData = {
@@ -83,7 +97,6 @@ router.post('/add-event', (req, res) => {
 
         req.session.studentId = student_id;
 
-        console.log('Event added:', req.session.eventData);
         res.redirect(`/spr-edit?id=${student_id}`);
     });
 });
@@ -105,7 +118,5 @@ router.post('/academic_year', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while adding the academic year.' });
     }
 });
-
-
 
 module.exports = router;

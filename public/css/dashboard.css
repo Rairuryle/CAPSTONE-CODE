@@ -200,11 +200,6 @@ input:focus + #suggestionsList {
   margin-left: -8rem;
   border: 1px dashed var(--main-green);
 }
-
-.student-name-list {
-  font-size: 1.2rem;
-}
-
 .student-id-number-list {
   background-color: #efefef;
   border: 1px solid rgba(33, 58, 49, 0.3);
@@ -218,7 +213,7 @@ input:focus + #suggestionsList {
 .student-id-number-list,
 .student-status-list {
   border-radius: 20px;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   padding-top: 0.2rem;
   padding: 0.3rem;
 }

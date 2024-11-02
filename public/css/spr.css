@@ -248,6 +248,7 @@ body {
   border-radius: 15px;
   overflow-y: auto;
   overflow-x: hidden;
+  min-height: 15rem;
   max-height: 21.5rem;
 }
 

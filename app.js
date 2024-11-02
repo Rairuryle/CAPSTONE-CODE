@@ -66,6 +66,13 @@ app.engine('hbs', exphbs.engine({
             const diffTime = Math.abs(end - start);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             return diffDays;
+        },
+        range: function (from, to) {
+            const result = [];
+            for (let i = from; i <= to; i++) {
+                result.push(i);
+            }
+            return result;
         }
     }
 }));
