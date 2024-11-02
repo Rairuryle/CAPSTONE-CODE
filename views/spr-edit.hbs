@@ -18,6 +18,14 @@
                 {{!-- attendance table --}}
                 <div class="attendance-table-container">
                     <span class="attendance-table-label border px-4 py-2">ATTENDANCE</span>
+                    <div class="attendance-actions-row d-flex mt-3 w-100">
+                        <select name="selectEventDay" id="selectEventDay"
+                            class="select-event-day border-gray bg-transparent fw-bold py-2">
+                            <option disabled="disabled" selected="selected">Select Event Day</option>
+                            <option value="Day 1">Day 1</option>
+                            <option value="Day 2">Day 2</option>
+                        </select>
+                    </div>
                     <div class="attendance-table-header d-flex fw-bold mt-3 border-bottom border-2 pb-1">
                         <div class="col-3 ps-2">
                             <span>DATE</span>
@@ -64,19 +72,11 @@
 
                 {{!-- activity table --}}
                 <div class="activity-table-container mt-4">
-                    <div class="d-flex align-items-center">
+                    <div class="activity-actions-row d-flex align-items-center w-100">
                         <span class="activity-table-label border px-4 py-2">ACTIVITIES</span>
                         <button class="btn m-0 p-0" data-bs-toggle="modal" data-bs-target="#addActivitiesModal">
                             <img src="../img/add-spr.png" alt="Add Activity" class="add-activity-icon ms-2">
                         </button>
-                    </div>
-                    <div class="activity-actions-row d-flex mt-3 w-100">
-                        <select name="selectEventDay" id="selectEventDay"
-                            class="select-event-day border-gray bg-transparent fw-bold">
-                            <option disabled="disabled" selected="selected">Select Day</option>
-                            <option value="Day 1">Day 1</option>
-                            <option value="Day 2">Day 2</option>
-                        </select>
                         <div class="d-flex align-items-center ms-auto">
                             <img src="../img/document-filter.png" alt="Sort" class="ps-2" style="height: 20px;">
                             <select id="sortActivities"
@@ -91,6 +91,8 @@
                                 <option value="Role" {{#if (eq selectedSort "Role" )}}selected{{/if}}>Sort By
                                     Role</option>
                                 <option value="Points" {{#if (eq selectedSort "Points" )}}selected{{/if}}>Sort By Points
+                                </option>
+                                <option value="Officer" {{#if (eq selectedSort "Officer" )}}selected{{/if}}>Sort By Officer
                                 </option>
                             </select>
                         </div>
@@ -127,10 +129,12 @@
                     </div>
 
                     <div class="activity-table-information-container mt-2">
+                        {{#if activities.length}}
+                        {{#each activities}}
                         <div
                             class="activity-table-information activity-table-information-odd d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
-                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
+                            <div class="col-4 col-activity-name">{{this.activity_name}}</div>
+                            <div class="col-2 ms-4 me-1">{{formatDate this.activity_date}}</div>
                             <div class="col-3 col-role">
                                 <select name="assignRole" id="assignRole" class="assign-role ps-2 indiv-participant">
                                     <option disabled="disabled" selected="selected">Assign Role</option>
@@ -143,16 +147,20 @@
                             <div class="col-1 ms-4 me-2">15 points</div>
                             <div class="col-2 d-flex justify-content-between col-officer-in-charge">
                                 <span
-                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{adminData.first_name}}
-                                    {{adminData.last_name}}</span>
+                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{../adminData.first_name}}
+                                    {{../adminData.last_name}}</span>
                                 <button class="btn m-0 p-0" data-bs-toggle="modal"
                                     data-bs-target="#editActivitiesModal">
                                     <img src="../img/edit.png" alt="Edit Activity" class="ms-2">
                                 </button>
                             </div>
                         </div>
+                        {{/each}}
+                        {{else}}
+                        <p>No associated activities found for this event.</p>
+                        {{/if}}
 
-                        <div
+                        {{!-- <div
                             class="activity-table-information activity-table-information-even d-flex align-items-center py-2">
                             <div class="col-4 col-activity-name">Dress to Impress</div>
                             <div class="col-2 ms-4 me-1">November 4, 2024</div>
@@ -216,7 +224,7 @@
                                     {{adminData.last_name}}</span>
                                 <img src="../img/edit.png" alt="Edit Activity" class="ms-2">
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -238,7 +246,7 @@
                             <div class="col dropdown">
                                 <button class="btn dropdown-toggle select-year fw-bold border border-black px-3"
                                     type="button" id="selectYearDropdown" data-bs-toggle="dropdown"
-                                    aria-expanded="false" style="width: 8.4rem;">
+                                    aria-expanded="false" style="width: 7.75rem;">
                                     {{selectedYear}}
                                 </button>
 
@@ -248,7 +256,7 @@
                                     <li>
                                         <!-- Set onclick event to call updateDropdownText -->
                                         <button class="dropdown-item" type="button"
-                                            onclick="updateDropdownText('{{this.academic_year}}')">
+                                            onclick="updateYearText('{{this.academic_year}}')">
                                             {{this.academic_year}}
                                         </button>
                                     </li>
@@ -268,7 +276,7 @@
                             <div class="col dropdown ms-2">
                                 <button class="btn dropdown-toggle select-sem fw-bold border border-black px-3"
                                     type="button" id="selectSemDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                    style="width: 7.7rem;">
+                                    style="width: 7.75rem;">
                                     {{selectedSemester}}
                                 </button>
 
@@ -300,7 +308,8 @@
                                     <button class="btn m-0 p-0 edit-event-btn" data-bs-toggle="modal"
                                         data-bs-target="#editEventsModal" data-event-name="{{this.event_name}}"
                                         data-event-start="{{formatDate this.event_date_start 'YYYY-MM-DD'}}"
-                                        data-event-end="{{formatDate this.event_date_end 'YYYY-MM-DD'}}">
+                                        data-event-end="{{formatDate this.event_date_end 'YYYY-MM-DD'}}"
+                                        onclick="event.stopPropagation();">
                                         <img src="../img/edit.png" alt="Edit Event" class="edit-event-icon me-2">
                                     </button>
                                 </div>
@@ -312,18 +321,6 @@
                         {{/each}}
                     </div>
                 </div>
-
-                {{#if activities.length}}
-                <h3>Associated Activities</h3>
-                <ul>
-                    {{#each activities}}
-                    <li>{{this.activity_name}} on {{formatDate this.activity_date}}</li>
-                    {{/each}}
-                </ul>
-                {{else}}
-                <p>No associated activities found for this event.</p>
-                {{/if}}
-
 
 
 
@@ -376,7 +373,14 @@
         {{> modals/deleteActivitiesModal}}
         {{> modals/importFileModal}}
         {{> modals/addYearModal}}
+
     </div>
 </div>
 
-<script src="../js/sprEdit.js"></script>
+<script src="../js/spr/loadDetails.js"></script>
+<script src="../js/spr/eventScope.js"></script>
+<script src="../js/spr/addYear.js"></script>
+<script src="../js/spr/dateUtils.js"></script>
+<script src="../js/spr/addMoreActivities.js"></script>
+<script src="../js/spr/editDeleteButtons.js"></script>
+<script src="../js/spr/disableElements.js"></script>

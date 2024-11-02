@@ -396,8 +396,6 @@ const filterEvents = (events, departmentName, aboName, iboName, selectedScope) =
     };
 };
 
-
-
 // Route for spr-main
 router.get('/spr-main', (req, res) => {
     if (req.session.isAuthenticated) {
@@ -512,7 +510,6 @@ router.get('/spr-edit', (req, res) => {
         console.log('ABO:', aboName);
         console.log('IBO:', iboName);
 
-        // Determine organization flags
         const {
             isUSG,
             isSAO,
@@ -533,14 +530,17 @@ router.get('/spr-edit', (req, res) => {
             isExtraOrgsTrue
         } = isExtraOrgs(organization);
 
-        // Fetch selected academic year and semester from query parameters
         const selectedYear = req.query.academic_year || "Select Year";
-        const selectedSemester = req.query.semester || "Select Sem"; // Default semester text
+        const selectedSemester = req.query.semester || "Select Sem";
+        const selectedScope = isUSG ? 'INSTITUTIONAL' : organization;
+        console.log('Selected Year: ', selectedYear);
+        console.log('Selected Semester:', selectedSemester);
+        console.log('Selected Scope:', selectedScope);
 
         const idNumber = req.query.id;
-        const eventId = req.query.event_id; // Get the event_id from the query
+        const eventId = req.query.event_id;
         console.log('ID Number:', idNumber);
-        console.log('Event ID:', eventId); // Log the event ID
+        console.log('Event ID:', eventId);
 
         // Helper function to fetch academic years
         const fetchAcademicYears = (callback) => {
@@ -554,10 +554,7 @@ router.get('/spr-edit', (req, res) => {
 
         // Function to render the edit page
         const renderEditPage = (student, events, academicYears, activities) => {
-            const selectedScope = req.query.scope || ''; // Get the selected event scope from the query parameter
-            console.log('Selected Scope:', selectedScope);
-            const { filteredEvents } = filterEvents(events, departmentName, aboName, iboName, selectedScope);
-
+            const { filteredEvents } = filterEvents(events, departmentName, aboName, iboName, selectedScope); // Use filterEvents
             res.render('spr-edit', {
                 adminData,
                 organization,
@@ -581,11 +578,12 @@ router.get('/spr-edit', (req, res) => {
                 isCSOorIBOorSAO,
                 isExtraOrgsTrue,
                 student,
-                filteredEvents, // Pass the filtered events to the template
-                academicYears,   // Pass the academic years to the template
-                activities,      // Pass the activities to the template
+                filteredEvents, // Pass filtered events to the render function
+                academicYears,
+                activities,
                 selectedYear,
                 selectedSemester,
+                selectedScope,
                 currentPath: '/spr-edit',
                 title: 'Student Participation Record Edit Mode | LSU HEU Events and Attendance Tracking Website'
             });
