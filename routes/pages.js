@@ -354,13 +354,13 @@ router.get('/list', (req, res) => {
     }
 });
 
-// Helper function to fetch events (you can place this outside of both routes)
 const fetchEvents = (academicYear, semester, eventScope, callback) => {
     const eventQuery = `
-        SELECT * FROM event
-        WHERE academic_year = ? AND semester = ? AND event_scope = ?
-        ORDER BY event_date_start DESC
-    `;
+    SELECT * FROM event
+    WHERE academic_year = ? AND semester = ? AND (event_scope = ? OR event_scope = 'INSTITUTIONAL')
+    ORDER BY event_date_start DESC
+`;
+
     db.query(eventQuery, [academicYear, semester, eventScope], (err, eventResults) => {
         if (err) {
             console.error('Error fetching events:', err);
@@ -387,8 +387,7 @@ const filterEvents = (events, departmentName, aboName, iboName, selectedScope) =
     } else if (selectedScope === iboName) {
         filteredEvents = iboEvents;
     } else {
-        // Default to show all events if no scope selected
-        filteredEvents = events;
+        filteredEvents = [];
     }
 
     return {
@@ -396,19 +395,25 @@ const filterEvents = (events, departmentName, aboName, iboName, selectedScope) =
         collegeEvents,
         aboEvents,
         iboEvents,
-        filteredEvents // Include the filtered events for use in the view
+        filteredEvents
     };
 };
 
+const formatDate = (date) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return new Intl.DateTimeFormat('en-US', options).format(new Date(date));
+};
 
 // Route for spr-main
 router.get('/spr-main', (req, res) => {
     if (req.session.isAuthenticated) {
+        console.log('Entered Main Page');
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const departmentName = req.session.departmentName;
         const aboName = req.session.aboName;
         const iboName = req.session.iboName;
+
         console.log('Department Name:', departmentName);
         console.log('ABO:', aboName);
         console.log('IBO:', iboName);
@@ -437,15 +442,37 @@ router.get('/spr-main', (req, res) => {
         } = isExtraOrgs(organization);
 
         const idNumber = req.query.id;
+        const selectedScope = req.query.event_scope || (isUSG ? 'INSTITUTIONAL' : organization) || '';
+        const selectedYear = req.query.academic_year || "Select Year";
+        const selectedSemester = req.query.semester || "Select Sem";
         console.log('ID Number:', idNumber);
+        console.log('Selected Scope:', selectedScope);
+        console.log('Selected Year:', selectedYear);
+        console.log('Selected Semester:', selectedSemester);
 
-        const selectedScope = req.query.scope || '';
+        const eventId = req.query.event_id;
+        const eventName = req.query.event_name;
+        const eventDays = req.query.event_days || null;
+        const eventDateStart = req.query.event_start_date;
+        const eventDateEnd = req.query.event_end_date;
+        console.log('Event ID:', eventId);
+        console.log('Event Name:', eventName);
+        console.log('Event Days:', eventDays);
+        console.log('Event Start Date:', eventDateStart);
+        console.log('Event End Date:', eventDateEnd);
 
-        const renderMainPage = (student, events) => {
-            console.log('Selected Scope:', selectedScope);
+        const fetchAcademicYears = (callback) => {
+            db.query('SELECT academic_year FROM academic_year ORDER BY academic_year DESC', (err, results) => {
+                if (err) {
+                    return callback(err, null);
+                }
+                callback(null, results);
+            });
+        };
 
-            // Determine if there are events
-            const noEvents = !events || events.length === 0;
+        const renderEditPage = (student, events, academicYears, eventDays, activities, attendance) => {
+            const { filteredEvents } = filterEvents(events, departmentName, aboName, iboName, selectedScope);
+            const noEvents = !filteredEvents || filteredEvents.length === 0;
 
             res.render('spr-main', {
                 adminData,
@@ -453,7 +480,7 @@ router.get('/spr-main', (req, res) => {
                 departmentName,
                 aboName,
                 iboName,
-                isUSGorCSOorSAO,
+                isUSGorCSOorSAO: isLeadingOrgs(organization),
                 isCollegeOrCSOorSAO: otherCombinations(organization),
                 isUSG,
                 isSAO,
@@ -471,42 +498,102 @@ router.get('/spr-main', (req, res) => {
                 isCSOorIBOorSAO,
                 isExtraOrgsTrue,
                 student,
-                filteredEvents: events || [], // Pass the events, or an empty array
-                noEvents, // Pass the noEvents flag to the template
+                filteredEvents,
+                noEvents,
+                academicYears,
+                activities,
+                attendance,
+                selectedYear,
+                selectedSemester,
+                selectedScope,
+                eventId,
+                eventName,
+                eventDays,
+                eventDateStart,
+                eventDateEnd,
                 currentPath: '/spr-main',
                 title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
             });
         };
 
-        if (idNumber) {
-            const query = 'SELECT * FROM student WHERE id_number = ?';
-            db.query(query, [idNumber], (err, results) => {
-                if (err) {
-                    return res.status(500).send('Database error');
-                }
+        // Fetch student data based on the ID number
+        const studentQuery = 'SELECT * FROM student WHERE id_number = ?';
+        db.query(studentQuery, [idNumber], (err, studentResults) => {
+            if (err) {
+                return res.status(500).send('Database error while fetching student data');
+            }
 
-                const student = results.length > 0 ? results[0] : null;
+            const student = studentResults.length > 0 ? studentResults[0] : null;
 
-                // Render the page with student data and fetch events
-                renderMainPage(student, []); // Pass an empty array for events for now
-            });
-        } else {
-            // If no ID number, render the page without student data
-            renderMainPage(null, []); // Pass an empty array for events for now
-        }
+            // Check if all parameters are present before fetching events
+            if (idNumber && selectedYear !== "Select Year" && selectedSemester !== "Select Sem") {
+                fetchEvents(selectedYear, selectedSemester, selectedScope, (events) => {
+                    if (events && events.length > 0) {
+                        if (eventId && eventDays) {
+                            const activitiesQuery = 'SELECT * FROM activity WHERE event_id = ?';
+                            db.query(activitiesQuery, [eventId], (err, activityResults) => {
+                                if (err) {
+                                    return res.status(500).send('Database error while fetching activities');
+                                }
+
+                                // Fetch attendance based on student ID and activity ID
+                                const attendanceQuery = 'SELECT * FROM attendance WHERE event_id = ?';
+                                db.query(attendanceQuery, [eventId], (err, attendanceResults) => {
+                                    if (err) {
+                                        return res.status(500).send('Database error while fetching attendance');
+                                    }
+
+                                    const formattedAttendance = attendanceResults.map(att => ({
+                                        ...att,
+                                        attendance_date: formatDate(att.attendance_date)
+                                    }));
+
+                                    fetchAcademicYears((err, academicYears) => {
+                                        if (err) {
+                                            return res.status(500).send('Database error while fetching academic years');
+                                        }
+
+                                        renderEditPage(student, events, academicYears, eventDays, activityResults, formattedAttendance);
+                                    });
+                                });
+                            });
+
+                        } else {
+                            // Render the page without activities or attendance if eventDays is not selected
+                            fetchAcademicYears((err, academicYears) => {
+                                if (err) {
+                                    return res.status(500).send('Database error while fetching academic years');
+                                }
+                                renderEditPage(student, events, academicYears, [], [], []); // No attendance data
+                            });
+                        }
+                    } else {
+                        // If no events, render the page indicating no events found
+                        fetchAcademicYears((err, academicYears) => {
+                            if (err) {
+                                return res.status(500).send('Database error while fetching academic years');
+                            }
+                            renderEditPage(student, [], academicYears, [], [], []); // No events or attendance found
+                        });
+                    }
+                });
+            } else {
+                // If parameters are missing, render the page without events or attendance
+                fetchAcademicYears((err, academicYears) => {
+                    if (err) {
+                        return res.status(500).send('Database error while fetching academic years');
+                    }
+                    renderEditPage(student, [], academicYears, [], [], []); // No events or attendance found
+                });
+            }
+        });
     } else {
         res.redirect('/login');
     }
 });
 
-const formatDate = (date) => {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return new Intl.DateTimeFormat('en-US', options).format(new Date(date));
-};
-
-
 // Route for spr-edit
-router.get('/spr-edit', (req, res) => { 
+router.get('/spr-edit', (req, res) => {
     if (req.session.isAuthenticated) {
         console.log('Entered Edit Mode');
         const adminData = req.session.adminData;
@@ -544,9 +631,16 @@ router.get('/spr-edit', (req, res) => {
         console.log('Selected Scope:', selectedScope);
 
         const eventId = req.query.event_id;
+        const eventName = req.query.event_name;
+        const eventDays = req.query.event_days || null;
+        const eventDateStart = req.query.event_start_date;
+        const eventDateEnd = req.query.event_end_date;
         console.log('Event ID:', eventId);
+        console.log('Event Name:', eventName);
+        console.log('Event Days:', eventDays);
+        console.log('Event Start Date:', eventDateStart);
+        console.log('Event End Date:', eventDateEnd);
 
-        // Helper function to fetch academic years
         const fetchAcademicYears = (callback) => {
             db.query('SELECT academic_year FROM academic_year ORDER BY academic_year DESC', (err, results) => {
                 if (err) {
@@ -556,11 +650,9 @@ router.get('/spr-edit', (req, res) => {
             });
         };
 
-        // Function to render the edit page
         const renderEditPage = (student, events, academicYears, eventDays, activities, attendance) => {
             const { filteredEvents } = filterEvents(events, departmentName, aboName, iboName, selectedScope);
             const noEvents = !filteredEvents || filteredEvents.length === 0;
-            console.log("Rendering edit page with eventDays:", eventDays);
 
             res.render('spr-edit', {
                 adminData,
@@ -593,7 +685,11 @@ router.get('/spr-edit', (req, res) => {
                 selectedYear,
                 selectedSemester,
                 selectedScope,
+                eventId,
+                eventName,
                 eventDays,
+                eventDateStart,
+                eventDateEnd,
                 currentPath: '/spr-edit',
                 title: 'Student Participation Record Edit Mode | LSU HEU Events and Attendance Tracking Website'
             });
@@ -610,13 +706,9 @@ router.get('/spr-edit', (req, res) => {
 
             // Check if all parameters are present before fetching events
             if (idNumber && selectedYear !== "Select Year" && selectedSemester !== "Select Sem") {
-                // Fetch events and activities if the parameters are valid
                 fetchEvents(selectedYear, selectedSemester, selectedScope, (events) => {
                     if (events && events.length > 0) {
-                        if (eventId) {
-                            // Fetch activities if event_id is present
-                            const eventDays = req.query.event_days || 0;
-
+                        if (eventId && eventDays) {
                             const activitiesQuery = 'SELECT * FROM activity WHERE event_id = ?';
                             db.query(activitiesQuery, [eventId], (err, activityResults) => {
                                 if (err) {
@@ -639,15 +731,14 @@ router.get('/spr-edit', (req, res) => {
                                         if (err) {
                                             return res.status(500).send('Database error while fetching academic years');
                                         }
-                                        console.log("Rendering with activities, eventDays, and attendance:", eventDays);
 
                                         renderEditPage(student, events, academicYears, eventDays, activityResults, formattedAttendance);
                                     });
                                 });
                             });
-                            
+
                         } else {
-                            // Render the page without activities or attendance
+                            // Render the page without activities or attendance if eventDays is not selected
                             fetchAcademicYears((err, academicYears) => {
                                 if (err) {
                                     return res.status(500).send('Database error while fetching academic years');
@@ -679,7 +770,5 @@ router.get('/spr-edit', (req, res) => {
         res.redirect('/login');
     }
 });
-
-
 
 module.exports = router;

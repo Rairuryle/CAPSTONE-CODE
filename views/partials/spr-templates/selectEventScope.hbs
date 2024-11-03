@@ -5,13 +5,12 @@
 {{else}}
 <select name="selectEventScope" id="selectEventScope" class="select-event-scope w-100 px-3 py-2 fw-bold">
     <option disabled="disabled" selected="selected">Select Event Scope</option>
-
-    <option value="INSTITUTIONAL">INSTITUTIONAL</option>
+    <option value="INSTITUTIONAL" {{#if (eq selectedScope "INSTITUTIONAL")}}selected{{/if}}>INSTITUTIONAL</option>
 
     {{#if isCollegeOrSAO}}
     <optgroup label="College Departments">
         {{#if (or (eq departmentName organization) (eq organization "SAO"))}}
-        <option value="{{departmentName}}">{{departmentName}}</option>
+        <option value="{{departmentName}}" {{#if (eq selectedScope departmentName)}}selected{{/if}}>{{departmentName}}</option>
         {{/if}}
     </optgroup>
     {{/if}}
@@ -19,22 +18,23 @@
     {{#unless isCollegeDepartment}}
     <optgroup label="ABO">
         {{#if (or (eq aboName organization) (eq organization "CSO") (eq organization "SAO"))}}
-        <option value="{{aboName}}">{{aboName}}</option>
+        <option value="{{aboName}}" {{#if (eq selectedScope aboName)}}selected{{/if}}>{{aboName}}</option>
         {{/if}}
     </optgroup>
 
     <optgroup label="IBO">
         {{#if (or (eq iboName organization) (eq organization "CSO") (eq organization "SAO"))}}
-        <option value="{{iboName}}">{{iboName}}</option>
+        <option value="{{iboName}}" {{#if (eq selectedScope iboName)}}selected{{/if}}>{{iboName}}</option>
         {{/if}}
     </optgroup>
     {{/unless}}
 </select>
+
 {{/if}}
 {{else if isUSG}}
 <input type="text" class="select-event-scope automatic-event-scope w-100 px-3 py-2 fw-bold" name="eventScope"
     id="eventScopeAutomatic" value="INSTITUTIONAL" readonly>
 {{else}}
 <input type="text" class="select-event-scope automatic-event-scope w-100 px-3 py-2 fw-bold" name="eventScope"
-    id="eventScopeAutomatic" value="{{adminData.organization}}" readonly>
+    id="eventScopeAutomaticOrganization" value="{{adminData.organization}}" readonly>
 {{/if}}

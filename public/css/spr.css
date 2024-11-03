@@ -179,7 +179,8 @@ body {
   font-size: 0.9rem;
 }
 
-.activity-table-information-even {
+.attendance-table-information-odd,
+.activity-table-information-odd {
   background-color: rgba(60, 98, 85, 0.15);
 }
 
@@ -357,6 +358,7 @@ body {
 }
 
 .btn-add-event-submit,
+.btn-add-activity-submit,
 .btn-edit-event-submit,
 .btn-edit-student-profile-submit,
 .btn-import-file-submit {
@@ -406,12 +408,12 @@ body {
 .edit-active-status,
 .edit-exemption-status {
   background-color: var(--main-green);
-  font-size: 0.9rem;
-  padding: 0.3rem 1rem 0.2rem 1rem;
+  font-size: 0.7rem;
+  padding: 0.3rem 1rem 0.2rem 0.6rem;
   color: white;
   border-radius: 20px;
   background-position: right 0.3rem center;
-  background-size: 0.9rem 0.9rem;
+  background-size: 0.6rem 0.6rem;
 }
 
 #editDepartmentNameDropdown,

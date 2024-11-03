@@ -15,14 +15,25 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function disableImportFileButton() {
+        const importFileCard = document.querySelector('.import-file-card');
+        const importFileButton = document.querySelector('.btn-import-file');
+        importFileButton.disabled = true;
+        importFileCard.style.backgroundColor = "#b0b0b0";
+        importFileButton.style.color = "white";
+        importFileButton.style.border = "none";
+    }
+
     function disableVerifyButton() {
         const verifyButton = document.querySelector('.btn-verify-points');
         verifyButton.disabled = true;
         verifyButton.style.backgroundColor = "gray";
         verifyButton.style.color = "white";
+        verifyButton.style.border = "none";
     }
 
     disableAllCheckboxes();
     disableAllAssignRoles();
+    disableImportFileButton();
     disableVerifyButton();
 });

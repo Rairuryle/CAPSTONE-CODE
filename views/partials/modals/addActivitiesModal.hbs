@@ -9,9 +9,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body mt-0 pt-0">
-                <form>
-                    <span>Pasimula</span><br>
-                    <span>August 3 - 5, 2024</span>
+                <form action="/event/add-activity" method="POST">
+                    <input type="hidden" id="selectedEventId" name="event_id" value="{{eventId}}">
+                    <input type="hidden" name="student_id" value="{{student.id_number}}">
+                    <input type="hidden" id="eventStartDate" name="event_date_start" value="{{eventDateStart}}">
+                    <input type="hidden" id="eventEndDate" value="{{eventDateEnd}}">
+                    <span>{{eventName}}</span><br>
+                    <span>{{eventDateStart}} - {{eventDateEnd}}</span>
 
                     <div class="activity-information mt-4">
                         <div class="activity-header d-flex justify-content-between border-bottom border-2 pb-2">
@@ -32,7 +36,8 @@
                         </div>
                     </div>
                     <div class="modal-footer border-top-0">
-                        <button type="submit" class="btn btn-success btn-add-activity-submit px-5">Add Activity</button>
+                        <button type="submit" class="btn btn-success btn-add-activity-submit px-5">Add
+                            Activity</button>
                     </div>
                 </form>
             </div>

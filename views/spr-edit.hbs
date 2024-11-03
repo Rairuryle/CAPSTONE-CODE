@@ -11,7 +11,7 @@
 
             {{#if student}}
 
-            {{> studentProfile}}
+            {{> spr-templates/studentProfile}}
 
             {{!-- spr table --}}
             <div class="participation-record-table-container mt-4">
@@ -45,8 +45,8 @@
 
                     {{#if attendance.length}}
                     {{#each attendance}}
-                    <div class=" attendance-table-information d-flex align-items-center border-bottom border-2 mt-3
-                        pb-3" data-day="{{this.attendance_day}}">
+                    <div class="attendance-table-information d-flex align-items-center border-bottom border-2 pt-3 pb-3 
+            {{#if (indexIsOdd @index)}}attendance-table-information-odd{{/if}}" data-day="{{this.attendance_day}}">
                         <div class="col-3 ps-2">
                             <span>{{this.attendance_date}}</span>
                         </div>
@@ -74,7 +74,7 @@
                     </div>
                     {{/each}}
                     {{else}}
-                    <p>No attendance record found.</p>
+                    <p>No associated attendance record found.</p>
                     {{/if}}
                 </div>
 
@@ -140,7 +140,7 @@
                     <div class="activity-table-information-container mt-2">
                         {{#if activities.length}}
                         {{#each activities}}
-                        <div class="activity-table-information activity-table-information-odd d-flex align-items-center py-2"
+                        <div class="activity-table-information {{#if (indexIsOdd @index)}}activity-table-information-odd{{/if}} d-flex align-items-center py-2"
                             data-day="{{this.activity_day}}">
                             <div class="col-4 col-activity-name">{{this.activity_name}}</div>
                             <div class="col-2 ms-4 me-1">{{formatDate this.activity_date}}</div>
@@ -180,58 +180,14 @@
         <div class="col col-spr-sidebar mt-3">
             {{> headerOfficer}}
 
+            {{#if student}}
+
             <div class="sidebar d-flex flex-column">
                 {{!-- events --}}
                 <div class="events-container p-2">
                     <div class="events-select-actions">
-                        {{> selectEventScope}}
-                        <div class="timeframe-select d-flex mt-2">
-                            <div class="col dropdown">
-                                <button class="btn dropdown-toggle select-year fw-bold border border-black px-3"
-                                    type="button" id="selectYearDropdown" data-bs-toggle="dropdown"
-                                    aria-expanded="false" style="width: 8rem;">
-                                    {{selectedYear}}
-                                </button>
-
-                                <ul class="dropdown-menu dropdown-menu-year text-center w-100"
-                                    aria-labelledby="selectYearDropdown">
-                                    {{#each academicYears}}
-                                    <li>
-                                        <!-- Set onclick event to call updateDropdownText -->
-                                        <button class="dropdown-item" type="button"
-                                            onclick="updateYearText('{{this.academic_year}}')">
-                                            {{this.academic_year}}
-                                        </button>
-                                    </li>
-                                    {{/each}}
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <button class="btn btn-add-year m-0 p-0" data-bs-toggle="modal"
-                                            data-bs-target="#addYearModal">
-                                            <img src="../img/add-spr.png" alt="Add Year" style="width: 1.3rem;">
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="col dropdown ms-2">
-                                <button class="btn dropdown-toggle select-sem fw-bold border border-black px-3"
-                                    type="button" id="selectSemDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                    style="width: 8rem;">
-                                    {{selectedSemester}}
-                                </button>
-
-                                <ul class="dropdown-menu dropdown-menu-sem text-center w-100"
-                                    aria-labelledby="selectSemDropdown">
-                                    <li><a class="dropdown-item" href="#" onclick="updateSemesterText('1st Sem')">1st
-                                            Sem</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="updateSemesterText('2nd Sem')">2nd
-                                            Sem</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                        {{> spr-templates/selectEventScope}}
+                        {{> spr-templates/selectYearSem}}
                     </div>
 
                     <div class="events-display-container d-flex flex-column justify-content-center mt-3">
@@ -248,7 +204,7 @@
                         {{#each filteredEvents}}
                         <div class="card event-card mb-1" data-scope="{{this.event_scope}}"
                             data-event-days="{{this.event_days}}"
-                            onclick="showEventDetails({{this.event_id}}, {{this.event_days}})">
+                            onclick="showEventDetails({{this.event_id}}, {{this.event_days}}, '{{this.event_name}}', '{{formatDate this.event_date_start 'YYYY-MM-DD'}}', '{{formatDate this.event_date_end 'YYYY-MM-DD'}}')">
                             <div class="card-body event-card-body d-flex flex-column py-2">
                                 <div class="d-flex justify-content-between">
                                     <span class="card-title fw-bold">{{this.event_name}}</span>
@@ -266,20 +222,19 @@
                             </div>
                         </div>
                         {{/each}}
-
                         {{/if}}
                     </div>
                 </div>
-
-
 
                 {{!-- import file --}}
                 <div class="import-file-container mt-3">
                     <div class="card import-file-card">
                         <div class="card-body import-file-card-body d-flex justify-content-center align-items-center">
-                            <button class="btn m-0 p-0" data-bs-toggle="modal" data-bs-target="#importFileModal">
+                            <button class="btn btn-import-file m-0 p-0" data-bs-toggle="modal"
+                                data-bs-target="#importFileModal">
                                 <img src="../img/import.png" alt="Import File Icon">
-                                <span class="px-2 import-file-text">IMPORT FILE</span> </button>
+                                <span class="px-2 import-file-text fw-bold">IMPORT FILE</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -310,6 +265,9 @@
                     </div>
                 </div>
             </div>
+
+            {{else}}
+            {{/if}}
         </div>
 
         {{!-- modals --}}
@@ -332,5 +290,6 @@
 <script src="../js/spr/dateUtils.js"></script>
 <script src="../js/spr/eventDays.js"></script>
 <script src="../js/spr/addMoreActivities.js"></script>
+<script src="../js/spr/editStudentProfile.js"></script>
 <script src="../js/spr/editDeleteButtons.js"></script>
 <script src="../js/spr/disableElements.js"></script>

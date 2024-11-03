@@ -11,7 +11,7 @@
 
             {{#if student}}
 
-            {{> studentProfile}}
+            {{> spr-templates/studentProfile}}
 
             {{!-- spr table --}}
             <div class="participation-record-table-container mt-4">
@@ -22,8 +22,9 @@
                         <select name="selectEventDay" id="selectEventDay"
                             class="select-event-day border-gray bg-transparent fw-bold py-2">
                             <option disabled="disabled" selected="selected">Select Event Day</option>
-                            <option value="Day 1">Day 1</option>
-                            <option value="Day 2">Day 2</option>
+                            {{#each (range 1 eventDays)}}
+                            <option value="{{this}}">Day {{this}}</option>
+                            {{/each}}
                         </select>
                     </div>
                     <div class="attendance-table-header d-flex fw-bold mt-3 border-bottom border-2 pb-1">
@@ -41,10 +42,12 @@
                         </div>
                     </div>
 
-                    <div
-                        class="attendance-table-information d-flex align-items-center border-bottom border-2 mt-3 pb-3">
+                    {{#if attendance.length}}
+                    {{#each attendance}}
+                    <div class="attendance-table-information d-flex align-items-center border-bottom border-2 pt-3 pb-3 
+            {{#if (indexIsOdd @index)}}attendance-table-information-odd{{/if}}" data-day="{{this.attendance_day}}">
                         <div class="col-3 ps-2">
-                            <span>August 8, 2024</span>
+                            <span>{{this.attendance_date}}</span>
                         </div>
                         <div class="col-2">
                             <div class="form-check form-check-inline ms-2">
@@ -64,10 +67,14 @@
                             </div>
                         </div>
                         <div class="col-4">
-                            <span class="officer-in-charge officer-attendance-recorder ps-3">{{adminData.first_name}}
-                                {{adminData.last_name}}</span>
+                            <span class="officer-in-charge officer-attendance-recorder ps-3">{{../adminData.first_name}}
+                                {{../adminData.last_name}}</span>
                         </div>
                     </div>
+                    {{/each}}
+                    {{else}}
+                    <p>No associated attendance record found.</p>
+                    {{/if}}
                 </div>
 
                 {{!-- activity table --}}
@@ -127,10 +134,12 @@
                     </div>
 
                     <div class="activity-table-information-container mt-2">
-                        <div
-                            class="activity-table-information activity-table-information-odd d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Dungeon Mayhem: Heroes Battle</div>
-                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
+                        {{#if activities.length}}
+                        {{#each activities}}
+                        <div class="activity-table-information {{#if (indexIsOdd @index)}}activity-table-information-odd{{/if}} d-flex align-items-center py-2"
+                            data-day="{{this.activity_day}}">
+                            <div class="col-4 col-activity-name">{{this.activity_name}}</div>
+                            <div class="col-2 ms-4 me-1">{{formatDate this.activity_date}}</div>
                             <div class="col-3 col-role">
                                 <select name="assignRole" id="assignRole" class="assign-role ps-2 indiv-participant">
                                     <option disabled="disabled" selected="selected">Assign Role</option>
@@ -141,71 +150,16 @@
                                 </select>
                             </div>
                             <div class="col-1 ms-4 me-2">15 points</div>
-                            <div class="col-2">
-                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
-                                    {{adminData.last_name}}</span>
+                            <div class="col-2 d-flex justify-content-between col-officer-in-charge">
+                                <span
+                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{../adminData.first_name}}
+                                    {{../adminData.last_name}}</span>
                             </div>
                         </div>
-
-                        <div
-                            class="activity-table-information activity-table-information-even d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Dress to Impress</div>
-                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
-                            <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role ps-2 team-participant">
-                                    <option disabled="disabled" selected="selected">Assign Role</option>
-                                    <option value="INDIV. Participant">INDIV. Participant</option>
-                                    <option value="TEAM Participant">Team Participant</option>
-                                    <option value="PROG. Spectator">PROG. Spectator</option>
-                                    <option value="OTH. Spectator">OTH. Spectator</option>
-                                </select>
-                            </div>
-                            <div class="col-1 ms-4 me-2">20 points</div>
-                            <div class="col-2">
-                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
-                                    {{adminData.last_name}}</span>
-                            </div>
-                        </div>
-
-                        <div
-                            class="activity-table-information activity-table-information-odd d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Jigsawlympics</div>
-                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
-                            <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role ps-2 prog-spectator">
-                                    <option disabled="disabled" selected="selected">Assign Role</option>
-                                    <option value="INDIV. Participant">INDIV. Participant</option>
-                                    <option value="TEAM Participant">Team Participant</option>
-                                    <option value="PROG. Spectator">PROG. Spectator</option>
-                                    <option value="OTH. Spectator">OTH. Spectator</option>
-                                </select>
-                            </div>
-                            <div class="col-1 ms-4 me-2">10 points</div>
-                            <div class="col-2">
-                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
-                                    {{adminData.last_name}}</span>
-                            </div>
-                        </div>
-
-                        <div
-                            class="activity-table-information activity-table-information-even d-flex align-items-center py-2">
-                            <div class="col-4 col-activity-name">Deal Or No Deal</div>
-                            <div class="col-2 ms-4 me-1">November 4, 2024</div>
-                            <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role ps-2 oth-spectator">
-                                    <option disabled="disabled" selected="selected">Assign Role</option>
-                                    <option value="INDIV. Participant">INDIV. Participant</option>
-                                    <option value="TEAM Participant">Team Participant</option>
-                                    <option value="PROG. Spectator">PROG. Spectator</option>
-                                    <option value="OTH. Spectator">OTH. Spectator</option>
-                                </select>
-                            </div>
-                            <div class="col-1 ms-4 me-2">5 points</div>
-                            <div class="col-2">
-                                <span class="officer-in-charge officer-activity-recorder ps-3">{{adminData.first_name}}
-                                    {{adminData.last_name}}</span>
-                            </div>
-                        </div>
+                        {{/each}}
+                        {{else}}
+                        <p>No associated activities found.</p>
+                        {{/if}}
                     </div>
                 </div>
             </div>
@@ -222,26 +176,9 @@
                 {{!-- events --}}
                 <div class="events-container p-2">
                     <div class="events-select-actions">
-                        {{> selectEventScope}}
-                        <div class="timeframe-select d-flex mt-2">
-                            <div class="col">
-                                <select name="selectYear" id="selectYear"
-                                    class="select-year fw-bold border border-black">
-                                    <option disabled="disabled" selected="selected">Select Year</option>
-                                    <option value="2024">2024-2025</option>
-                                    <option value="2025">2025-2026</option>
-                                    <option value="2026">2026-2027</option>
-                                    <option value="2027">2027-2028</option>
-                                </select>
-                            </div>
-                            <div class="col ms-2">
-                                <select name="selectSem" id="selectSem" class="select-sem fw-bold border border-black">
-                                    <option disabled="disabled" selected="selected">Select Sem</option>
-                                    <option value="1st Sem">1st Sem</option>
-                                    <option value="2nd Sem">2nd Sem</option>
-                                </select>
-                            </div>
-                        </div>
+                        {{> spr-templates/selectEventScope}}
+                        {{> spr-templates/selectYearSem}}
+
                     </div>
 
                     <div class="events-display-container d-flex flex-column justify-content-center mt-3">
@@ -250,9 +187,13 @@
                         <p>No events found.</p>
                         {{else}}
                         {{#each filteredEvents}}
-                        <div class="card event-card mb-1" data-scope="{{this.event_scope}}" style="display:none;">
-                            <div class="card-body event-card-body py-2">
-                                <span class="card-title fw-bold">{{this.event_name}}</span> <br>
+                        <div class="card event-card mb-1" data-scope="{{this.event_scope}}"
+                            data-event-days="{{this.event_days}}"
+                            onclick="showEventDetails({{this.event_id}}, {{this.event_days}}, '{{this.event_name}}', '{{formatDate this.event_date_start 'YYYY-MM-DD'}}', '{{formatDate this.event_date_end 'YYYY-MM-DD'}}')">
+                            <div class="card-body event-card-body d-flex flex-column py-2">
+                                <div class="d-flex justify-content-between">
+                                    <span class="card-title fw-bold">{{this.event_name}}</span>
+                                </div>
                                 <span class="card-text card-event-date">
                                     {{formatDate this.event_date_start}} - {{formatDate this.event_date_end}}
                                 </span>
@@ -303,4 +244,6 @@
     </div>
 </div>
 
-<script src="../js/sprMain.js"></script>
+<script src="../js/spr/loadDetails.js"></script>
+<script src="../js/spr/eventScope.js"></script>
+<script src="../js/spr/eventDays.js"></script>

@@ -2,28 +2,66 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateURLWithEventScope() {
         const scopeElementDefault = document.getElementById('eventScope');
         const scopeElementAutomatic = document.getElementById('eventScopeAutomatic');
+        const scopeElementAutomaticOrganization = document.getElementById('eventScopeAutomaticOrganization');
+        const selectEventScope = document.getElementById('selectEventScope');
         const isUSG = document.querySelector('#isUSG').value === "true";
 
         let scope;
 
-        if (scopeElementDefault || scopeElementAutomatic) {
-            if (isUSG) {
-                scope = scopeElementAutomatic.value; // Use .value for input elements
-            } else {
-                scope = scopeElementDefault.value;
-            }
-            console.log("Scope Value:", scope);
+        if (scopeElementAutomatic && isUSG) {
+            scope = scopeElementAutomatic.value;
+        } else if (scopeElementDefault) {
+            scope = scopeElementDefault.value;
+        } else if (selectEventScope && selectEventScope.value) {
+            scope = selectEventScope.value;
+        } else if (scopeElementAutomaticOrganization) {
+            scope = scopeElementAutomaticOrganization.value;
+        }
 
+        if (scope) {
+            console.log("Setting Scope Value:", scope);
             const url = new URL(window.location.href);
             url.searchParams.set('event_scope', scope);
             window.history.replaceState({}, '', url.toString());
+            console.log("Updated URL:", url.toString());
+
+            // Send the updated scope via AJAX
+            fetch(url.toString(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json())
+                .then(data => console.log('Backend response:', data))
+                .catch(error => console.error('Error:', error));
         } else {
-            console.log("Neither #eventScopeAutomatic nor #eventScope were found in the DOM.");
+            console.log("No scope value determined.");
         }
     }
 
-    // Call the function to update the URL with event scope on page load
+    // Function to set the selected event scope on page load
+    function setSelectedEventScope() {
+        const selectEventScope = document.getElementById('selectEventScope');
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventScope = urlParams.get('event_scope');
+
+        if (selectEventScope && eventScope) {
+            selectEventScope.value = eventScope;
+
+            // Update the label to reflect the selected scope
+            const eventScopeLabel = document.getElementById('eventScopeLabel');
+            eventScopeLabel.textContent = eventScope.toUpperCase() + ' EVENTS';
+        }
+    }
+
+    // Call this function on page load
+    setSelectedEventScope();
     updateURLWithEventScope();
+
+    const selectEventScope = document.getElementById('selectEventScope');
+    if (selectEventScope) {
+        selectEventScope.addEventListener('change', updateURLWithEventScope);
+    }
 
     window.updateYearText = function (selectedYear) {
         const dropdownButton = document.getElementById('selectYearDropdown');
@@ -35,8 +73,15 @@ document.addEventListener('DOMContentLoaded', function () {
             url.searchParams.set('id', idParam);
         }
         url.searchParams.set('academic_year', selectedYear);
+
+        const selectEventScope = document.getElementById('selectEventScope');
+        if (selectEventScope) {
+            const selectedScope = selectEventScope.value;
+            url.searchParams.set('event_scope', selectedScope);
+        }
+
         window.location.href = url.toString();
-    }
+    };
 
     window.updateSemesterText = function (selectedSem) {
         const dropdownButton = document.getElementById('selectSemDropdown');
@@ -48,13 +93,22 @@ document.addEventListener('DOMContentLoaded', function () {
             url.searchParams.set('academic_year', academicYear);
         }
         url.searchParams.set('semester', selectedSem);
-        window.location.href = url.toString();
-    }
 
-    // Function to show event details when an event card is clicked
-    window.showEventDetails = function (eventId, eventDays) {
+        const selectEventScope = document.getElementById('selectEventScope');
+        if (selectEventScope) {
+            const selectedScope = selectEventScope.value;
+            url.searchParams.set('event_scope', selectedScope);
+        }
+
+        window.location.href = url.toString();
+    };
+
+    window.showEventDetails = function (eventId, eventDays, eventName, eventStartDate, eventEndDate) {
         console.log("showEventDetails called with eventId:", eventId);
-        console.log("Days", eventDays);
+        console.log("Days:", eventDays);
+        console.log("Name:", eventName);
+        console.log("Start Date:", eventStartDate);
+        console.log("End Date:", eventEndDate);
 
         // Populate the dropdown
         const selectEventDayDropdown = document.getElementById('selectEventDay');
@@ -68,25 +122,35 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("day", day);
         }
 
-        loadEventDetails(eventId, eventDays); // Pass eventDays as an argument
+        loadEventDetails(eventId, eventDays, eventName, eventStartDate, eventEndDate);
     };
 
-
     // Function to load event details and redirect
-    function loadEventDetails(eventId, eventDays) {
+    function loadEventDetails(eventId, eventDays, eventName, eventStartDate, eventEndDate) {
         const currentYear = document.getElementById('selectYearDropdown').innerText || "Select Year";
         const currentSemester = document.getElementById('selectSemDropdown').innerText || "Select Sem";
         const studentId = getStudentIdFromUrl();
 
-        // Add eventId and eventDays to the URL
-        const url = new URL(`/spr-edit?id=${studentId}&event_id=${eventId}`, window.location.origin);
+        const currentPath = window.location.pathname.includes('spr-edit') ? 'spr-edit' : 'spr-main';
+
+        // Construct the URL with the correct path and maintain the event scope
+        const url = new URL(`/${currentPath}?id=${studentId}&event_id=${eventId}`, window.location.origin);
         url.searchParams.set('academic_year', currentYear);
         url.searchParams.set('semester', currentSemester);
-        url.searchParams.set('event_days', eventDays);  // Include eventDays in the URL
+        url.searchParams.set('event_days', eventDays);
+        url.searchParams.set('event_name', eventName);
+        url.searchParams.set('event_start_date', eventStartDate);
+        url.searchParams.set('event_end_date', eventEndDate);
+
+        // Preserve the event scope in the URL
+        const selectEventScope = document.getElementById('selectEventScope');
+        if (selectEventScope) {
+            const selectedScope = selectEventScope.value;
+            url.searchParams.set('event_scope', selectedScope);
+        }
 
         window.location.href = url.toString();
     }
-
 
     // Helper function to extract the student ID from the URL
     function getStudentIdFromUrl() {

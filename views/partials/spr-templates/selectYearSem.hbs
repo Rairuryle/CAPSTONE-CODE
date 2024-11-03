@@ -1,0 +1,43 @@
+<div class="timeframe-select d-flex mt-2">
+    <div class="col dropdown">
+        <button class="btn dropdown-toggle select-year fw-bold border border-black px-3" type="button"
+            id="selectYearDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="width: 8rem;">
+            {{selectedYear}}
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-year text-center w-100" aria-labelledby="selectYearDropdown">
+            {{#each academicYears}}
+            <li>
+                <!-- Set onclick event to call updateDropdownText -->
+                <button class="dropdown-item" type="button" onclick="updateYearText('{{this.academic_year}}')">
+                    {{this.academic_year}}
+                </button>
+            </li>
+            {{/each}}
+            {{#if (eq currentPath '/spr-edit')}}
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li>
+                <button class="btn btn-add-year m-0 p-0" data-bs-toggle="modal" data-bs-target="#addYearModal">
+                    <img src="../img/add-spr.png" alt="Add Year" style="width: 1.3rem;">
+                </button>
+            </li>
+            {{/if}}
+        </ul>
+    </div>
+
+    <div class="col dropdown ms-2">
+        <button class="btn dropdown-toggle select-sem fw-bold border border-black px-3" type="button"
+            id="selectSemDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="width: 8rem;">
+            {{selectedSemester}}
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-sem text-center w-100" aria-labelledby="selectSemDropdown">
+            <li><a class="dropdown-item" href="#" onclick="updateSemesterText('1st Sem')">1st
+                    Sem</a></li>
+            <li><a class="dropdown-item" href="#" onclick="updateSemesterText('2nd Sem')">2nd
+                    Sem</a></li>
+        </ul>
+    </div>
+</div>

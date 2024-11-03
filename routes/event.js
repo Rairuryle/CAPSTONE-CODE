@@ -1,6 +1,5 @@
 const express = require('express');
 const mysql = require('mysql');
-const { getUrlFlags, isLeadingOrgs, isMainOrgs, isExtraOrgs, otherCombinations } = require('./utils');
 const router = express.Router();
 
 const db = mysql.createConnection({
@@ -101,6 +100,67 @@ router.post('/add-event', (req, res) => {
     });
 });
 
+router.post('/add-activity', (req, res) => {
+    const { event_id, student_id, event_date_start } = req.body;
+    const activity_name = req.body['activity_name[]'] ? [].concat(req.body['activity_name[]']) : [];
+    const activity_date = req.body['activity_date[]'] ? [].concat(req.body['activity_date[]']) : [];
+
+    if (!event_id || activity_name.length === 0 || activity_date.length === 0) {
+        return res.status(400).send('Please provide all required fields');
+    }
+
+    // Convert event_date_start to a valid Date object
+    let startDate = new Date(event_date_start);
+
+    // Check if the initial parsing was successful
+    if (isNaN(startDate.getTime())) {
+        // Try to parse in case the date is in MM/DD/YYYY format
+        const parts = event_date_start.split('/');
+        if (parts.length === 3) {
+            // Assume MM/DD/YYYY format
+            startDate = new Date(parts[2], parts[0] - 1, parts[1]); // Year, Month, Day
+        }
+    }
+
+    // Validate the parsed date
+    if (isNaN(startDate.getTime())) {
+        return res.status(400).send('Invalid event start date');
+    }
+
+    // Prepare and execute activity insertion
+    const activityQueries = activity_name.map((name, index) => {
+        if (name && activity_date[index]) {
+            const activityDate = new Date(activity_date[index]);
+            const dayDifference = Math.ceil((activityDate - startDate) / (1000 * 60 * 60 * 24));
+
+            console.log('Activity Date:', activityDate);
+            console.log('Start Date:', startDate);
+            console.log('Day difference:', dayDifference);
+
+            return new Promise((resolve, reject) => {
+                const sqlActivity = 'INSERT INTO activity (activity_name, activity_date, event_id, activity_day) VALUES (?, ?, ?, ?)';
+                db.query(sqlActivity, [name, activityDate.toISOString().split('T')[0], event_id, dayDifference], (err) => {
+                    if (err) {
+                        console.error('Error inserting activity into database:', err);
+                        return reject(err);
+                    }
+                    console.log('Activity inserted successfully:', { name, date: activityDate });
+                    resolve();
+                });
+            });
+        }
+        return Promise.resolve(); // Skip if name or date is missing
+    }).filter(query => query !== null);
+
+    Promise.all(activityQueries)
+        .then(() => {
+            res.redirect(`/spr-edit?id=${student_id}`);
+        })
+        .catch(err => {
+            console.error('Error adding activities:', err);
+            res.status(500).send('Error adding activities');
+        });
+});
 
 router.post('/academic_year', async (req, res) => {
     const { academic_year } = req.body; //
