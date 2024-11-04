@@ -8,9 +8,8 @@
         <ul class="dropdown-menu dropdown-menu-year text-center w-100" aria-labelledby="selectYearDropdown">
             {{#each academicYears}}
             <li>
-                <!-- Use the helper to format the academic year -->
                 <button class="dropdown-item" type="button" onclick="updateYearText('{{this.academic_year}}')">
-                    {{formatAcademicYear this.academic_year}}
+                    {{this.academic_year}}
                 </button>
             </li>
             {{/each}}
@@ -25,7 +24,6 @@
             </li>
             {{/if}}
         </ul>
-
     </div>
 
     <div class="col dropdown ms-2">

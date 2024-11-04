@@ -76,11 +76,6 @@ app.engine('hbs', exphbs.engine({
                 result.push(i);
             }
             return result;
-        },
-        // New helper to format academic year as "year-year+1"
-        formatAcademicYear: function (year) {
-            const nextYear = parseInt(year) + 1;
-            return `${year}-${nextYear}`;
         }
     }
 }));

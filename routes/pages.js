@@ -359,7 +359,7 @@ const fetchEvents = (academicYear, semester, eventScope, callback) => {
     SELECT * FROM event
     WHERE academic_year = ? AND semester = ? AND (event_scope = ? OR event_scope = 'INSTITUTIONAL')
     ORDER BY event_date_start DESC
-`;
+    `;
 
     db.query(eventQuery, [academicYear, semester, eventScope], (err, eventResults) => {
         if (err) {
@@ -530,8 +530,14 @@ router.get('/spr-main', (req, res) => {
                 fetchEvents(selectedYear, selectedSemester, selectedScope, (events) => {
                     if (events && events.length > 0) {
                         if (eventId && eventDays) {
-                            const activitiesQuery = 'SELECT * FROM activity WHERE event_id = ?';
-                            db.query(activitiesQuery, [eventId], (err, activityResults) => {
+                            // Fetch activities with roles and points
+                            const activitiesQuery = `
+                                SELECT a.*, pr.role_name, pr.participation_record_points
+                                FROM activity a
+                                LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id AND pr.id_number = ?
+                                WHERE a.event_id = ?
+                            `;
+                            db.query(activitiesQuery, [idNumber, eventId], (err, activityResults) => {
                                 if (err) {
                                     return res.status(500).send('Database error while fetching activities');
                                 }
@@ -557,7 +563,6 @@ router.get('/spr-main', (req, res) => {
                                     });
                                 });
                             });
-
                         } else {
                             // Render the page without activities or attendance if eventDays is not selected
                             fetchAcademicYears((err, academicYears) => {
@@ -626,6 +631,7 @@ router.get('/spr-edit', (req, res) => {
         const selectedYear = req.query.academic_year || "Select Year";
         const selectedSemester = req.query.semester || "Select Sem";
         const selectedScope = isUSG ? 'INSTITUTIONAL' : organization;
+        console.log('ID Number:', idNumber);
         console.log('Selected Year:', selectedYear);
         console.log('Selected Semester:', selectedSemester);
         console.log('Selected Scope:', selectedScope);

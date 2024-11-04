@@ -18,12 +18,12 @@ const getDaysDifference = (startDate, endDate) => {
 };
 
 router.post('/add-event', (req, res) => {
-    const { event_name, event_date_start, event_date_end, event_scope, id_number, to_verify, academic_year, semester } = req.body;
+    const { event_name, event_date_start, event_date_end, event_scope, student_id, to_verify, academic_year, semester } = req.body;
 
     const activity_name = req.body['activity_name[]'] ? [].concat(req.body['activity_name[]']) : [];
     const activity_date = req.body['activity_date[]'] ? [].concat(req.body['activity_date[]']) : [];
 
-    if (!event_name || !event_date_start || !event_date_end || !event_scope || !id_number || !to_verify || !academic_year || !semester) {
+    if (!event_name || !event_date_start || !event_date_end || !event_scope || !student_id || !to_verify || !academic_year || !semester) {
         return res.status(400).send('Please provide all required fields');
     }
 
@@ -94,14 +94,15 @@ router.post('/add-event', (req, res) => {
             semester
         };
 
-        req.session.studentId = id_number;
+        req.session.studentId = student_id;
 
-        res.redirect(`/spr-edit?id=${id_number}`);
+        res.redirect(`/spr-edit?id=${student_id}`);
     });
 });
 
+// add activity
 router.post('/add-activity', (req, res) => {
-    const { event_id, id_number, event_date_start } = req.body;
+    const { event_id, student_id, event_date_start } = req.body;
     const activity_name = req.body['activity_name[]'] ? [].concat(req.body['activity_name[]']) : [];
     const activity_date = req.body['activity_date[]'] ? [].concat(req.body['activity_date[]']) : [];
 
@@ -154,7 +155,7 @@ router.post('/add-activity', (req, res) => {
 
     Promise.all(activityQueries)
         .then(() => {
-            res.redirect(`/spr-edit?id=${id_number}`);
+            res.redirect(`/spr-edit?id=${student_id}`);
         })
         .catch(err => {
             console.error('Error adding activities:', err);
@@ -162,6 +163,7 @@ router.post('/add-activity', (req, res) => {
         });
 });
 
+// academic year
 router.post('/academic_year', async (req, res) => {
     const { academic_year } = req.body; //
 
@@ -179,7 +181,8 @@ router.post('/academic_year', async (req, res) => {
     }
 });
 
-// Route to assign a role to an activity
+
+// assign role
 router.put('/assign-role', (req, res) => {
     const { activity_id, role_name, id_number, points } = req.body;
 
