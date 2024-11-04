@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         window.location.href = url.toString();
     }
-
+    
     // Helper function to extract the student ID from the URL
     function getStudentIdFromUrl() {
         const urlParams = new URLSearchParams(window.location.search);

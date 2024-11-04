@@ -137,23 +137,28 @@
                         {{#if activities.length}}
                         {{#each activities}}
                         <div class="activity-table-information {{#if (indexIsOdd @index)}}activity-table-information-odd{{/if}} d-flex align-items-center py-2"
-                            data-day="{{this.activity_day}}">
+                            data-day="{{this.activity_day}}" data-activity-id="{{this.activity_id}}">
+                            <!-- Added data-activity-id -->
                             <div class="col-4 col-activity-name">{{this.activity_name}}</div>
                             <div class="col-2 ms-4 me-1">{{formatDate this.activity_date}}</div>
+
                             <div class="col-3 col-role">
-                                <select name="assignRole" id="assignRole" class="assign-role ps-2 indiv-participant">
+                                <select name="assignRole" class="assign-role ps-2" id="assignRole-{{@index}}"
+                                    onchange="updatePoints({{@index}})">
                                     <option disabled="disabled" selected="selected">Assign Role</option>
                                     <option value="INDIV. Participant">INDIV. Participant</option>
-                                    <option value="TEAM Participant">Team Participant</option>
+                                    <option value="TEAM Participant">TEAM Participant</option>
                                     <option value="PROG. Spectator">PROG. Spectator</option>
                                     <option value="OTH. Spectator">OTH. Spectator</option>
                                 </select>
                             </div>
-                            <div class="col-1 ms-4 me-2">15 points</div>
+
+                            <div class="col-1 ms-4 me-2" id="points-container-{{@index}}">0 points</div>
+
                             <div class="col-2 d-flex justify-content-between col-officer-in-charge">
-                                <span
-                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{../adminData.first_name}}
-                                    {{../adminData.last_name}}</span>
+                                <span class="officer-in-charge officer-activity-recorder ps-3 w-100">
+                                    {{../adminData.first_name}} {{../adminData.last_name}}
+                                </span>
                             </div>
                         </div>
                         {{/each}}
@@ -247,3 +252,4 @@
 <script src="../js/spr/loadDetails.js"></script>
 <script src="../js/spr/eventScope.js"></script>
 <script src="../js/spr/eventDays.js"></script>
+<script src="../js/spr/assignRoles.js"></script>

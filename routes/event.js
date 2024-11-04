@@ -18,12 +18,12 @@ const getDaysDifference = (startDate, endDate) => {
 };
 
 router.post('/add-event', (req, res) => {
-    const { event_name, event_date_start, event_date_end, event_scope, student_id, to_verify, academic_year, semester } = req.body;
+    const { event_name, event_date_start, event_date_end, event_scope, id_number, to_verify, academic_year, semester } = req.body;
 
     const activity_name = req.body['activity_name[]'] ? [].concat(req.body['activity_name[]']) : [];
     const activity_date = req.body['activity_date[]'] ? [].concat(req.body['activity_date[]']) : [];
 
-    if (!event_name || !event_date_start || !event_date_end || !event_scope || !student_id || !to_verify || !academic_year || !semester) {
+    if (!event_name || !event_date_start || !event_date_end || !event_scope || !id_number || !to_verify || !academic_year || !semester) {
         return res.status(400).send('Please provide all required fields');
     }
 
@@ -94,14 +94,14 @@ router.post('/add-event', (req, res) => {
             semester
         };
 
-        req.session.studentId = student_id;
+        req.session.studentId = id_number;
 
-        res.redirect(`/spr-edit?id=${student_id}`);
+        res.redirect(`/spr-edit?id=${id_number}`);
     });
 });
 
 router.post('/add-activity', (req, res) => {
-    const { event_id, student_id, event_date_start } = req.body;
+    const { event_id, id_number, event_date_start } = req.body;
     const activity_name = req.body['activity_name[]'] ? [].concat(req.body['activity_name[]']) : [];
     const activity_date = req.body['activity_date[]'] ? [].concat(req.body['activity_date[]']) : [];
 
@@ -154,7 +154,7 @@ router.post('/add-activity', (req, res) => {
 
     Promise.all(activityQueries)
         .then(() => {
-            res.redirect(`/spr-edit?id=${student_id}`);
+            res.redirect(`/spr-edit?id=${id_number}`);
         })
         .catch(err => {
             console.error('Error adding activities:', err);
@@ -178,5 +178,68 @@ router.post('/academic_year', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while adding the academic year.' });
     }
 });
+
+// Route to assign a role to an activity
+router.put('/assign-role', (req, res) => {
+    const { activity_id, role_name, id_number, points } = req.body;
+
+    // Check if id_number exists in the student table
+    const checkStudentQuery = `SELECT * FROM student WHERE id_number = ?`;
+    db.query(checkStudentQuery, [id_number], (error, results) => {
+        if (error) {
+            console.error('Error checking student:', error);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(400).json({ error: 'Invalid student ID' });
+        }
+
+        // Check if a participation record already exists for this activity and id_number
+        const checkExistenceQuery = `
+            SELECT COUNT(*) AS count 
+            FROM participation_record 
+            WHERE activity_id = ? AND id_number = ?`;
+
+        db.query(checkExistenceQuery, [activity_id, id_number], (error, existenceResults) => {
+            if (error) {
+                console.error('Error checking participation record existence:', error);
+                return res.status(500).json({ error: 'Database error' });
+            }
+
+            // Determine whether to insert or update
+            if (existenceResults[0].count > 0) {
+                // Update existing record
+                const updateQuery = `
+                    UPDATE participation_record 
+                    SET participation_record_points = ?, role_name = ?
+                    WHERE activity_id = ? AND id_number = ?`;
+
+                db.query(updateQuery, [points, role_name, activity_id, id_number], (error, updateResults) => {
+                    if (error) {
+                        console.error('Error updating participation record:', error);
+                        return res.status(500).json({ error: 'Failed to update participation record' });
+                    }
+                    res.status(200).json({ message: 'Participation record updated successfully', updateResults });
+                });
+
+            } else {
+                // Insert new record
+                const insertQuery = `
+                    INSERT INTO participation_record (participation_record_points, id_number, activity_id, role_name)
+                    VALUES (?, ?, ?, ?)`;
+
+                db.query(insertQuery, [points, id_number, activity_id, role_name], (error, insertResults) => {
+                    if (error) {
+                        console.error('Error saving participation record:', error);
+                        return res.status(500).json({ error: 'Failed to create participation record' });
+                    }
+                    res.status(201).json({ message: 'Participation record created successfully', insertResults });
+                });
+            }
+        });
+    });
+});
+
 
 module.exports = router;
