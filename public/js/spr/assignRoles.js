@@ -1,20 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
     const roleSelects = document.querySelectorAll('.assign-role');
     const verifyButton = document.querySelector('.btn-verify-points');
-
-
-    // Get the student ID from the URL
     const studentId = getStudentIdFromUrl();
 
     roleSelects.forEach((select, index) => {
         // Initial setup: Add class based on initial value, if any
         updateRoleClass(select);
 
-        // Event listener for role change
         select.addEventListener('change', function () {
-            // Update role class
             updateRoleClass(select);
-
             // Update points display based on role selected
             updatePoints(select, index);
         });
