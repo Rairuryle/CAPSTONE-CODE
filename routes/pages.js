@@ -554,9 +554,20 @@ router.get('/spr-main', (req, res) => {
                                     return res.status(500).send('Database error while fetching activities');
                                 }
 
-                                // Fetch attendance based on student ID and activity ID
-                                const attendanceQuery = 'SELECT * FROM attendance WHERE event_id = ?';
-                                db.query(attendanceQuery, [eventId], (err, attendanceResults) => {
+                                // Fetch attendance records based on event ID and student ID
+                                const attendanceQuery = `
+                                    SELECT ar.*, 
+                                        a.attendance_day, 
+                                        a.attendance_date,
+                                        ad.first_name AS officer_first_name,
+                                        ad.last_name AS officer_last_name
+                                    FROM attendance_record ar
+                                    LEFT JOIN attendance a ON ar.attendance_id = a.attendance_id
+                                    LEFT JOIN admin ad ON ar.admin_id = ad.admin_id
+                                    WHERE ar.id_number = ? AND a.event_id = ?`;
+
+
+                                db.query(attendanceQuery, [idNumber, eventId], (err, attendanceResults) => {
                                     if (err) {
                                         return res.status(500).send('Database error while fetching attendance');
                                     }
@@ -608,6 +619,7 @@ router.get('/spr-main', (req, res) => {
         res.redirect('/login');
     }
 });
+
 
 // Route for spr-edit
 router.get('/spr-edit', (req, res) => {

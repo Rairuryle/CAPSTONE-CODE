@@ -187,7 +187,7 @@ router.put('/assign-role', (req, res) => {
     const { activity_id, role_name, id_number, points, admin_id } = req.body;
 
     // Check if id_number exists in the student table
-    const checkStudentQuery = 'SELECT * FROM student WHERE id_number = ?';
+    const checkStudentQuery = `SELECT * FROM student WHERE id_number = ?`;
     db.query(checkStudentQuery, [id_number], (error, results) => {
         if (error) {
             console.error('Error checking student:', error);
@@ -199,8 +199,10 @@ router.put('/assign-role', (req, res) => {
         }
 
         // Check if a participation record already exists for this activity and id_number
-        const checkExistenceQuery = 
-            'SELECT COUNT(*) AS count FROM participation_record WHERE activity_id = ? AND id_number = ?';
+        const checkExistenceQuery = `
+            SELECT COUNT(*) AS count 
+            FROM participation_record 
+            WHERE activity_id = ? AND id_number = ?`;
 
         db.query(checkExistenceQuery, [activity_id, id_number], (error, existenceResults) => {
             if (error) {
@@ -211,8 +213,10 @@ router.put('/assign-role', (req, res) => {
             // Determine whether to insert or update
             if (existenceResults[0].count > 0) {
                 // Update existing record
-                const updateQuery = 
-                    'UPDATE participation_record SET participation_record_points = ?, role_name = ?, admin_id = ? WHERE activity_id = ? AND id_number = ?';
+                const updateQuery = `
+                    UPDATE participation_record 
+                    SET participation_record_points = ?, role_name = ?, admin_id = ?
+                    WHERE activity_id = ? AND id_number = ?`;
 
                 db.query(updateQuery, [points, role_name, admin_id, activity_id, id_number], (error, updateResults) => {
                     if (error) {
@@ -224,8 +228,9 @@ router.put('/assign-role', (req, res) => {
 
             } else {
                 // Insert new record
-                const insertQuery = 
-                    'INSERT INTO participation_record (participation_record_points, id_number, activity_id, role_name, admin_id) VALUES (?, ?, ?, ?, ?)';
+                const insertQuery = `
+                    INSERT INTO participation_record (participation_record_points, id_number, activity_id, role_name, admin_id)
+                    VALUES (?, ?, ?, ?, ?)`;
 
                 db.query(insertQuery, [points, id_number, activity_id, role_name, admin_id], (error, insertResults) => {
                     if (error) {
@@ -238,6 +243,52 @@ router.put('/assign-role', (req, res) => {
         });
     });
 });
+
+router.post('/record-attendance', (req, res) => {
+    const { attendance_points, am_in, pm_in, pm_out, attendance_id, id_number, admin_id } = req.body;
+
+    // First, check if a record already exists for this attendance_id
+    const selectQuery = 'SELECT * FROM attendance_record WHERE attendance_id = ? AND id_number = ?';
+
+    db.query(selectQuery, [attendance_id, id_number], (err, results) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: err.message });
+        }
+
+        if (results.length > 0) {
+            // Record exists, perform an update
+            const updateQuery = `
+                UPDATE attendance_record 
+                SET attendance_points = ?, am_in = ?, pm_in = ?, pm_out = ?, admin_id = ?
+                WHERE attendance_id = ? AND id_number = ?`;
+
+            const updateValues = [attendance_points, am_in, pm_in, pm_out, admin_id, attendance_id, id_number];
+
+            db.query(updateQuery, updateValues, (err, results) => {
+                if (err) {
+                    return res.status(500).json({ success: false, message: err.message });
+                }
+                res.json({ success: true, message: 'Attendance record updated successfully' });
+            });
+        } else {
+            // No existing record, perform an insert
+            const insertQuery = `
+                INSERT INTO attendance_record (attendance_points, am_in, pm_in, pm_out, attendance_id, id_number, admin_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+            const insertValues = [attendance_points, am_in, pm_in, pm_out, attendance_id, id_number, admin_id];
+
+            db.query(insertQuery, insertValues, (err, results) => {
+                if (err) {
+                    return res.status(500).json({ success: false, message: err.message });
+                }
+                res.json({ success: true, message: 'Attendance record inserted successfully', attendance_id: results.insertId });
+            });
+        }
+    });
+});
+
+
 
 
 

@@ -45,9 +45,8 @@
                     {{#if attendance.length}}
                     {{#each attendance}}
                     <div class="attendance-table-information d-flex align-items-center border-bottom border-2 pt-3 pb-3 
-                        {{#if (indexIsOdd @index)}}attendance-table-information-odd{{/if}}"
-                        data-attendance-id="{{this.attendance_id}}" data-day="{{this.attendance_day}}">
-                        <input type="hidden" id="adminId" name="admin_id" value="{{../adminData.admin_id}}">
+        {{#if (indexIsOdd @index)}}attendance-table-information-odd{{/if}}" data-attendance-id="{{this.attendance_id}}"
+                        data-day="{{this.attendance_day}}">
 
                         <div class="col-3 ps-2">
                             <span>{{this.attendance_date}}</span>
@@ -55,31 +54,36 @@
                         <div class="col-2">
                             <div class="form-check form-check-inline ms-2">
                                 <input class="form-check-input attendance-checkbox" type="checkbox"
-                                    data-role-name="AM IN" value="AM IN">
+                                    data-role-name="AM IN" value="AM IN" data-attendance-id="{{this.attendance_id}}"
+                                    {{#if this.am_in}}checked{{/if}}>
                                 <label class="form-check-label" for="attendanceCheckboxAMIN">AM IN</label>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="form-check form-check-inline ms-2">
                                 <input class="form-check-input attendance-checkbox" type="checkbox"
-                                    data-role-name="PM IN" value="PM IN">
+                                    data-role-name="PM IN" value="PM IN" data-attendance-id="{{this.attendance_id}}"
+                                    {{#if this.pm_in}}checked{{/if}}>
                                 <label class="form-check-label" for="attendanceCheckboxPMIN">PM IN</label>
                             </div>
                             <div class="form-check form-check-inline ms-2">
                                 <input class="form-check-input attendance-checkbox" type="checkbox"
-                                    data-role-name="PM OUT" value="PM OUT">
+                                    data-role-name="PM OUT" value="PM OUT" data-attendance-id="{{this.attendance_id}}"
+                                    {{#if this.pm_out}}checked{{/if}}>
                                 <label class="form-check-label" for="attendanceCheckboxPMOUT">PM OUT</label>
                             </div>
                         </div>
                         <div class="col-4">
-                            <span class="officer-in-charge officer-attendance-recorder ps-3">{{../adminData.first_name}}
-                                {{../adminData.last_name}}</span>
+                            <span class="officer-in-charge officer-attendance-recorder ps-3">
+                                {{this.officer_first_name}} {{this.officer_last_name}}
+                            </span>
                         </div>
                     </div>
                     {{/each}}
                     {{else}}
                     <p>No associated attendance record found.</p>
                     {{/if}}
+
                 </div>
 
                 {{!-- activity table --}}
@@ -273,3 +277,4 @@
 <script src="../js/spr/eventScope.js"></script>
 <script src="../js/spr/eventDays.js"></script>
 <script src="../js/spr/assignRoles.js"></script>
+<script src="../js/spr/attendanceRecord.js"></script>

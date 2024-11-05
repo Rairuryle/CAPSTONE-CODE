@@ -83,15 +83,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     admin_id: adminId
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                // Refresh the page after the successful data submission
-                location.reload();  // This line refreshes the page
-            })
-            .catch((error) => console.error('Error:', error));
+
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    // Refresh the page after the successful data submission
+                    location.reload();  // This line refreshes the page
+                })
+                .catch((error) => console.error('Error:', error));
         });
-        
     }
 
     // Function to extract the student ID from the URL
