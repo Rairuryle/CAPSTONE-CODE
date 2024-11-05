@@ -153,6 +153,7 @@ exports.login = async (req, res) => {
                 req.session.isAuthenticated = true;
 
                 req.session.adminData = {
+                    admin_id: user.admin_id,
                     last_name: user.last_name,
                     first_name: user.first_name,
                     organization: user.organization,
@@ -161,6 +162,7 @@ exports.login = async (req, res) => {
 
                 console.log("User logged in:", user.username);
                 console.log("User organization:", user.organization);
+                console.log("User admin ID:", user.admin_id);
 
                 res.redirect('/dashboard');
             }

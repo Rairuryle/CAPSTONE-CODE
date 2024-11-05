@@ -532,19 +532,22 @@ router.get('/spr-main', (req, res) => {
                         if (eventId && eventDays) {
                             // Fetch activities with roles and points
                             const activitiesQuery = `
-    SELECT a.*, 
-           pr.role_name, 
-           CASE pr.role_name 
-               WHEN 'INDIV. Participant' THEN 15
-               WHEN 'TEAM Participant' THEN 20
-               WHEN 'PROG. Spectator' THEN 10
-               WHEN 'OTH. Spectator' THEN 5
-               ELSE 0
-           END AS participation_record_points
-    FROM activity a
-    LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id AND pr.id_number = ?
-    WHERE a.event_id = ?`;
-
+                                SELECT a.*, 
+                                    pr.role_name, 
+                                    pr.admin_id, 
+                                    ad.first_name AS officer_first_name,
+                                    ad.last_name AS officer_last_name,
+                                    CASE pr.role_name 
+                                        WHEN 'INDIV. Participant' THEN 15
+                                        WHEN 'TEAM Participant' THEN 20
+                                        WHEN 'PROG. Spectator' THEN 10
+                                        WHEN 'OTH. Spectator' THEN 5
+                                        ELSE 0
+                                    END AS participation_record_points
+                                FROM activity a
+                                LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id AND pr.id_number = ?
+                                LEFT JOIN admin ad ON pr.admin_id = ad.admin_id
+                                WHERE a.event_id = ?`;
 
                             db.query(activitiesQuery, [idNumber, eventId], (err, activityResults) => {
                                 if (err) {

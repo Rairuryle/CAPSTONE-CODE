@@ -45,7 +45,10 @@
                     {{#if attendance.length}}
                     {{#each attendance}}
                     <div class="attendance-table-information d-flex align-items-center border-bottom border-2 pt-3 pb-3 
-     {{#if (indexIsOdd @index)}}attendance-table-information-odd{{/if}}" data-attendance-id="{{this.attendance_id}}">
+                        {{#if (indexIsOdd @index)}}attendance-table-information-odd{{/if}}"
+                        data-attendance-id="{{this.attendance_id}}" data-day="{{this.attendance_day}}">
+                        <input type="hidden" id="adminId" name="admin_id" value="{{../adminData.admin_id}}">
+
                         <div class="col-3 ps-2">
                             <span>{{this.attendance_date}}</span>
                         </div>
@@ -73,12 +76,10 @@
                                 {{../adminData.last_name}}</span>
                         </div>
                     </div>
-
                     {{/each}}
                     {{else}}
                     <p>No associated attendance record found.</p>
                     {{/if}}
-
                 </div>
 
                 {{!-- activity table --}}
@@ -142,6 +143,8 @@
                         {{#each activities}}
                         <div class="activity-table-information {{#if (indexIsOdd @index)}}activity-table-information-odd{{/if}} d-flex align-items-center py-2"
                             data-day="{{this.activity_day}}" data-activity-id="{{this.activity_id}}">
+                            <input type="hidden" id="adminId" name="admin_id" value="{{../adminData.admin_id}}">
+
                             <div class="col-4 col-activity-name">{{this.activity_name}}</div>
                             <div class="col-2 ms-4 me-1">{{formatDate this.activity_date}}</div>
 
@@ -167,9 +170,15 @@
                             </div>
 
                             <div class="col-2 d-flex justify-content-between col-officer-in-charge">
-                                <span
-                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{../adminData.first_name}}
-                                    {{../adminData.last_name}}</span>
+                                {{#if this.role_name}}
+                                <span class="officer-in-charge officer-activity-recorder ps-3 w-100">
+                                    {{#if this.officer_first_name}} {{this.officer_first_name}} {{/if}}
+                                    {{#if this.officer_last_name}} {{this.officer_last_name}} {{/if}}
+                                </span>
+                                {{else}}
+                                <span class="officer-in-charge officer-activity-recorder ps-3 w-100"
+                                    style="display:none;"></span>
+                                {{/if}}
                             </div>
                         </div>
                         {{/each}}
@@ -177,6 +186,7 @@
                         <p>No associated activities found.</p>
                         {{/if}}
                     </div>
+
                 </div>
             </div>
 
@@ -194,7 +204,6 @@
                     <div class="events-select-actions">
                         {{> spr-templates/selectEventScope}}
                         {{> spr-templates/selectYearSem}}
-
                     </div>
 
                     <div class="events-display-container d-flex flex-column justify-content-center mt-3">

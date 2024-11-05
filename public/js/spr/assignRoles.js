@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updatePoints(select, index) {
         const pointsContainer = document.getElementById(`points-container-${index}`);
+        const officerSpan = document.getElementById(`officer-in-charge-${index}`);
+        const adminId = document.getElementById('adminId').value; // Retrieve the admin ID
+
+        console.log('officerSpan', officerSpan);
         const rolePoints = {
             'INDIV. Participant': 15,
             'TEAM Participant': 20,
@@ -51,6 +55,10 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update the points display
         if (pointsContainer) {
             pointsContainer.innerText = `${points} points`;
+        }
+
+        if (officerSpan) {
+            officerSpan.style.display = 'block';
         }
 
         // Get the activity ID from the parent div
@@ -70,15 +78,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify({
                     activity_id: activityId,
                     role_name: selectedRole,
-                    id_number: studentId,  // Use id_number instead of student_id
-                    points: points
+                    id_number: studentId,
+                    points: points,
+                    admin_id: adminId
                 })
             })
-
-                .then(response => response.json())
-                .then(data => console.log('Success:', data))
-                .catch((error) => console.error('Error:', error));
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Refresh the page after the successful data submission
+                location.reload();  // This line refreshes the page
+            })
+            .catch((error) => console.error('Error:', error));
         });
+        
     }
 
     // Function to extract the student ID from the URL

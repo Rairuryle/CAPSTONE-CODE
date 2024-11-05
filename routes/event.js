@@ -184,10 +184,10 @@ router.post('/academic_year', async (req, res) => {
 
 // assign role
 router.put('/assign-role', (req, res) => {
-    const { activity_id, role_name, id_number, points } = req.body;
+    const { activity_id, role_name, id_number, points, admin_id } = req.body;
 
     // Check if id_number exists in the student table
-    const checkStudentQuery = `SELECT * FROM student WHERE id_number = ?`;
+    const checkStudentQuery = 'SELECT * FROM student WHERE id_number = ?';
     db.query(checkStudentQuery, [id_number], (error, results) => {
         if (error) {
             console.error('Error checking student:', error);
@@ -199,10 +199,8 @@ router.put('/assign-role', (req, res) => {
         }
 
         // Check if a participation record already exists for this activity and id_number
-        const checkExistenceQuery = `
-            SELECT COUNT(*) AS count 
-            FROM participation_record 
-            WHERE activity_id = ? AND id_number = ?`;
+        const checkExistenceQuery = 
+            'SELECT COUNT(*) AS count FROM participation_record WHERE activity_id = ? AND id_number = ?';
 
         db.query(checkExistenceQuery, [activity_id, id_number], (error, existenceResults) => {
             if (error) {
@@ -213,12 +211,10 @@ router.put('/assign-role', (req, res) => {
             // Determine whether to insert or update
             if (existenceResults[0].count > 0) {
                 // Update existing record
-                const updateQuery = `
-                    UPDATE participation_record 
-                    SET participation_record_points = ?, role_name = ?
-                    WHERE activity_id = ? AND id_number = ?`;
+                const updateQuery = 
+                    'UPDATE participation_record SET participation_record_points = ?, role_name = ?, admin_id = ? WHERE activity_id = ? AND id_number = ?';
 
-                db.query(updateQuery, [points, role_name, activity_id, id_number], (error, updateResults) => {
+                db.query(updateQuery, [points, role_name, admin_id, activity_id, id_number], (error, updateResults) => {
                     if (error) {
                         console.error('Error updating participation record:', error);
                         return res.status(500).json({ error: 'Failed to update participation record' });
@@ -228,11 +224,10 @@ router.put('/assign-role', (req, res) => {
 
             } else {
                 // Insert new record
-                const insertQuery = `
-                    INSERT INTO participation_record (participation_record_points, id_number, activity_id, role_name)
-                    VALUES (?, ?, ?, ?)`;
+                const insertQuery = 
+                    'INSERT INTO participation_record (participation_record_points, id_number, activity_id, role_name, admin_id) VALUES (?, ?, ?, ?, ?)';
 
-                db.query(insertQuery, [points, id_number, activity_id, role_name], (error, insertResults) => {
+                db.query(insertQuery, [points, id_number, activity_id, role_name, admin_id], (error, insertResults) => {
                     if (error) {
                         console.error('Error saving participation record:', error);
                         return res.status(500).json({ error: 'Failed to create participation record' });
@@ -243,6 +238,7 @@ router.put('/assign-role', (req, res) => {
         });
     });
 });
+
 
 
 module.exports = router;
