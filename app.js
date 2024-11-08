@@ -76,6 +76,9 @@ app.engine('hbs', exphbs.engine({
                 result.push(i);
             }
             return result;
+        },
+        sum: function (a, b) {
+            return (a || 0) + (b || 0);
         }
     }
 }));
