@@ -205,4 +205,77 @@ router.get('/search', (req, res) => {
     });
 });
 
+
+router.post('/update-student-profile', (req, res) => {
+    const { id_number, first_name, last_name, new_id_number, active_status, exemption_status, department_name, course_name, abo_name, ibo_name, year_level } = req.body;
+
+    // Step 1: Check if the student exists (using the original id_number)
+    const checkStudentQuery = `
+        SELECT COUNT(*) AS count 
+        FROM student 
+        WHERE id_number = ?;
+    `;
+
+    db.query(checkStudentQuery, [id_number], (err, result) => {
+        if (err) {
+            console.error("Error checking if student exists:", err);
+            return res.status(500).json({ success: false, message: "Error checking student existence" });
+        }
+
+        if (result[0].count === 0) {
+            return res.status(404).json({ success: false, message: "Student not found" });
+        }
+
+        // Step 2: Proceed with the update if student exists
+        const updateQuery = `
+            UPDATE student
+            SET first_name = ?, last_name = ?, id_number = ?, active_status = ?, exemption_status = ?, department_name = ?, course_name = ?, abo_name = ?, ibo_name = ?, year_level = ?
+            WHERE id_number = ?;
+        `;
+
+
+        db.query(updateQuery, [first_name, last_name, new_id_number, active_status, exemption_status, department_name, course_name, abo_name, ibo_name, year_level, id_number], (err, result) => {
+            if (err) {
+                console.error("Error updating student profile:", err);
+                return res.status(500).json({ success: false, message: "Error updating student profile" });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ success: false, message: "No changes made or student not found" });
+            }
+
+            // Step 3: Update foreign key references in the participation_record table
+            const updateParticipationRecordQuery = `
+                UPDATE participation_record 
+                SET id_number = ?
+                WHERE id_number = ?
+            `;
+            db.query(updateParticipationRecordQuery, [new_id_number, id_number], (err, result) => {
+                if (err) {
+                    console.error("Error updating foreign key references in participation_record:", err);
+                    return res.status(500).json({ success: false, message: "Error updating participation records" });
+                }
+
+                // Step 4: Update foreign key references in the attendance_record table
+                const updateAttendanceRecordQuery = `
+                    UPDATE attendance_record
+                    SET id_number = ?
+                    WHERE id_number = ?
+                `;
+                db.query(updateAttendanceRecordQuery, [new_id_number, id_number], (err, result) => {
+                    if (err) {
+                        console.error("Error updating foreign key references in attendance_record:", err);
+                        return res.status(500).json({ success: false, message: "Error updating attendance records" });
+                    }
+
+                    // Send success response
+                    res.json({ success: true, message: "Student profile updated successfully" });
+                });
+            });
+        });
+    });
+});
+
+
+
 module.exports = router;

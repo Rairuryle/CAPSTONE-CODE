@@ -209,7 +209,8 @@
                                 <div class="d-flex justify-content-between">
                                     <span class="card-title fw-bold">{{this.event_name}}</span>
                                     <button class="btn m-0 p-0 edit-event-btn" data-bs-toggle="modal"
-                                        data-bs-target="#editEventsModal" data-event-name="{{this.event_name}}"
+                                        data-bs-target="#editEventsModal" data-event-id="{{this.event_id}}"
+                                        data-event-name="{{this.event_name}}"
                                         data-event-start="{{formatDate this.event_date_start 'YYYY-MM-DD'}}"
                                         data-event-end="{{formatDate this.event_date_end 'YYYY-MM-DD'}}"
                                         onclick="event.stopPropagation();">
@@ -290,7 +291,7 @@
 <script src="../js/spr/dateUtils.js"></script>
 <script src="../js/spr/eventDays.js"></script>
 <script src="../js/spr/addMoreActivities.js"></script>
+<script src="../js/spr/modifyEvents.js"></script>
 <script src="../js/spr/editStudentProfile.js"></script>
-<script src="../js/spr/editDeleteButtons.js"></script>
 <script src="../js/spr/assignRoles.js"></script>
 <script src="../js/spr/disableElements.js"></script>

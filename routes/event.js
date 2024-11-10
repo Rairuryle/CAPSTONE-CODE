@@ -288,8 +288,24 @@ router.post('/record-attendance', (req, res) => {
     });
 });
 
+router.post('/update-event', (req, res) => {
+    const { event_id, event_name, event_date_start, event_date_end } = req.body;
 
+    // SQL query to update the event record in the database
+    const query = `
+        UPDATE event
+        SET event_name = ?, event_date_start = ?, event_date_end = ?
+        WHERE event_id = ?
+    `;
 
+    db.query(query, [event_name, event_date_start, event_date_end, event_id], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, message: 'Database error' });
+        }
 
+        res.json({ success: true });
+    });
+});
 
 module.exports = router;
