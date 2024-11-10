@@ -214,6 +214,10 @@ body {
   line-height: 15px;
 }
 
+.officer-edit {
+  padding-top: 0.3rem;
+}
+
 .team-participant,
 .prog-spectator {
   background-color: red;
@@ -360,6 +364,7 @@ body {
 .btn-add-event-submit,
 .btn-add-activity-submit,
 .btn-edit-event-submit,
+.btn-edit-activity-submit,
 .btn-edit-student-profile-submit,
 .btn-import-file-submit {
   background-color: var(--main-green);
@@ -485,7 +490,8 @@ body {
 }
 
 .btn-delete-event-submit,
-.btn-edit-activity-submit {
+.btn-edit-activity-submit,
+.btn-delete-activity-submit {
   border-radius: 20px;
 }
 

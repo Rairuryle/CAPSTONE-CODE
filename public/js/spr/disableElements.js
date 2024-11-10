@@ -32,8 +32,14 @@ document.addEventListener('DOMContentLoaded', function () {
         verifyButton.style.border = "none";
     }
 
-    disableAllCheckboxes();
-    disableAllAssignRoles();
-    disableImportFileButton();
-    disableVerifyButton();
+    const activeStatus = document.getElementById('activeStatus').textContent;
+    const exemptionStatus = document.getElementById('exemptionStatus').textContent;
+    const currentPath = window.location.pathname;
+
+    if (activeStatus === 'Inactive' || exemptionStatus === 'Exempted' || currentPath === '/spr-edit') {
+        disableAllCheckboxes();
+        disableAllAssignRoles();
+        disableImportFileButton();
+        disableVerifyButton();
+    }
 });

@@ -236,45 +236,31 @@
                 {{!-- import file --}}
                 <div class="import-file-container mt-3">
                     <div class="card import-file-card">
-                        <div class="card-body import-file-card-body d-flex justify-content-center align-items-center">
-                            <img src="../img/import.png" alt="Import File Icon">
-                            <span class="px-2 import-file-text">IMPORT FILE</span>
-                        </div>
+                        <button class="btn btn-import-file m-0 p-0" data-bs-toggle="modal"
+                            data-bs-target="#importFileModal">
+                            <div
+                                class="card-body import-file-card-body d-flex justify-content-center align-items-center">
+
+                                <img src="../img/import.png" alt="Import File Icon">
+                                <span class="px-2 import-file-text fw-bold">IMPORT FILE</span>
+                            </div>
+                        </button>
                     </div>
                 </div>
 
                 {{!-- points --}}
-                <div class="points-container mt-3">
-                    <div class="card points-card">
-                        <div class="card-body points-card-body">
-                            <div class="row d-flex align-items-center justify-content-center">
-                                <div class="col d-flex flex-column align-items-center justify-content-center">
-                                    <span class="text-center fw-bold activity-subtotal-text">Activity<br>Subtotal</span>
-                                    <h3 class="fw-bold mt-2"> {{totalParticipationPoints}}</h3>
-                                </div>
-                                <div class="col-1 d-flex justify-content-center m-0 p-0">
-                                    <div class="vl"></div>
-                                </div>
-                                <div class="col d-flex flex-column align-items-center justify-content-center">
-                                    <span
-                                        class="text-center fw-bold attendance-subtotal-text">Attendance<br>Subtotal</span>
-                                    <h3 class="fw-bold mt-2"> {{totalAttendancePoints}}</h3>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <button class="btn btn-success btn-verify-points w-75 m-auto mt-1">Verify
-                                    Points</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {{> spr-templates/subtotalPoints}}
             </div>
         </div>
     </div>
 </div>
+
+{{> modals/importFileModal}}
+
 
 <script src="../js/spr/loadDetails.js"></script>
 <script src="../js/spr/eventScope.js"></script>
 <script src="../js/spr/eventDays.js"></script>
 <script src="../js/spr/assignRoles.js"></script>
 <script src="../js/spr/attendanceRecord.js"></script>
+<script src="../js/spr/disableElements.js"></script>

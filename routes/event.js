@@ -288,23 +288,192 @@ router.post('/record-attendance', (req, res) => {
     });
 });
 
+// update event
 router.post('/update-event', (req, res) => {
     const { event_id, event_name, event_date_start, event_date_end } = req.body;
 
-    // SQL query to update the event record in the database
-    const query = `
+    if (!event_name || !event_date_start || !event_date_end) {
+        return res.status(400).send('Please provide all required fields');
+    }
+
+    const event_days = getDaysDifference(event_date_start, event_date_end);
+
+    const updateEventQuery = `
         UPDATE event
-        SET event_name = ?, event_date_start = ?, event_date_end = ?
+        SET event_name = ?, event_date_start = ?, event_date_end = ?, event_days = ?
         WHERE event_id = ?
     `;
 
-    db.query(query, [event_name, event_date_start, event_date_end, event_id], (err, result) => {
+    db.query(updateEventQuery, [event_name, event_date_start, event_date_end, event_days, event_id], (err) => {
         if (err) {
-            console.error(err);
+            console.error('Error updating event in database:', err);
+            return res.status(500).send('Error updating event');
+        }
+
+        // Delete attendance records outside the new date range
+        const deleteAttendanceQuery = `
+            DELETE FROM attendance 
+            WHERE event_id = ? 
+            AND (attendance_date < ? OR attendance_date > ?)
+        `;
+
+        db.query(deleteAttendanceQuery, [event_id, event_date_start, event_date_end], (deleteErr) => {
+            if (deleteErr) {
+                console.error('Error deleting out-of-range attendance records:', deleteErr);
+                return res.status(500).send('Error managing attendance records');
+            }
+
+            // Delete activities outside the new date range
+            const deleteActivityQuery = `
+                DELETE FROM activity 
+                WHERE event_id = ? 
+                AND (activity_date < ? OR activity_date > ?)
+            `;
+
+            db.query(deleteActivityQuery, [event_id, event_date_start, event_date_end], (activityErr) => {
+                if (activityErr) {
+                    console.error('Error deleting out-of-range activities:', activityErr);
+                    return res.status(500).send('Error managing activities');
+                }
+
+                // Insert attendance records for each day within the new date range
+                let currentDate = new Date(event_date_start);
+                const endDate = new Date(event_date_end);
+                let attendanceDayCounter = 1;
+
+                const insertAttendance = (attendanceDate) => {
+                    return new Promise((resolve, reject) => {
+                        // Check if the attendance record already exists for the date
+                        const checkAttendanceQuery = `
+                            SELECT 1 FROM attendance
+                            WHERE event_id = ? AND attendance_date = ?
+                        `;
+
+                        db.query(checkAttendanceQuery, [event_id, attendanceDate], (checkErr, results) => {
+                            if (checkErr) {
+                                console.error('Error checking for existing attendance record:', checkErr);
+                                return reject('Error checking attendance records');
+                            }
+
+                            if (results.length === 0) {  // No existing record, insert new
+                                const sqlAttendance = `
+                                    INSERT INTO attendance (attendance_date, event_id, attendance_day) 
+                                    VALUES (?, ?, ?)
+                                `;
+
+                                db.query(sqlAttendance, [attendanceDate, event_id, attendanceDayCounter], (insertErr) => {
+                                    if (insertErr) {
+                                        console.error('Error inserting attendance record:', insertErr);
+                                        return reject('Error inserting attendance record');
+                                    }
+                                    resolve();
+                                });
+                            } else {
+                                resolve();  // No insertion needed, resolve immediately
+                            }
+                        });
+                    });
+                };
+
+                const attendancePromises = [];
+
+                while (currentDate <= endDate) {
+                    const attendanceDate = currentDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+                    attendancePromises.push(insertAttendance(attendanceDate));
+                    attendanceDayCounter++;
+                    currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+                }
+
+                // Wait for all attendance records to be inserted before responding
+                Promise.all(attendancePromises)
+                    .then(() => {
+                        res.json({ success: true, message: 'Event, attendance, and activities updated successfully' });
+                    })
+                    .catch(err => {
+                        console.error('Error inserting attendance records:', err);
+                        res.status(500).send('Error inserting attendance records');
+                    });
+            });
+        });
+    });
+});
+
+router.post('/delete-event', (req, res) => {
+    const { event_id } = req.body;
+    console.log('Deleting event with ID:', event_id);
+
+    const deleteQuery = 'DELETE FROM event WHERE event_id = ?';
+
+    db.query(deleteQuery, [event_id], (error, result) => {
+        if (error) {
+            console.error('Error deleting event:', error);
+            res.json({ success: false, message: 'Error deleting event.' });
+            return;
+        }
+
+        const affectedRows = result.affectedRows;
+        console.log('Delete query affected rows:', affectedRows);
+
+        if (affectedRows > 0) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false, message: 'Event not found or failed to delete.' });
+        }
+    });
+});
+
+
+router.post('/update-activity', (req, res) => {
+    const { activity_id, activity_name, activity_date, activity_day } = req.body;
+    console.log('Updating activity:', req.body);
+
+    // Ensure required data is provided
+    if (!activity_id || !activity_name || !activity_date || !activity_day) {
+        return res.status(400).json({ success: false, message: 'Activity ID, name, date, and day are required.' });
+    }
+
+    // SQL query to update activity name and activity_day
+    const query = `
+        UPDATE activity 
+        SET activity_name = ?, activity_date = ?, activity_day = ? 
+        WHERE activity_id = ?
+    `;
+    db.query(query, [activity_name, activity_date, activity_day, activity_id], (err, result) => {
+        if (err) {
+            console.error('Error updating activity:', err);
             return res.status(500).json({ success: false, message: 'Database error' });
         }
 
-        res.json({ success: true });
+        // Check if an activity was actually updated
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'Activity not found' });
+        }
+
+        res.json({ success: true, message: 'Activity updated successfully!' });
+    });
+});
+
+router.post('/delete-activity', (req, res) => {
+    const { activity_id } = req.body;
+    console.log('Deleting activity with ID:', activity_id);
+
+    const deleteQuery = 'DELETE FROM activity WHERE activity_id = ?';
+
+    db.query(deleteQuery, [activity_id], (error, result) => {
+        if (error) {
+            console.error('Error deleting activity:', error);
+            res.json({ success: false, message: 'Error deleting activity.' });
+            return;
+        }
+
+        const affectedRows = result.affectedRows;
+        console.log('Delete query affected rows:', affectedRows);
+
+        if (affectedRows > 0) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false, message: 'Activity not found or failed to delete.' });
+        }
     });
 });
 

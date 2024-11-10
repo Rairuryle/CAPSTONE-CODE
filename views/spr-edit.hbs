@@ -68,8 +68,7 @@
                             </div>
                         </div>
                         <div class="col-4">
-                            <span class="officer-in-charge officer-attendance-recorder ps-3">{{../adminData.first_name}}
-                                {{../adminData.last_name}}</span>
+                            <span class="officer-in-charge officer-attendance-recorder officer-edit ps-3">N/A</span>
                         </div>
                     </div>
                     {{/each}}
@@ -156,10 +155,11 @@
                             <div class="col-1 ms-4 me-2">15 points</div>
                             <div class="col-2 d-flex justify-content-between col-officer-in-charge">
                                 <span
-                                    class="officer-in-charge officer-activity-recorder ps-3 w-100">{{../adminData.first_name}}
-                                    {{../adminData.last_name}}</span>
-                                <button class="btn m-0 p-0" data-bs-toggle="modal"
-                                    data-bs-target="#editActivitiesModal">
+                                    class="officer-in-charge officer-activity-recorder officer-edit ps-3 w-100">N/A</span>
+                                <button class="btn m-0 p-0" data-bs-toggle="modal" data-bs-target="#editActivitiesModal"
+                                    data-activity-id="{{this.activity_id}}" data-activity-name="{{this.activity_name}}"
+                                    data-activity-date="{{formatDate this.activity_date}}"
+                                    onclick="event.stopPropagation();">
                                     <img src="../img/edit.png" alt="Edit Activity" class="ms-2">
                                 </button>
                             </div>
@@ -231,8 +231,7 @@
                 <div class="import-file-container mt-3">
                     <div class="card import-file-card">
                         <div class="card-body import-file-card-body d-flex justify-content-center align-items-center">
-                            <button class="btn btn-import-file m-0 p-0" data-bs-toggle="modal"
-                                data-bs-target="#importFileModal">
+                            <button class="btn btn-import-file m-0 p-0">
                                 <img src="../img/import.png" alt="Import File Icon">
                                 <span class="px-2 import-file-text fw-bold">IMPORT FILE</span>
                             </button>
@@ -241,30 +240,7 @@
                 </div>
 
                 {{!-- points --}}
-                <div class="points-container mt-3">
-                    <div class="card points-card">
-                        <div class="card-body points-card-body">
-                            <div class="row d-flex align-items-center justify-content-center">
-                                <div class="col d-flex flex-column align-items-center justify-content-center">
-                                    <span class="text-center fw-bold activity-subtotal-text">Activity<br>Subtotal</span>
-                                    <h3 class="fw-bold mt-2">13</h3>
-                                </div>
-                                <div class="col-1 d-flex justify-content-center m-0 p-0">
-                                    <div class="vl"></div>
-                                </div>
-                                <div class="col d-flex flex-column align-items-center justify-content-center">
-                                    <span
-                                        class="text-center fw-bold attendance-subtotal-text">Attendance<br>Subtotal</span>
-                                    <h3 class="fw-bold mt-2">13</h3>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <button class="btn btn-success btn-verify-points w-75 m-auto mt-1">Verify
-                                    Points</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {{> spr-templates/subtotalPoints}}
             </div>
 
             {{else}}
@@ -279,7 +255,6 @@
         {{> modals/addActivitiesModal}}
         {{> modals/editActivitiesModal}}
         {{> modals/deleteActivitiesModal}}
-        {{> modals/importFileModal}}
         {{> modals/addYearModal}}
 
     </div>
@@ -292,6 +267,7 @@
 <script src="../js/spr/eventDays.js"></script>
 <script src="../js/spr/addMoreActivities.js"></script>
 <script src="../js/spr/modifyEvents.js"></script>
+<script src="../js/spr/modifyActivities.js"></script>
 <script src="../js/spr/editStudentProfile.js"></script>
 <script src="../js/spr/assignRoles.js"></script>
 <script src="../js/spr/disableElements.js"></script>

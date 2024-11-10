@@ -39,10 +39,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const addActivitiesModal = document.getElementById('addActivitiesModal');
 
     addActivitiesModal.addEventListener('show.bs.modal', function () {
-        console.log("Modal is opening...");
 
         function formatDateToYYYYMMDD(dateString) {
-            const parts = dateString.split('/'); // Split by '/'
+            const parts = dateString.split('/');
             return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`; // YYYY-MM-DD format
         }
 
@@ -73,4 +72,42 @@ document.addEventListener('DOMContentLoaded', function () {
             updateActivityDateRestrictions(eventDateStart, eventDateEnd);
         }
     });
+
+    // edit activities modal
+    const editActivitiesModal = document.getElementById('editActivitiesModal');
+
+editActivitiesModal.addEventListener('show.bs.modal', function () {
+
+    // Function to format date to YYYY-MM-DD
+    function formatDateToYYYYMMDD(dateString) {
+        const parts = dateString.split('/');
+        return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`; // YYYY-MM-DD format
+    }
+
+    // Function to update date restrictions on activity date input
+    function updateActivityDateRestrictions(startDate, endDate) {
+        const activityDateInput = document.getElementById('editActivityDate');
+
+        // Convert start and end dates to YYYY-MM-DD format
+        const formattedStartDate = formatDateToYYYYMMDD(startDate);
+        const formattedEndDate = formatDateToYYYYMMDD(endDate);
+
+        // Set min and max date attributes for the activity date input
+        activityDateInput.setAttribute('min', formattedStartDate);
+        activityDateInput.setAttribute('max', formattedEndDate);
+        activityDateInput.value = ''; // Clear previous value to avoid confusion
+    }
+
+    // Get event start and end date values from hidden inputs
+    const eventDateStart = document.getElementById('eventStartDate').value;
+    const eventDateEnd = document.getElementById('eventEndDate').value;
+
+    console.log("Event Start Date:", eventDateStart);
+    console.log("Event End Date:", eventDateEnd);
+
+    if (eventDateStart && eventDateEnd) {
+        updateActivityDateRestrictions(eventDateStart, eventDateEnd);
+    }
+});
+
 });

@@ -15,8 +15,10 @@
 
                     <div class="d-flex flex-wrap">
                         <span class="student-id-number-spr border px-3 fw-bold">{{student.id_number}}</span>
-                        <span class="student-status-spr border mx-2 px-3">{{student.active_status}}</span>
-                        <span class="student-status-spr border px-3">{{student.exemption_status}}</span>
+                        <span id="activeStatus"
+                            class="student-status-spr border mx-2 px-3">{{student.active_status}}</span>
+                        <span id="exemptionStatus"
+                            class="student-status-spr border px-3">{{student.exemption_status}}</span>
                     </div>
 
                     <div class="d-flex flex-wrap mt-3 align-items-center">
@@ -58,7 +60,11 @@
                                     SEMESTRAL POINTS ACQUIRED
                                 </div>
                                 <div class="points-indicator fs-1 py-4">
+                                    {{#if (eq currentPath '/spr-main')}}
                                     {{semestralScore}}
+                                    {{else}}
+                                    N/A
+                                    {{/if}}
                                 </div>
                             </div>
                         </div>
@@ -71,10 +77,12 @@
                                     TOTAL POINTS ACQUIRED
                                 </div>
                                 <div class="points-indicator fs-1 py-4">
+                                    {{#if (eq currentPath '/spr-main')}}
                                     {{yearlyScore}}
-
+                                    {{else}}
+                                    N/A
+                                    {{/if}}
                                 </div>
-
                             </div>
                         </div>
                     </div>
