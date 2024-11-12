@@ -24,6 +24,7 @@ app.set('view engine', 'hbs');
 
 router.get('/', (req, res) => {
     res.render('landing-page', {
+        currentPath: '/',
         title: 'Landing Page | LSU HEU Events and Attendance Tracking Website'
     });
 });
@@ -627,7 +628,7 @@ router.get('/spr-main', (req, res) => {
                 totalAttendancePoints,
                 totalScore,
                 semestralScore,
-                yearlyScore, 
+                yearlyScore,
                 currentPath: '/spr-main',
                 title: 'Student Participation Record Main Page | LSU HEU Events and Attendance Tracking Website'
             });
@@ -932,5 +933,51 @@ router.get('/spr-edit', (req, res) => {
         res.redirect('/login');
     }
 });
+
+// student side
+
+router.get('/landing-page-student', (req, res) => {
+    res.render('landing-page-student', {
+        currentPath: '/landing-page-student',
+        title: 'Landing Page | LSU HEU Events and Attendance Tracking Website'
+    });
+});
+
+router.get('/landing-page-student-search', (req, res) => {
+    res.render('landing-page-student-search', {
+        currentPath: '/landing-page-student-search',
+        title: 'Landing Page | LSU HEU Events and Attendance Tracking Website'
+    });
+});
+
+router.get('/spr-student', (req, res) => {
+    const { id_number } = req.query;
+
+    if (!id_number) {
+        return res.status(400).send('Student ID is required');
+    }
+
+    const query = `SELECT * FROM student WHERE id_number = ?`;
+
+    db.query(query, [id_number], (error, results) => {
+        if (error) {
+            console.error('Database error:', error);
+            return res.status(500).send('Database error');
+        }
+
+        if (results.length === 0) {
+            return res.status(404).send('Student not found');
+        }
+
+        const student = results[0];
+
+        res.render('spr-student', {
+            student,
+            currentPath: '/spr-student',
+            title: 'Student Participation Record | LSU HEU Events and Attendance Tracking Website'
+        });
+    });
+});
+
 
 module.exports = router;

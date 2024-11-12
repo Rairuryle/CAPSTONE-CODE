@@ -276,6 +276,32 @@ router.post('/update-student-profile', (req, res) => {
     });
 });
 
+// Unrestricted search route to find a student for the landing page 
+router.get('/search-landing', (req, res) => {
+    const searchQuery = req.query.q; // Capture the query from the request
+
+    if (!searchQuery) {
+        return res.status(400).json({ studentFound: false, message: 'Search query is required' });
+    }
+
+    const query = `
+        SELECT * FROM student 
+        WHERE id_number LIKE ? 
+        OR first_name LIKE ? 
+        OR last_name LIKE ?
+    `;
+    const likeSearch = `%${searchQuery}%`; // Partial matching for id_number, first_name, and last_name
+
+    db.query(query, [likeSearch, likeSearch, likeSearch], (error, results) => {
+        if (error) {
+            console.error('Database error:', error);
+            return res.status(500).json({ studentFound: false });
+        }
+
+        res.status(200).json({ studentFound: results.length > 0, results });
+    });
+});
+
 
 
 module.exports = router;

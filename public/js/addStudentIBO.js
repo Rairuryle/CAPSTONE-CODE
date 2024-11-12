@@ -1,4 +1,4 @@
-const selectedStudents = []; // Ensure this array is managed properly
+const selectedStudents = [];
 
 // Function to log selected students
 function logSelectedStudents() {

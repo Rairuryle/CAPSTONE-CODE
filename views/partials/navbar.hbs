@@ -11,6 +11,8 @@
         </div>
 
         <ul class="nav nav-pills flex-column mt-4 mb-sm-auto mb-0 align-items-center align-items-sm-start h-100">
+            {{!-- unless spr-student start --}}
+            {{#unless (eq currentPath '/spr-student')}}
             <li
                 class="nav-item nav-item-title nav-item-dashboard ps-4 {{#if (eq currentPath '/dashboard')}}active{{/if}}">
                 <a href="/dashboard" class="nav-link align-middle px-0">
@@ -28,13 +30,18 @@
                     </div>
                 </a>
             </li>
+            {{/unless}}
+            {{!-- unless spr-student end --}}
 
-            <li class="nav-item nav-item-title nav-item-records ps-4 mt-3 
-                {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-edit'))}}active{{/if}}">
-                <a href="/spr-main" class="nav-link align-middle px-0">
+            <li
+                class="nav-item nav-item-title nav-item-records ps-4 {{#unless (eq currentPath '/spr-student')}} mt-3 {{/unless}}
+                {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-edit') (eq currentPath '/spr-student') )}}active{{/if}}">
+                <a {{#if (or (eq currentPath '/spr-main' ) (eq currentPath '/spr-edit' ))}} href="/spr-main" {{else}}
+                    href="/spr-student?id_number={{student.id_number}}" {{/if}} class="nav-link align-middle px-0">
                     <div class="d-flex align-items-center">
                         <div class="icon-container me-3">
-                            {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-edit'))}}
+                            {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-edit') (eq currentPath
+                            '/spr-student'))}}
                             <img src="../img/record-filled.png" alt="Records Icon">
                             {{else}}
                             <img src="../img/record.png" alt="Records Icon">
@@ -46,6 +53,9 @@
                     </div>
                 </a>
             </li>
+
+            {{!-- unless spr-student start --}}
+            {{#unless (eq currentPath '/spr-student')}}
             {{#if (eq isExtraOrgsTrue false)}}
             <li
                 class="nav-item nav-item-title nav-item-add-student ps-4 mt-3 {{#if (eq currentPath '/add-student')}}active{{/if}}">
@@ -146,6 +156,7 @@
                 {{/if}}
             </li>
 
+
             <li class="nav-item nav-item-title ps-4">
                 <a href="/logout" class="nav-link align-middle px-0">
                     <div class="d-flex align-items-center">
@@ -158,6 +169,23 @@
                     </div>
                 </a>
             </li>
+            {{/unless}}
+            {{!-- unless spr-student end --}}
+
+            {{#if (eq currentPath '/spr-student')}}
+            <li class="nav-item nav-item-title mt-auto ps-4">
+                <a href="/landing-page-student" class="nav-link align-middle px-0">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-container me-3">
+                            <img src="../img/logout.png" alt="Logout Icon">
+                        </div>
+                        <div class="text-container flex-grow-1 pt-1">
+                            <span class="title-link-sidebar title-link-sidebar-dashboard fw-bold">EXIT</span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {{/if}}
         </ul>
     </div>
 </div>

@@ -4,11 +4,17 @@
 
 <div class="header-profile-dashboard d-flex flex-nowrap justify-content-end align-items-center pt-2">
     <span class="px-1 officer-name">
+        {{#unless (eq currentPath '/spr-student')}}
         <span id="adminOrganization">{{adminData.organization}}</span>,
         {{adminData.first_name}} {{adminData.last_name}}
+        {{else}}
+        Welcome, {{student.first_name}} {{student.last_name}} !
+        {{/unless}}
     </span>
     <span class="p-2 pe-2"><img src="../img/profile.png" alt="Profile Icon"></span>
     <a href="/help"><img src="../img/help.png" alt="Help Icon"></a>
 </div>
 
+{{#unless (eq currentPath '/spr-student')}}
 {{> officerPermission}}
+{{/unless}}

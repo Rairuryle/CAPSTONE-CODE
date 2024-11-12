@@ -1,0 +1,266 @@
+<head>
+    <link rel="stylesheet" href="../css/spr.css">
+</head>
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {{> navbar}}
+
+        <div class="col-7 spr-parent-container mt-3 ms-1">
+            {{> headerSearch}}
+
+            {{#if student}}
+
+            {{> spr-templates/studentProfile}}
+
+            {{!-- spr table --}}
+            <div class="participation-record-table-container mt-4">
+                {{!-- attendance table --}}
+                <div class="attendance-table-container">
+                    <span class="attendance-table-label border px-4 py-2">ATTENDANCE</span>
+                    <div class="attendance-actions-row d-flex mt-3 w-100">
+                        <select name="selectEventDay" id="selectEventDay"
+                            class="select-event-day border-gray bg-transparent fw-bold py-2">
+                            <option disabled="disabled" selected="selected">Select Event Day</option>
+                            {{#each (range 1 eventDays)}}
+                            <option value="{{this}}">Day {{this}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="attendance-table-header d-flex fw-bold mt-3 border-bottom border-2 pb-1">
+                        <div class="col-3 ps-2">
+                            <span>DATE</span>
+                        </div>
+                        <div class="col-2">
+                            <span>AM</span>
+                        </div>
+                        <div class="col-3">
+                            <span>PM</span>
+                        </div>
+                        <div class="col-4">
+                            <span>OFFICER IN-CHARGE</span>
+                        </div>
+                    </div>
+
+                    {{#if attendance.length}}
+                    {{#each attendance}}
+                    <div class="attendance-table-information d-flex align-items-center border-bottom border-2 pt-3 pb-3 
+        {{#if (indexIsOdd @index)}}attendance-table-information-odd{{/if}}" data-attendance-id="{{this.attendance_id}}"
+                        data-day="{{this.attendance_day}}">
+
+                        <div class="col-3 ps-2">
+                            <span>{{this.attendance_date}}</span>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-check form-check-inline ms-2">
+                                <input class="form-check-input attendance-checkbox" type="checkbox"
+                                    data-role-name="AM IN" value="AM IN" data-attendance-id="{{this.attendance_id}}"
+                                    {{#if this.am_in}}checked{{/if}}>
+                                <label class="form-check-label" for="attendanceCheckboxAMIN">AM IN</label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-check form-check-inline ms-2">
+                                <input class="form-check-input attendance-checkbox" type="checkbox"
+                                    data-role-name="PM IN" value="PM IN" data-attendance-id="{{this.attendance_id}}"
+                                    {{#if this.pm_in}}checked{{/if}}>
+                                <label class="form-check-label" for="attendanceCheckboxPMIN">PM IN</label>
+                            </div>
+                            <div class="form-check form-check-inline ms-2">
+                                <input class="form-check-input attendance-checkbox" type="checkbox"
+                                    data-role-name="PM OUT" value="PM OUT" data-attendance-id="{{this.attendance_id}}"
+                                    {{#if this.pm_out}}checked{{/if}}>
+                                <label class="form-check-label" for="attendanceCheckboxPMOUT">PM OUT</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <span class="officer-in-charge officer-attendance-recorder ps-3">
+                                {{this.officer_first_name}} {{this.officer_last_name}}
+                            </span>
+                        </div>
+                    </div>
+                    {{/each}}
+                    {{else}}
+                    <p>No associated attendance record found.</p>
+                    {{/if}}
+
+                </div>
+
+                {{!-- activity table --}}
+                <div class="activity-table-container mt-4">
+                    <div class="activity-actions-row d-flex mt-3 w-100">
+                        <span class="activity-table-label border px-4 py-2">ACTIVITIES</span>
+                        <div class="d-flex align-items-center ms-auto">
+                            <img src="../img/document-filter.png" alt="Sort" class="ps-2" style="height: 20px;">
+                            <select id="sortActivities"
+                                class="form-control sort-activities bg-transparent border-0 fw-bold ps-1"
+                                name="sortActivities">
+                                <option value="" disabled selected>Sort By</option>
+                                <option value="Activity" {{#if (eq selectedSort "Activity" )}}selected{{/if}}> Sort By
+                                    Activity
+                                </option>
+                                <option value="Date" {{#if (eq selectedSort "Date" )}}selected{{/if}}>Sort
+                                    By Date</option>
+                                <option value="Role" {{#if (eq selectedSort "Role" )}}selected{{/if}}>Sort By
+                                    Role</option>
+                                <option value="Points" {{#if (eq selectedSort "Points" )}}selected{{/if}}>Sort By Points
+                                </option>
+                                <option value="Officer" {{#if (eq selectedSort "Officer" )}}selected{{/if}}>Sort By
+                                    Officer
+                                </option>
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <form class="w-100" id="searchForm">
+                                <div class="input-group search-activity-group border border-gray border-3"
+                                    style="max-height:2rem;">
+                                    <input class="form-control border-0 search-activity-field" type="search"
+                                        aria-label="Search" id="searchInput">
+                                    <span class="input-group-text border-0">
+                                        <img src="../img/search.png" alt="Search">
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="activity-table-header d-flex fw-bold mt-3 border-bottom pb-1">
+                        <div class="col-4 col-activity-name">
+                            <span>ACTIVITY NAME</span>
+                        </div>
+                        <div class="col-2 ms-4 me-1">
+                            <span>DATE</span>
+                        </div>
+                        <div class="col-3 col-role">
+                            <span>ROLE</span>
+                        </div>
+                        <div class="col-1 ms-4 me-2">
+                            <span>POINTS</span>
+                        </div>
+                        <div class="col-2 officer-activity-recorder-header">
+                            <span>OFFICER IN-CHARGE</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-table-information-container mt-2">
+                        {{#if activities.length}}
+                        {{#each activities}}
+                        <div class="activity-table-information {{#if (indexIsOdd @index)}}activity-table-information-odd{{/if}} d-flex align-items-center py-2"
+                            data-day="{{this.activity_day}}" data-activity-id="{{this.activity_id}}">
+                            <input type="hidden" id="adminId" name="admin_id" value="{{../adminData.admin_id}}">
+
+                            <div class="col-4 col-activity-name">{{this.activity_name}}</div>
+                            <div class="col-2 ms-4 me-1">{{formatDate this.activity_date}}</div>
+
+                            <div class="col-3 col-role">
+                                <select name="assignRole" class="assign-role ps-2" id="assignRole-{{@index}}"
+                                    onchange="updatePoints({{@index}})">
+                                    <option disabled="disabled" selected="selected">Assign Role</option>
+                                    <option value="INDIV. Participant" {{#if (eq this.role_name "INDIV. Participant"
+                                        )}}selected{{/if}}>INDIV. Participant</option>
+                                    <option value="TEAM Participant" {{#if (eq this.role_name "TEAM Participant"
+                                        )}}selected{{/if}}>TEAM Participant</option>
+                                    <option value="PROG. Spectator" {{#if (eq this.role_name "PROG. Spectator"
+                                        )}}selected{{/if}}>PROG. Spectator</option>
+                                    <option value="OTH. Spectator" {{#if (eq this.role_name "OTH. Spectator"
+                                        )}}selected{{/if}}>OTH. Spectator</option>
+                                </select>
+                            </div>
+
+                            <div class="col-1 ms-4 me-2" id="points-container-{{@index}}">
+                                {{#if
+                                this.participation_record_points}}{{this.participation_record_points}}{{else}}0{{/if}}
+                                points
+                            </div>
+
+                            <div class="col-2 d-flex justify-content-between col-officer-in-charge">
+                                {{#if this.role_name}}
+                                <span class="officer-in-charge officer-activity-recorder ps-3 w-100">
+                                    {{#if this.officer_first_name}} {{this.officer_first_name}} {{/if}}
+                                    {{#if this.officer_last_name}} {{this.officer_last_name}} {{/if}}
+                                </span>
+                                {{else}}
+                                <span class="officer-in-charge officer-activity-recorder ps-3 w-100"
+                                    style="display:none;"></span>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/each}}
+                        {{else}}
+                        <p>No associated activities found.</p>
+                        {{/if}}
+                    </div>
+
+                </div>
+            </div>
+
+            {{else}}
+            <p>No student record found.</p>
+            {{/if}}
+        </div>
+
+        <div class="col col-spr-sidebar mt-3">
+            {{> headerOfficer}}
+
+            <div class="sidebar d-flex flex-column">
+                {{!-- events --}}
+                <div class="events-container p-2">
+                    <div class="events-select-actions">
+                        {{> spr-templates/selectEventScope}}
+                        {{> spr-templates/selectYearSem}}
+                    </div>
+
+                    <div class="events-display-container d-flex flex-column justify-content-center mt-3">
+                        <h5 class="fw-bold text-center"><span id="eventScopeLabel"></span></h5>
+                        {{#if noEvents}}
+                        <p>No events found.</p>
+                        {{else}}
+                        {{#each filteredEvents}}
+                        <div class="card event-card mb-1" data-scope="{{this.event_scope}}"
+                            data-event-days="{{this.event_days}}"
+                            onclick="showEventDetails({{this.event_id}}, {{this.event_days}}, '{{this.event_name}}', '{{formatDate this.event_date_start 'YYYY-MM-DD'}}', '{{formatDate this.event_date_end 'YYYY-MM-DD'}}')">
+                            <div class="card-body event-card-body d-flex flex-column py-2">
+                                <div class="d-flex justify-content-between">
+                                    <span class="card-title fw-bold">{{this.event_name}}</span>
+                                </div>
+                                <span class="card-text card-event-date">
+                                    {{formatDate this.event_date_start}} - {{formatDate this.event_date_end}}
+                                </span>
+                            </div>
+                        </div>
+                        {{/each}}
+                        {{/if}}
+                    </div>
+                </div>
+
+                {{!-- import file --}}
+                <div class="import-file-container mt-3">
+                    <div class="card import-file-card">
+                        <button class="btn btn-import-file m-0 p-0" data-bs-toggle="modal"
+                            data-bs-target="#importFileModal">
+                            <div
+                                class="card-body import-file-card-body d-flex justify-content-center align-items-center">
+
+                                <img src="../img/import.png" alt="Import File Icon">
+                                <span class="px-2 import-file-text fw-bold">IMPORT FILE</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                {{!-- points --}}
+                {{> spr-templates/subtotalPoints}}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> modals/importFileModal}}
+
+
+<script src="../js/spr/loadDetails.js"></script>
+<script src="../js/spr/eventScope.js"></script>
+<script src="../js/spr/eventDays.js"></script>
+<script src="../js/spr/assignRoles.js"></script>
+<script src="../js/spr/attendanceRecord.js"></script>
+<script src="../js/spr/disableElements.js"></script>

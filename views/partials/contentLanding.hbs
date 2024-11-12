@@ -1,0 +1,89 @@
+<body>
+    {{> headerLanding}}
+    <div class="container">
+        <div class="row">
+            <div class="col position-relative">
+                <figure class="figure-landing position-absolute w-100">
+                    <img src="../img/landing-img.png" alt="Landing Page Image">
+                    <div
+                        class="position-absolute top-0 start-50 translate-middle-x py-5 text-center d-flex align-items-center w-75">
+                        <figcaption class="me-3">
+                            <h1 class="brackets-landing">[</h1>
+                        </figcaption>
+                        <figcaption class="me-3">
+                            <h5 class="title-img-landing fw-bold">EVENTS AND ATTENDANCE TRACKING WEBSITE</h5>
+                        </figcaption>
+                        <figcaption class="me-3">
+                            <h1 class="brackets-landing">]</h1>
+                        </figcaption>
+                    </div>
+                    <div class="position-absolute bottom-0 start-50 translate-middle-x text-center py-5 w-100">
+                        <a {{#if (eq currentPath '/' )}} href="/login" {{else}} href="/landing-page-student-search"
+                            {{/if}}>
+                            {{#unless (eq currentPath '/landing-page-student-search')}}
+                            <button type="button" class="btn-landing btn btn-light btn-lg fw-bold w-50 p-3">TAKE ME
+                                IN</button>
+                            {{/unless}}
+                        </a>
+                    </div>
+                </figure>
+            </div>
+            <div class="second-col-landing col position-relative">
+                <h1 class="title-landing">EVENTS AND <br> ATTENDANCE <br> TRACKING WEBSITE</h1>
+                {{#unless (eq currentPath '/landing-page-student-search')}}
+                <p class="description-landing fw-light">Lorem ipsum dolor sit amet consectetur,
+                    adipisicing elit. Iste exercitationem modi, inventore vitae maiores, ut beatae adipisci
+                    assumenda, expedita ipsum fugit nostrum. Nihil sit ullam dolorum quas corporis. Reiciendis totam
+                    mollitia atque eaque omnis non esse alias commodi laborum facilis fugiat, eos excepturi iste
+                    officia? Quaerat provident dolores ut recusandae.
+                </p>
+
+                <a href="https://www.facebook.com/lsuusg/posts/pfbid02u5de68BxeYvp7Hu2KeeNvg4AiDgCdrbHMvgt3BVKcnuTd6zgzV1Ac6grqLNj8KG1l"
+                    target="_blank" class="attendance-guidelines-link">
+                    <button class="btn bg-white btn-attendance-guidelines">
+                        <img src="../img/attendance-guidelines-landing-btn.png" alt="Attendance Guidelines Icon">
+                        <span>Attendance Guidelines ></span>
+                    </button>
+                </a>
+
+                <a href="/help" target="_blank" class="help-link">
+                    <button class="btn bg-white btn-help mt-3">
+                        <img src="../img/help-landing-btn.png" alt="Help and Resources Icon">
+                        <span>Help and Resources ></span>
+                    </button>
+                </a>
+
+                <div class="logo-link-landing">
+                    <div class="position-absolute bottom-0 ps-1 py-5 d-flex">
+                        <figure><a href="https://www.facebook.com/lsu.edu.ph" target="_blank"><img
+                                    src="../img/fb-white-landing.png" alt="Facebook"></a></figure>
+                        <figure class="px-4"><a href="https://lsu.edu.ph" target="_blank"><img
+                                    src="../img/lsu-website-white-landing.png" alt="LSU Website"></a></figure>
+                        <figure><a href="https://lsu.instructure.com" target="_blank"><img
+                                    src="../img/canvas-white-landing.png" alt="Canvas"></a></figure>
+                    </div>
+                </div>
+
+                {{else}}
+                <p class="description-landing fw-light">You can view your participation record by searching with either
+                    your ID or your name.
+                </p>
+
+                <div class="container search-student-container border border-white" style="height: 21rem;">
+                    <div class="input-group search-landing-page-student-group border-bottom w-100 mt-3 mb-5">
+                        <input id="searchStudentProfileLanding" class="form-control border-0 bg-transparent text-white"
+                            type="search" placeholder="Search..." aria-label="Search">
+                        <span class="input-group-text border-0 bg-transparent">
+                            <img src="../img/search-landing-student.png" id="searchButton" alt="Search">
+                        </span>
+                    </div>
+
+                    <ul id="suggestionsList" class="list-group d-none position-absolute top-50 mt-2 w-75"
+                        style="max-height: 15rem;">
+                    </ul>
+                </div>
+                {{/unless}}
+            </div>
+        </div>
+    </div>
+</body>

@@ -236,3 +236,39 @@ body {
 .btn-register-another {
   font-size: 0.9rem;
 }
+
+/* landing page student search */
+
+.search-student-container {
+  border-radius: 12px;
+}
+
+#searchStudentProfileLanding {
+  font-size: 0.9rem;
+}
+
+#searchStudentProfileLanding::placeholder {
+  color: white;
+}
+
+#searchStudentProfileLanding:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.search-landing-page-student-group img {
+  width: 2.8rem;
+  cursor: pointer;
+}
+
+#suggestionsList {
+  list-style: none;
+  overflow-y: auto;
+}
+
+.list-group-item {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid white;
+  margin-left: 3rem;
+}
