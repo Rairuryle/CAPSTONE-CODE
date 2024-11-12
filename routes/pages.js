@@ -377,8 +377,8 @@ const filterEvents = (events, departmentName, aboName, iboName, selectedScope) =
     const aboEvents = events.filter(event => event.event_scope === aboName);
     const iboEvents = events.filter(event => event.event_scope === iboName);
 
-    // Determine which events to return based on selectedScope
     let filteredEvents;
+
     if (selectedScope === 'INSTITUTIONAL') {
         filteredEvents = institutionalEvents;
     } else if (selectedScope === departmentName) {
@@ -388,9 +388,8 @@ const filterEvents = (events, departmentName, aboName, iboName, selectedScope) =
     } else if (selectedScope === iboName) {
         filteredEvents = iboEvents;
     } else {
-        filteredEvents = [];
+        filteredEvents = []; // If no matching scope, return empty array
     }
-
     return {
         institutionalEvents,
         collegeEvents,
@@ -399,6 +398,7 @@ const filterEvents = (events, departmentName, aboName, iboName, selectedScope) =
         filteredEvents
     };
 };
+
 
 const formatDate = (date) => {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -582,7 +582,7 @@ router.get('/spr-main', (req, res) => {
             });
         };
 
-        const renderEditPage = (student, events, academicYears, eventDays, activities, attendance, totalParticipationPoints, totalAttendancePoints, semestralScore, yearlyScore) => {
+        const renderMainPage = (student, events, academicYears, eventDays, activities, attendance, totalParticipationPoints, totalAttendancePoints, semestralScore, yearlyScore) => {
             const { filteredEvents } = filterEvents(events, departmentName, aboName, iboName, selectedScope);
             const noEvents = !filteredEvents || filteredEvents.length === 0;
             const totalScore = totalParticipationPoints + totalAttendancePoints;
@@ -711,7 +711,7 @@ router.get('/spr-main', (req, res) => {
                                                     return res.status(500).send('Database error while fetching academic years');
                                                 }
 
-                                                renderEditPage(student, events, academicYears, eventDays, activityResults, formattedAttendance, totalParticipationPoints, totalAttendancePoints, semestralScore, yearlyScore); // Pass the yearly score here
+                                                renderMainPage(student, events, academicYears, eventDays, activityResults, formattedAttendance, totalParticipationPoints, totalAttendancePoints, semestralScore, yearlyScore); // Pass the yearly score here
                                             });
                                         });
                                     });
@@ -720,7 +720,7 @@ router.get('/spr-main', (req, res) => {
                                         if (err) {
                                             return res.status(500).send('Database error while fetching academic years');
                                         }
-                                        renderEditPage(student, events, academicYears, [], [], [], 0, 0, semestralScore, yearlyScore);
+                                        renderMainPage(student, events, academicYears, [], [], [], 0, 0, semestralScore, yearlyScore);
                                     });
                                 }
                             } else {
@@ -728,7 +728,7 @@ router.get('/spr-main', (req, res) => {
                                     if (err) {
                                         return res.status(500).send('Database error while fetching academic years');
                                     }
-                                    renderEditPage(student, [], academicYears, [], [], [], 0, 0, semestralScore, yearlyScore);
+                                    renderMainPage(student, [], academicYears, [], [], [], 0, 0, semestralScore, yearlyScore);
                                 });
                             }
                         });
@@ -737,7 +737,7 @@ router.get('/spr-main', (req, res) => {
                             if (err) {
                                 return res.status(500).send('Database error while fetching academic years');
                             }
-                            renderEditPage(student, [], academicYears, [], [], [], 0, 0, semestralScore, yearlyScore);
+                            renderMainPage(student, [], academicYears, [], [], [], 0, 0, semestralScore, yearlyScore);
                         });
                     }
                 });
@@ -951,33 +951,166 @@ router.get('/landing-page-student-search', (req, res) => {
 });
 
 router.get('/spr-student', (req, res) => {
-    const { id_number } = req.query;
+    const id_number = req.query.id_number;
+    const selectedScope = req.query.event_scope || '';
+    const selectedYear = req.query.academic_year || "Select Year";
+    const selectedSemester = req.query.semester || "Select Sem";
+    const eventId = req.query.event_id;
+    const eventName = req.query.event_name;
+    const eventDays = req.query.event_days || null;
+    const eventDateStart = req.query.event_start_date;
+    const eventDateEnd = req.query.event_end_date;
 
-    if (!id_number) {
-        return res.status(400).send('Student ID is required');
-    }
+    console.log('ID Number:', id_number);
+    console.log('Selected Scope:', selectedScope);
+    console.log('Selected Year:', selectedYear);
+    console.log('Selected Semester:', selectedSemester);
 
-    const query = `SELECT * FROM student WHERE id_number = ?`;
+    const fetchAcademicYears = (callback) => {
+        db.query('SELECT academic_year FROM academic_year ORDER BY academic_year DESC', (err, results) => {
+            if (err) {
+                return callback(err, null);
+            }
+            callback(null, results);
+        });
+    };
 
-    db.query(query, [id_number], (error, results) => {
-        if (error) {
-            console.error('Database error:', error);
-            return res.status(500).send('Database error');
-        }
+    const renderPage = (student, academicYears, events, activities, attendance, totalParticipationPoints, totalAttendancePoints, semestralScore, yearlyScore) => {
 
-        if (results.length === 0) {
-            return res.status(404).send('Student not found');
-        }
-
-        const student = results[0];
+        const { filteredEvents } = filterEvents(events, student.department_name, student.abo_name, student.ibo_name, selectedScope);
+        const noEvents = !filteredEvents || filteredEvents.length === 0;
+        const totalScore = totalParticipationPoints + totalAttendancePoints;
 
         res.render('spr-student', {
             student,
+            departmentName: student.department_name,
+            aboName: student.abo_name,
+            iboName: student.ibo_name,
+            filteredEvents,
+            noEvents,
+            academicYears,
+            activities,
+            attendance,
+            selectedYear,
+            selectedSemester,
+            selectedScope,
+            eventId,
+            eventName,
+            eventDays,
+            eventDateStart,
+            eventDateEnd,
+            totalParticipationPoints,
+            totalAttendancePoints,
+            totalScore,
+            semestralScore,
+            yearlyScore,
             currentPath: '/spr-student',
             title: 'Student Participation Record | LSU HEU Events and Attendance Tracking Website'
         });
+    };
+
+    const studentQuery = 'SELECT * FROM student WHERE id_number = ?';
+    db.query(studentQuery, [id_number], (err, studentResults) => {
+        if (err) {
+            return res.status(500).send('Database error while fetching student data');
+        }
+
+        const student = studentResults.length > 0 ? studentResults[0] : null;
+
+        if (!student) {
+            return res.status(404).send('Student not found');
+        }
+
+        console.log('Student Data:', student);
+
+        fetchAcademicYears((err, academicYears) => {
+            if (err) {
+                return res.status(500).send('Database error while fetching academic years');
+            }
+
+            fetchSemestralPoints(selectedYear, selectedSemester, id_number, (semestralScore) => {
+                fetchYearlyPoints(selectedYear, id_number, (yearlyScore) => {
+                    // Fetch events
+                    if (id_number && selectedYear !== "Select Year" && selectedSemester !== "Select Sem") {
+                        fetchEvents(selectedYear, selectedSemester, selectedScope, (events) => {
+
+                            if (events && events.length > 0) {
+                                if (eventId && eventDays) {
+                                    const activitiesQuery = `
+                                        SELECT a.*, 
+                                               pr.role_name, 
+                                               pr.admin_id, 
+                                               ad.first_name AS officer_first_name,
+                                               ad.last_name AS officer_last_name,
+                                               CASE pr.role_name 
+                                                   WHEN 'INDIV. Participant' THEN 15
+                                                   WHEN 'TEAM Participant' THEN 20
+                                                   WHEN 'PROG. Spectator' THEN 10
+                                                   WHEN 'OTH. Spectator' THEN 5
+                                                   ELSE 0
+                                               END AS participation_record_points
+                                        FROM activity a
+                                        LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id AND pr.id_number = ?
+                                        LEFT JOIN admin ad ON pr.admin_id = ad.admin_id
+                                        WHERE a.event_id = ?`;
+
+                                    db.query(activitiesQuery, [id_number, eventId], (err, activityResults) => {
+                                        if (err) {
+                                            return res.status(500).send('Database error while fetching activities');
+                                        }
+
+                                        const totalParticipationPoints = activityResults.reduce((acc, activity) => acc + (activity.participation_record_points || 0), 0);
+
+                                        const attendanceQuery = `
+                                            SELECT a.attendance_id,
+                                                   a.attendance_day,
+                                                   a.attendance_date,
+                                                   COALESCE(ar.am_in, 0) AS am_in,
+                                                   COALESCE(ar.pm_in, 0) AS pm_in,
+                                                   COALESCE(ar.pm_out, 0) AS pm_out,
+                                                   ad.first_name AS officer_first_name,
+                                                   ad.last_name AS officer_last_name
+                                            FROM attendance a
+                                            LEFT JOIN attendance_record ar ON a.attendance_id = ar.attendance_id AND ar.id_number = ?
+                                            LEFT JOIN admin ad ON ar.admin_id = ad.admin_id
+                                            WHERE a.event_id = ?`;
+
+                                        db.query(attendanceQuery, [id_number, eventId], (err, attendanceResults) => {
+                                            if (err) {
+                                                return res.status(500).send('Database error while fetching attendance');
+                                            }
+
+                                            const totalAttendancePoints = attendanceResults.reduce((acc, att) => {
+                                                return acc + (att.am_in ? 5 : 0) + (att.pm_in ? 5 : 0) + (att.pm_out ? 5 : 0);
+                                            }, 0);
+
+                                            const formattedAttendance = attendanceResults.map(att => ({
+                                                ...att,
+                                                attendance_date: formatDate(att.attendance_date)
+                                            }));
+
+                                            renderPage(student, academicYears, events, activityResults, formattedAttendance, totalParticipationPoints, totalAttendancePoints, semestralScore, yearlyScore);
+                                        });
+                                    });
+                                } else {
+                                    // Render the page with events, but no specific activity or attendance details
+                                    renderPage(student, academicYears, events, [], [], 0, 0, semestralScore, yearlyScore);
+                                }
+                            } else {
+                                // If no events found, render the page without events
+                                renderPage(student, academicYears, [], [], [], 0, 0, semestralScore, yearlyScore);
+                            }
+                        });
+                    } else {
+                        // If academic year or semester is not selected, render the page with no events
+                        renderPage(student, academicYears, [], [], [], 0, 0, semestralScore, yearlyScore);
+                    }
+                });
+            });
+        });
     });
 });
+
 
 
 module.exports = router;

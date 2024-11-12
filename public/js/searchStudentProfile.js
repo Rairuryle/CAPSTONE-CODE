@@ -7,6 +7,7 @@ function searchStudentProfile() {
     }
 
     const searchQuery = idNumberInput.value.trim(); // Use this for search
+
     if (!searchQuery) {
         alert('Please enter an ID number or name to search.');
         return;
@@ -37,14 +38,11 @@ function searchStudentProfile() {
                 let redirectUrl = '';
 
                 if (currentUrl.includes('/spr-edit')) {
-                    // If on the `spr-edit` page, redirect to `spr-edit` with the same ID
                     redirectUrl = `/spr-edit?id=${encodeURIComponent(data.studentData.id_number)}`;
                 } else {
-                    // Otherwise, redirect to `spr-main`
                     redirectUrl = `/spr-main?id=${encodeURIComponent(data.studentData.id_number)}`;
                 }
 
-                // Redirect to the appropriate page
                 window.location.href = redirectUrl;
             } else {
                 alert('Student not found.');

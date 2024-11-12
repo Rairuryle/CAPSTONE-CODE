@@ -30,15 +30,12 @@ document.addEventListener('DOMContentLoaded', function () {
         searchStudent();
     });
 
-    // Event listener for pressing the Enter key
     searchInput.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent form submission if in a form
             searchStudent();
         }
     });
 
-    // Function to perform the student search and redirect
     function searchStudent() {
         const query = searchInput.value.trim();
 

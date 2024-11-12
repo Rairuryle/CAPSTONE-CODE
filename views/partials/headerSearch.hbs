@@ -21,4 +21,8 @@
     </div>
 </nav>
 
+{{#unless (eq currentPath '/spr-student')}}
 <script src="../js/searchStudentProfile.js"></script>
+{{else}}
+<script src="../js/student/searchStudentProfileSPR.js"></script>
+{{/unless}}

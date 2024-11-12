@@ -1,0 +1,25 @@
+<select name="selectEventScope" id="selectEventScope" class="select-event-scope w-100 px-3 py-2 fw-bold">
+    <option disabled="disabled" selected="selected">Select Event Scope</option>
+    <option value="INSTITUTIONAL" {{#if (eq selectedScope "INSTITUTIONAL" )}} selected {{/if}}>
+        INSTITUTIONAL
+    </option>
+
+    <optgroup label="College Departments">
+        <option value="{{student.department_name}}" {{#if (eq selectedScope student.department_name )}} selected
+            {{/if}}>
+            {{student.department_name}}
+        </option>
+    </optgroup>
+
+    <optgroup label="ABO">
+        <option value="{{student.abo_name}}" {{#if (eq selectedScope student.abo_name)}}selected{{/if}}>
+            {{student.abo_name}}
+        </option>
+    </optgroup>
+
+    <optgroup label="IBO">
+        <option value="{{student.ibo_name}}" {{#if (eq selectedScope student.ibo_name)}}selected{{/if}}>
+            {{student.ibo_name}}
+        </option>
+    </optgroup>
+</select>

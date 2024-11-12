@@ -5,7 +5,7 @@
                 <div class="col d-flex flex-column align-items-center justify-content-center">
                     <span class="text-center fw-bold activity-subtotal-text">Activity<br>Subtotal</span>
                     <h3 class="fw-bold mt-2">
-                        {{#if (eq currentPath '/spr-main')}}
+                        {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-student'))}}
                         {{totalParticipationPoints}}
                         {{else}}
                         N/A
@@ -17,7 +17,7 @@
                 </div>
                 <div class="col d-flex flex-column align-items-center justify-content-center">
                     <span class="text-center fw-bold attendance-subtotal-text">Attendance<br>Subtotal</span>
-                    <h3 class="fw-bold mt-2"> {{#if (eq currentPath '/spr-main')}}
+                    <h3 class="fw-bold mt-2"> {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-student'))}}
                         {{totalAttendancePoints}}
                         {{else}}
                         N/A
@@ -25,10 +25,12 @@
                     </h3>
                 </div>
             </div>
+            {{#unless (eq currentPath '/spr-student')}}
             <div class="row">
                 <button class="btn btn-success btn-verify-points w-75 m-auto mt-1">Verify
                     Points</button>
             </div>
+            {{/unless}}
         </div>
     </div>
 </div>

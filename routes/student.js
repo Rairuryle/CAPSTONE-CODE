@@ -268,7 +268,6 @@ router.post('/update-student-profile', (req, res) => {
                         return res.status(500).json({ success: false, message: "Error updating attendance records" });
                     }
 
-                    // Send success response
                     res.json({ success: true, message: "Student profile updated successfully" });
                 });
             });
@@ -276,9 +275,9 @@ router.post('/update-student-profile', (req, res) => {
     });
 });
 
-// Unrestricted search route to find a student for the landing page 
+
 router.get('/search-landing', (req, res) => {
-    const searchQuery = req.query.q; // Capture the query from the request
+    const searchQuery = req.query.q;
 
     if (!searchQuery) {
         return res.status(400).json({ studentFound: false, message: 'Search query is required' });
@@ -290,7 +289,8 @@ router.get('/search-landing', (req, res) => {
         OR first_name LIKE ? 
         OR last_name LIKE ?
     `;
-    const likeSearch = `%${searchQuery}%`; // Partial matching for id_number, first_name, and last_name
+
+    const likeSearch = `%${searchQuery}%`;
 
     db.query(query, [likeSearch, likeSearch, likeSearch], (error, results) => {
         if (error) {

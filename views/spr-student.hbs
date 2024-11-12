@@ -1,5 +1,25 @@
 <head>
     <link rel="stylesheet" href="../css/spr.css">
+    <style>
+        input[type="checkbox"]:disabled {
+            opacity: 1 !important;
+            pointer-events: none;
+            background-color: var(--main-green) !important;
+            border-color: var(--main-green) !important;
+            color: var(--main-green) !important;
+        }
+
+        input[type="checkbox"]:disabled:not(:checked) {
+            background-color: transparent !important;
+            border-color: var(--main-green) !important;
+        }
+
+        .form-check-label {
+            color: var(--main-green);
+            opacity: 1 !important;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <div class="container-fluid">
@@ -83,7 +103,6 @@
                     {{else}}
                     <p>No associated attendance record found.</p>
                     {{/if}}
-
                 </div>
 
                 {{!-- activity table --}}
@@ -204,9 +223,9 @@
 
             <div class="sidebar d-flex flex-column">
                 {{!-- events --}}
-                <div class="events-container p-2">
+                <div class="events-container p-2" style="max-height: 28rem;">
                     <div class="events-select-actions">
-                        {{> spr-templates/selectEventScope}}
+                        {{> spr-templates/student/selectEventScopeStudent}}
                         {{> spr-templates/selectYearSem}}
                     </div>
 
@@ -233,21 +252,6 @@
                     </div>
                 </div>
 
-                {{!-- import file --}}
-                <div class="import-file-container mt-3">
-                    <div class="card import-file-card">
-                        <button class="btn btn-import-file m-0 p-0" data-bs-toggle="modal"
-                            data-bs-target="#importFileModal">
-                            <div
-                                class="card-body import-file-card-body d-flex justify-content-center align-items-center">
-
-                                <img src="../img/import.png" alt="Import File Icon">
-                                <span class="px-2 import-file-text fw-bold">IMPORT FILE</span>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-
                 {{!-- points --}}
                 {{> spr-templates/subtotalPoints}}
             </div>
@@ -255,12 +259,6 @@
     </div>
 </div>
 
-{{> modals/importFileModal}}
-
-
-<script src="../js/spr/loadDetails.js"></script>
-<script src="../js/spr/eventScope.js"></script>
+<script src="../js/student/loadDetailsStudent.js"></script>
 <script src="../js/spr/eventDays.js"></script>
-<script src="../js/spr/assignRoles.js"></script>
-<script src="../js/spr/attendanceRecord.js"></script>
-<script src="../js/spr/disableElements.js"></script>
+<script src="../js/student/disableElementsStudent.js"></script>
