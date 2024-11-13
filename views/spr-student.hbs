@@ -43,7 +43,7 @@
                             class="select-event-day border-gray bg-transparent fw-bold py-2">
                             <option disabled="disabled" selected="selected">Select Event Day</option>
                             {{#each (range 1 eventDays)}}
-                            <option value="{{this}}">Day {{this}}</option>
+                            <option value="{{this}}">Day {{this}} - {{lookup ../verificationStatusByDay this}}</option>
                             {{/each}}
                         </select>
                     </div>

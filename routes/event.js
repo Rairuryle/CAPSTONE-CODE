@@ -310,7 +310,6 @@ router.post('/update-event', (req, res) => {
             return res.status(500).send('Error updating event');
         }
 
-        // Delete attendance records outside the new date range
         const deleteAttendanceQuery = `
             DELETE FROM attendance 
             WHERE event_id = ? 
@@ -323,7 +322,6 @@ router.post('/update-event', (req, res) => {
                 return res.status(500).send('Error managing attendance records');
             }
 
-            // Delete activities outside the new date range
             const deleteActivityQuery = `
                 DELETE FROM activity 
                 WHERE event_id = ? 
@@ -336,63 +334,107 @@ router.post('/update-event', (req, res) => {
                     return res.status(500).send('Error managing activities');
                 }
 
-                // Insert attendance records for each day within the new date range
-                let currentDate = new Date(event_date_start);
-                const endDate = new Date(event_date_end);
-                let attendanceDayCounter = 1;
+                // Update activity_day dynamically based on the new event_date_start
+                const updateActivityDayQuery = `
+                    UPDATE activity
+                    SET activity_day = DATEDIFF(activity_date, ?) + 1
+                    WHERE event_id = ? 
+                    AND activity_date BETWEEN ? AND ?
+                `;
 
-                const insertAttendance = (attendanceDate) => {
-                    return new Promise((resolve, reject) => {
-                        // Check if the attendance record already exists for the date
-                        const checkAttendanceQuery = `
-                            SELECT 1 FROM attendance
-                            WHERE event_id = ? AND attendance_date = ?
-                        `;
+                db.query(updateActivityDayQuery, [event_date_start, event_id, event_date_start, event_date_end], (updateErr) => {
+                    if (updateErr) {
+                        console.error('Error updating activity_day for activities:', updateErr);
+                        return res.status(500).send('Error updating activity_day');
+                    }
 
-                        db.query(checkAttendanceQuery, [event_id, attendanceDate], (checkErr, results) => {
-                            if (checkErr) {
-                                console.error('Error checking for existing attendance record:', checkErr);
-                                return reject('Error checking attendance records');
-                            }
+                    // Now we update the attendance_day for all attendance records within the new date range
+                    const updateAttendanceDayQuery = `
+                        UPDATE attendance
+                        SET attendance_day = DATEDIFF(attendance_date, ?) + 1
+                        WHERE event_id = ? 
+                        AND attendance_date BETWEEN ? AND ?
+                    `;
 
-                            if (results.length === 0) {  // No existing record, insert new
-                                const sqlAttendance = `
-                                    INSERT INTO attendance (attendance_date, event_id, attendance_day) 
-                                    VALUES (?, ?, ?)
+                    db.query(updateAttendanceDayQuery, [event_date_start, event_id, event_date_start, event_date_end], (attendanceUpdateErr) => {
+                        if (attendanceUpdateErr) {
+                            console.error('Error updating attendance_day for attendance records:', attendanceUpdateErr);
+                            return res.status(500).send('Error updating attendance_day');
+                        }
+
+                        let currentDate = new Date(event_date_start);
+                        const endDate = new Date(event_date_end);
+
+                        // Insert new attendance records for all the dates in the new event date range
+                        const insertAttendance = (attendanceDate, attendanceDay) => {
+                            return new Promise((resolve, reject) => {
+                                const checkAttendanceQuery = `
+                                    SELECT 1 FROM attendance
+                                    WHERE event_id = ? AND attendance_date = ? 
                                 `;
 
-                                db.query(sqlAttendance, [attendanceDate, event_id, attendanceDayCounter], (insertErr) => {
-                                    if (insertErr) {
-                                        console.error('Error inserting attendance record:', insertErr);
-                                        return reject('Error inserting attendance record');
+                                db.query(checkAttendanceQuery, [event_id, attendanceDate], (checkErr, results) => {
+                                    if (checkErr) {
+                                        console.error('Error checking for existing attendance record:', checkErr);
+                                        return reject('Error checking attendance records');
                                     }
-                                    resolve();
+
+                                    if (results.length === 0) {  // No existing record, insert new
+                                        const sqlAttendance = `
+                                            INSERT INTO attendance (attendance_date, event_id, attendance_day) 
+                                            VALUES (?, ?, ?)
+                                        `;
+
+                                        db.query(sqlAttendance, [attendanceDate, event_id, attendanceDay], (insertErr) => {
+                                            if (insertErr) {
+                                                console.error('Error inserting attendance record:', insertErr);
+                                                return reject('Error inserting attendance record');
+                                            }
+                                            resolve();
+                                        });
+                                    } else {
+                                        resolve();  // No insertion needed, resolve immediately
+                                    }
                                 });
-                            } else {
-                                resolve();  // No insertion needed, resolve immediately
-                            }
+                            });
+                        };
+
+                        const attendancePromises = [];
+                        let attendanceDayCounter = 1;
+
+                        // Store all attendance dates to sort them before inserting
+                        const attendanceDates = [];
+
+                        while (currentDate <= endDate) {
+                            const attendanceDate = currentDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
+                            // Recalculate attendance_day based on the new event_date_start
+                            const diffTime = currentDate - new Date(event_date_start);
+                            const attendanceDay = Math.floor(diffTime / (1000 * 3600 * 24)) + 1;
+
+                            attendanceDates.push({ attendanceDate, attendanceDay });
+                            currentDate.setDate(currentDate.getDate() + 1);
+                        }
+
+                        // Sort the attendance dates in chronological order
+                        attendanceDates.sort((a, b) => new Date(a.attendanceDate) - new Date(b.attendanceDate));
+
+                        // Push the attendance insert promises after sorting
+                        attendanceDates.forEach(item => {
+                            attendancePromises.push(insertAttendance(item.attendanceDate, item.attendanceDay));
                         });
+
+                        // Wait for all attendance records to be inserted before responding
+                        Promise.all(attendancePromises)
+                            .then(() => {
+                                res.json({ success: true, message: 'Event, attendance, and activities updated successfully' });
+                            })
+                            .catch(err => {
+                                console.error('Error inserting attendance records:', err);
+                                res.status(500).send('Error inserting attendance records');
+                            });
                     });
-                };
-
-                const attendancePromises = [];
-
-                while (currentDate <= endDate) {
-                    const attendanceDate = currentDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-                    attendancePromises.push(insertAttendance(attendanceDate));
-                    attendanceDayCounter++;
-                    currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
-                }
-
-                // Wait for all attendance records to be inserted before responding
-                Promise.all(attendancePromises)
-                    .then(() => {
-                        res.json({ success: true, message: 'Event, attendance, and activities updated successfully' });
-                    })
-                    .catch(err => {
-                        console.error('Error inserting attendance records:', err);
-                        res.status(500).send('Error inserting attendance records');
-                    });
+                });
             });
         });
     });

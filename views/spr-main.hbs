@@ -23,7 +23,7 @@
                             class="select-event-day border-gray bg-transparent fw-bold py-2">
                             <option disabled="disabled" selected="selected">Select Event Day</option>
                             {{#each (range 1 eventDays)}}
-                            <option value="{{this}}">Day {{this}}</option>
+                            <option value="{{this}}">Day {{this}} - {{lookup ../verificationStatusByDay this}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -47,7 +47,6 @@
                     <div class="attendance-table-information d-flex align-items-center border-bottom border-2 pt-3 pb-3 
         {{#if (indexIsOdd @index)}}attendance-table-information-odd{{/if}}" data-attendance-id="{{this.attendance_id}}"
                         data-day="{{this.attendance_day}}">
-
                         <div class="col-3 ps-2">
                             <span>{{this.attendance_date}}</span>
                         </div>
@@ -155,7 +154,7 @@
                             <div class="col-3 col-role">
                                 <select name="assignRole" class="assign-role ps-2" id="assignRole-{{@index}}"
                                     onchange="updatePoints({{@index}})">
-                                    <option disabled="disabled" selected="selected">Assign Role</option>
+                                    <option selected="selected">Assign Role</option>
                                     <option value="INDIV. Participant" {{#if (eq this.role_name "INDIV. Participant"
                                         )}}selected{{/if}}>INDIV. Participant</option>
                                     <option value="TEAM Participant" {{#if (eq this.role_name "TEAM Participant"
@@ -190,7 +189,6 @@
                         <p>No associated activities found.</p>
                         {{/if}}
                     </div>
-
                 </div>
             </div>
 
