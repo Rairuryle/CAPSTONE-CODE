@@ -103,12 +103,13 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = url.toString();
     };
 
-    window.showEventDetails = function (eventId, eventDays, eventName, eventStartDate, eventEndDate) {
+    window.showEventDetails = function (eventId, eventDays, eventName, eventStartDate, eventEndDate, toVerify) {
         console.log("showEventDetails called with eventId:", eventId);
         console.log("Days:", eventDays);
         console.log("Name:", eventName);
         console.log("Start Date:", eventStartDate);
         console.log("End Date:", eventEndDate);
+        console.log("To Verify:", toVerify)
 
         // Populate the dropdown
         const selectEventDayDropdown = document.getElementById('selectEventDay');
@@ -122,11 +123,11 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("day", day);
         }
 
-        loadEventDetails(eventId, eventDays, eventName, eventStartDate, eventEndDate);
+        loadEventDetails(eventId, eventDays, eventName, eventStartDate, eventEndDate, toVerify);
     };
 
     // Function to load event details and redirect
-    function loadEventDetails(eventId, eventDays, eventName, eventStartDate, eventEndDate) {
+    function loadEventDetails(eventId, eventDays, eventName, eventStartDate, eventEndDate, toVerify) {
         const currentYear = document.getElementById('selectYearDropdown').innerText || "Select Year";
         const currentSemester = document.getElementById('selectSemDropdown').innerText || "Select Sem";
         const studentId = getStudentIdFromUrl();
@@ -141,6 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
         url.searchParams.set('event_name', eventName);
         url.searchParams.set('event_start_date', eventStartDate);
         url.searchParams.set('event_end_date', eventEndDate);
+        url.searchParams.set('to_verify', toVerify);
 
         // Preserve the event scope in the URL
         const selectEventScope = document.getElementById('selectEventScope');

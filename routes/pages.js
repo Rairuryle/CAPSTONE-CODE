@@ -567,11 +567,13 @@ router.get('/spr-main', (req, res) => {
         const eventDays = req.query.event_days || null;
         const eventDateStart = req.query.event_start_date;
         const eventDateEnd = req.query.event_end_date;
+        const eventToVerify = req.query.to_verify;
         console.log('Event ID:', eventId);
         console.log('Event Name:', eventName);
         console.log('Event Days:', eventDays);
         console.log('Event Start Date:', eventDateStart);
         console.log('Event End Date:', eventDateEnd);
+        console.log('To Verify:', eventToVerify);
 
         const fetchAcademicYears = (callback) => {
             db.query('SELECT academic_year FROM academic_year ORDER BY academic_year DESC', (err, results) => {
@@ -624,6 +626,7 @@ router.get('/spr-main', (req, res) => {
                 eventDays,
                 eventDateStart,
                 eventDateEnd,
+                eventToVerify,
                 totalParticipationPoints,
                 totalAttendancePoints,
                 totalScore,
@@ -643,9 +646,7 @@ router.get('/spr-main', (req, res) => {
 
             const student = studentResults.length > 0 ? studentResults[0] : null;
 
-            // Fetch the semestral points first
             fetchSemestralPoints(selectedYear, selectedSemester, idNumber, (semestralScore) => {
-                // Fetch the yearly points now, alongside semestral score
                 fetchYearlyPoints(selectedYear, idNumber, (yearlyScore) => {
                     if (idNumber && selectedYear !== "Select Year" && selectedSemester !== "Select Sem") {
                         fetchEvents(selectedYear, selectedSemester, selectedScope, (events) => {
@@ -711,7 +712,7 @@ router.get('/spr-main', (req, res) => {
                                                     return res.status(500).send('Database error while fetching academic years');
                                                 }
 
-                                                renderMainPage(student, events, academicYears, eventDays, activityResults, formattedAttendance, totalParticipationPoints, totalAttendancePoints, semestralScore, yearlyScore); // Pass the yearly score here
+                                                renderMainPage(student, events, academicYears, eventDays, activityResults, formattedAttendance, totalParticipationPoints, totalAttendancePoints, semestralScore, yearlyScore);
                                             });
                                         });
                                     });

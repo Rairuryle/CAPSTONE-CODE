@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const verifyButton = document.querySelector('.btn-verify-points');
     const studentId = getStudentIdFromUrl();
 
+    const eventDays = {};  // To track the assigned roles per event day
+
     roleSelects.forEach((select, index) => {
         // Initial setup: Add class based on initial value, if any
         updateRoleClass(select);
@@ -11,10 +13,12 @@ document.addEventListener('DOMContentLoaded', function () {
             updateRoleClass(select);
             // Update points display based on role selected
             updatePoints(select, index);
+            // Track assigned roles count per event day
+            updateAssignedRolesCount(select);
+            checkAndEnableVerifyButton();
         });
     });
 
-    // Function to update role classes
     function updateRoleClass(select) {
         select.classList.remove('indiv-participant', 'team-participant', 'prog-spectator', 'oth-spectator');
 
@@ -41,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const officerSpan = document.getElementById(`officer-in-charge-${index}`);
         const adminId = document.getElementById('adminId').value; // Retrieve the admin ID
 
-        console.log('officerSpan', officerSpan);
         const rolePoints = {
             'INDIV. Participant': 15,
             'TEAM Participant': 20,
@@ -52,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedRole = select.value;
         const points = rolePoints[selectedRole] || 0;
 
-        // Update the points display
         if (pointsContainer) {
             pointsContainer.innerText = `${points} points`;
         }
@@ -61,14 +63,9 @@ document.addEventListener('DOMContentLoaded', function () {
             officerSpan.style.display = 'block';
         }
 
-        // Get the activity ID from the parent div
         const activityDiv = select.closest('.activity-table-information');
         const activityId = activityDiv.getAttribute('data-activity-id');
 
-        // Get the student ID from the URL
-        const studentId = getStudentIdFromUrl(); // Make sure this function is defined to extract the ID
-
-        // Send role assignment to the server
         verifyButton.addEventListener('click', function () {
             fetch('/event/assign-role', {
                 method: 'PUT',
@@ -83,18 +80,59 @@ document.addEventListener('DOMContentLoaded', function () {
                     admin_id: adminId
                 })
             })
-
                 .then(response => response.json())
                 .then(data => {
                     console.log('Success:', data);
-                    // Refresh the page after the successful data submission
-                    location.reload();  // This line refreshes the page
+                    location.reload();
                 })
                 .catch((error) => console.error('Error:', error));
         });
     }
 
-    // Function to extract the student ID from the URL
+    // Function to track the assigned roles count per event day
+    function updateAssignedRolesCount(select) {
+        const activityDiv = select.closest('.activity-table-information');
+        const eventDay = activityDiv.getAttribute('data-day');
+        console.log('Activity Day:', eventDay);
+        const selectedRole = select.value;
+        console.log('Selected Role:', selectedRole);
+
+        if (!eventDay) return;
+
+        if (!eventDays[eventDay]) {
+            eventDays[eventDay] = 0;
+        }
+
+        if (selectedRole !== "") {
+            eventDays[eventDay] += 1;
+        } else {
+            eventDays[eventDay] -= 1;
+        }
+    }
+
+    function checkAndEnableVerifyButton() {
+        let enableButton = false;
+
+        // Loop through all event days to check the assigned roles
+        for (let eventDay in eventDays) {
+            const assignedRolesCount = eventDays[eventDay];
+            console.log('Role Count:', assignedRolesCount);
+            const toVerify = document.getElementById('toVerify').value;
+            console.log('To Verify Check:', toVerify);
+
+            if (assignedRolesCount >= toVerify) {
+                enableButton = true;
+                break;
+            }
+        }
+
+        if (enableButton) {
+            verifyButton.removeAttribute('disabled');
+        } else {
+            verifyButton.setAttribute('disabled', 'true');
+        }
+    }
+
     function getStudentIdFromUrl() {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('id');
