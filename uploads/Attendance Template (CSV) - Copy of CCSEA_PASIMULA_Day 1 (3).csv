@@ -1,0 +1,2 @@
+ID Number,Attendance Day,AM IN,PM IN,PM OUT,Attendance Points,AM IN Points,PM Out Points,PM OUT Points,AM IN Calculated,PM IN Calculated,PM Out Calculated
+vc,1,TRUE,FALSE,TRUE,10,5,5,5,5,0,5

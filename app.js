@@ -6,9 +6,13 @@ const exphbs = require('express-handlebars');
 const session = require('express-session');
 const authMiddleware = require('./middleware/authMiddleware'); // Import authentication middleware
 const bodyParser = require('body-parser'); // Parsing form data
-// const fs = require('fs'); // File System module
-
 dotenv.config({ path: './.env' });
+
+const multer = require('multer');
+const csv = require('csv-parser');
+const fs = require('fs'); // File System module
+const processImportedData = require('./controllers/importController'); // Import the import controller
+
 
 const app = express();
 
@@ -22,9 +26,9 @@ const db = mysql.createConnection({
 const publicDirectory = path.join(__dirname, './public');
 app.use(express.static(publicDirectory));
 
-//  parse URL-encoded bodies (as sent by HTML forms)
+// parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded({ extended: false }));
-//  parse JSON bodies (as sent by API clients)
+// parse JSON bodies (as sent by API clients)
 app.use(express.json());
 
 app.engine('hbs', exphbs.engine({
@@ -37,7 +41,6 @@ app.engine('hbs', exphbs.engine({
             return a === b;
         },
         or: function () {
-            // Loop through all arguments and return true if any of them are truthy
             for (let i = 0; i < arguments.length - 1; i++) {
                 if (arguments[i]) {
                     return true;
@@ -57,12 +60,10 @@ app.engine('hbs', exphbs.engine({
         json: (context) => {
             return JSON.stringify(context);
         },
-        // Date helper to format a date as MM-DD-YYYY
         formatDate: function (date) {
             const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
             return new Date(date).toLocaleDateString('en-US', options);
         },
-        // Helper to calculate the number of days between two dates
         calculateDays: function (startDate, endDate) {
             const start = new Date(startDate);
             const end = new Date(endDate);
@@ -94,22 +95,23 @@ app.use(session({
 
 db.connect((error) => {
     if (error) {
-        console.log(error)
+        console.log(error);
     } else {
-        console.log("MySQL Connected")
+        console.log("MySQL Connected");
     }
-})
+});
 
-// define routes
+// Define routes
 app.use('/', require('./routes/pages'));
 app.use('/auth', require('./routes/auth'));
 app.use('/dashboard', authMiddleware);
 app.use('/student', require('./routes/student'));
 app.use('/event', require('./routes/event'));
-
+app.use('/import', require('./routes/import')); // Import routes
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Start the server
 app.listen(3000, () => {
     console.log("Server started on Port 3000");
-})
+});

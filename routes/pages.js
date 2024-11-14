@@ -528,10 +528,27 @@ router.get('/spr-main', (req, res) => {
         const departmentName = req.session.departmentName;
         const aboName = req.session.aboName;
         const iboName = req.session.iboName;
-        
-        // Organization checks (same as before)
-        const { isUSG, isSAO, isCollegeDepartment, isUSGorSAO, isCollegeOrSAO, isUSGorCollegeOrSAO, isMainOrgsTrue } = isMainOrgs(organization, departmentName);
-        const { isCSO, isIBO, isABOorIBO, isCSOorSAO, isCSOorIBO, isCSOorABOorSAO, isCSOorIBOorSAO, isExtraOrgsTrue } = isExtraOrgs(organization);
+
+        const { 
+            isUSG, 
+            isSAO, 
+            isCollegeDepartment, 
+            isUSGorSAO, 
+            isCollegeOrSAO, 
+            isUSGorCollegeOrSAO, 
+            isMainOrgsTrue 
+        } = isMainOrgs(organization, departmentName);
+
+        const { 
+            isCSO, 
+            isIBO, 
+            isABOorIBO, 
+            isCSOorSAO, 
+            isCSOorIBO, 
+            isCSOorABOorSAO, 
+            isCSOorIBOorSAO, 
+            isExtraOrgsTrue 
+        } = isExtraOrgs(organization);
 
         const selectedScope = req.query.event_scope || (isUSG ? 'INSTITUTIONAL' : organization) || '';
         const selectedYear = req.query.academic_year || "Select Year";
@@ -540,6 +557,12 @@ router.get('/spr-main', (req, res) => {
 
         const eventId = req.query.event_id;
         const eventDays = req.query.event_days || null;
+        const eventName = req.query.event_name;
+        const eventDateStart = req.query.event_start_date;
+        const eventDateEnd = req.query.event_end_date;
+
+        const departments = ['CAS', 'CBA', 'CCJE', 'CCSEA', 'CON', 'CTE', 'CTHM'];
+        const IBOs = ['Compatriots', 'Cosplay Corps', 'Green Leaders', 'Kainos', 'Meeples', 'Micromantics', 'Red Cross Youth', 'Soul Whisperers', 'Vanguard E-sports'];
 
         const fetchAcademicYears = (callback) => {
             db.query('SELECT academic_year FROM academic_year ORDER BY academic_year DESC', (err, results) => {
@@ -561,6 +584,8 @@ router.get('/spr-main', (req, res) => {
                 departmentName,
                 aboName,
                 iboName,
+                isUSGorCSOorSAO: isLeadingOrgs(organization),
+                isCollegeOrCSOorSAO: otherCombinations(organization),
                 isUSG,
                 isSAO,
                 isCollegeDepartment,
@@ -588,6 +613,11 @@ router.get('/spr-main', (req, res) => {
                 selectedEventDay,
                 eventId,
                 eventDays,
+                eventName,
+                eventDateStart,
+                eventDateEnd,
+                departments,
+                IBOs,
                 totalParticipationPoints,
                 totalAttendancePoints,
                 totalScore,
@@ -611,40 +641,40 @@ router.get('/spr-main', (req, res) => {
                             if (events && events.length > 0) {
                                 if (eventId && eventDays) {
                                     const activitiesQuery = `
-                                    SELECT a.*, 
-                                        pr.role_name, 
-                                        pr.admin_id, 
-                                        ad.first_name AS officer_first_name,
-                                        ad.last_name AS officer_last_name,
-                                        CASE pr.role_name 
-                                            WHEN 'INDIV. Participant' THEN 15
-                                            WHEN 'TEAM Participant' THEN 20
-                                            WHEN 'PROG. Spectator' THEN 10
-                                            WHEN 'OTH. Spectator' THEN 5
-                                            ELSE 0
-                                        END AS participation_record_points
-                                    FROM activity a
-                                    LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id AND pr.id_number = ?
-                                    LEFT JOIN admin ad ON pr.admin_id = ad.admin_id
-                                    WHERE a.event_id = ?;`
+                                        SELECT a.*, 
+                                            pr.role_name, 
+                                            pr.admin_id, 
+                                            ad.first_name AS officer_first_name,
+                                            ad.last_name AS officer_last_name,
+                                            CASE pr.role_name 
+                                                WHEN 'INDIV. Participant' THEN 15
+                                                WHEN 'TEAM Participant' THEN 20
+                                                WHEN 'PROG. Spectator' THEN 10
+                                                WHEN 'OTH. Spectator' THEN 5
+                                                ELSE 0
+                                            END AS participation_record_points
+                                        FROM activity a
+                                        LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id AND pr.id_number = ?
+                                        LEFT JOIN admin ad ON pr.admin_id = ad.admin_id
+                                        WHERE a.event_id = ?;`
 
                                     db.query(activitiesQuery, [idNumber, eventId], (err, activityResults) => {
                                         if (err) return res.status(500).send('Database error while fetching activities');
                                         const totalParticipationPoints = activityResults.reduce((acc, activity) => acc + (activity.participation_record_points || 0), 0);
 
                                         const attendanceQuery = `
-                                        SELECT a.attendance_id,
-                                            a.attendance_day,
-                                            a.attendance_date,
-                                            COALESCE(ar.am_in, 0) AS am_in,
-                                            COALESCE(ar.pm_in, 0) AS pm_in,
-                                            COALESCE(ar.pm_out, 0) AS pm_out,
-                                            ad.first_name AS officer_first_name,
-                                            ad.last_name AS officer_last_name
-                                        FROM attendance a
-                                        LEFT JOIN attendance_record ar ON a.attendance_id = ar.attendance_id AND ar.id_number = ?
-                                        LEFT JOIN admin ad ON ar.admin_id = ad.admin_id
-                                        WHERE a.event_id = ?;`;
+                                            SELECT a.attendance_id,
+                                                a.attendance_day,
+                                                a.attendance_date,
+                                                COALESCE(ar.am_in, 0) AS am_in,
+                                                COALESCE(ar.pm_in, 0) AS pm_in,
+                                                COALESCE(ar.pm_out, 0) AS pm_out,
+                                                ad.first_name AS officer_first_name,
+                                                ad.last_name AS officer_last_name
+                                            FROM attendance a
+                                            LEFT JOIN attendance_record ar ON a.attendance_id = ar.attendance_id AND ar.id_number = ?
+                                            LEFT JOIN admin ad ON ar.admin_id = ad.admin_id
+                                            WHERE a.event_id = ?;`;
 
                                         db.query(attendanceQuery, [idNumber, eventId], (err, attendanceResults) => {
                                             if (err) return res.status(500).send('Database error while fetching attendance');

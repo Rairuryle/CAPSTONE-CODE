@@ -7,14 +7,36 @@
             </div>
 
             <div class="modal-body mt-0 pt-0">
-                <div class="import-file-modal-container text-center p-5">
-                    <img src="../img/import-file.png" alt="Import File">
-                </div>
+                <span>Upload a .csv file of your event attendance tracking records.</span>
+                <label for="csvFile" class="w-100" style="cursor: pointer;">
+                    <div class="import-file-modal-container text-center mt-3 p-5">
+                        <img src="../img/import-file.png" alt="Import File">
+                    </div>
+                </label>
+
+                <!-- Move admin_id and id_number inside the form -->
+                <form action="/import/import-csv" method="POST" id="importCsvForm" enctype="multipart/form-data">
+                    <input type="hidden" id="adminId" name="admin_id" value="{{adminData.admin_id}}">
+                    <input type="hidden" id="studentId" name="id_number" value="{{student.id_number}}">
+
+                    <!-- Loop over attendance records and add hidden inputs for each -->
+                    {{#if attendance.length}}
+                    {{#each attendance}}
+                    <input type="hidden" id="attendanceId_{{this.attendance_day}}"
+                        name="attendance_id_{{this.attendance_day}}" value="{{this.attendance_id}}">
+                    {{/each}}
+                    {{/if}}
+
+                    <!-- Hidden file input field, triggered by clicking the image -->
+                    <input type="file" class="form-control" name="csvFile" id="csvFile" accept=".csv"
+                        style="display: none;" />
+                    <div id="importStatusMessage"></div>
             </div>
 
-            <div class="modal-footer border-top-0 mt-2">
-                <button type="submit" class="btn btn-success btn-import-file-submit px-5">Import</button>
+            <div class="modal-footer border-top-0 mt-1">
+                <button type="submit" class="btn btn-success btn-import-file-submit importBtn px-5">Import</button>
             </div>
+            </form>
         </div>
     </div>
 </div>

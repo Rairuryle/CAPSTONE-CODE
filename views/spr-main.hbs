@@ -47,6 +47,9 @@
                     <div class="attendance-table-information d-flex align-items-center border-bottom border-2 pt-3 pb-3 
         {{#if (indexIsOdd @index)}}attendance-table-information-odd{{/if}}" data-attendance-id="{{this.attendance_id}}"
                         data-day="{{this.attendance_day}}">
+                        <input type="hidden" id="attendanceId" name="attendance_id" value="{{this.attendance_id}}">
+                        <input type="hidden" id="attendanceDay" name="attendance_day" value="{{this.attendance_day}}">
+
                         <div class="col-3 ps-2">
                             <span>{{this.attendance_date}}</span>
                         </div>
@@ -256,7 +259,7 @@
 
 {{> modals/importFileModal}}
 
-
+<script src="../js/spr/importFile.js"></script>
 <script src="../js/spr/loadDetails.js"></script>
 <script src="../js/spr/eventScope.js"></script>
 <script src="../js/spr/eventDays.js"></script>
