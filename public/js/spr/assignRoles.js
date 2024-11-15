@@ -5,6 +5,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const eventDays = {};  // To track the assigned roles per event day
 
+    // Get to_verify value from the URL
+    const toVerify = new URLSearchParams(window.location.search).get('to_verify');
+    console.log('To Verify URL:', toVerify);
+    
+    // Optionally, if you want to update the element with the ID 'toVerify' with the value:
+    if (toVerify) {
+        document.getElementById('toVerify').value = toVerify;
+        console.log('To Verify Value:', document.getElementById('toVerify').value);
+    }
+
     roleSelects.forEach((select, index) => {
         // Initial setup: Add class based on initial value, if any
         updateRoleClass(select);
@@ -117,9 +127,8 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let eventDay in eventDays) {
             const assignedRolesCount = eventDays[eventDay];
             console.log('Role Count:', assignedRolesCount);
-            const toVerify = document.getElementById('toVerify').value;
-            console.log('To Verify Check:', toVerify);
 
+            // Use the `toVerify` value from the URL
             if (assignedRolesCount >= toVerify) {
                 enableButton = true;
                 break;
