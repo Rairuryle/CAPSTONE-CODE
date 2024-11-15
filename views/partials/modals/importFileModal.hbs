@@ -19,11 +19,19 @@
                     <input type="hidden" id="adminId" name="admin_id" value="{{adminData.admin_id}}">
                     <input type="hidden" id="studentId" name="id_number" value="{{student.id_number}}">
 
-                    <!-- Loop over attendance records and add hidden inputs for each -->
+                    <!-- Include attendance records as hidden inputs -->
                     {{#if attendance.length}}
                     {{#each attendance}}
                     <input type="hidden" id="attendanceId_{{this.attendance_day}}"
                         name="attendance_id_{{this.attendance_day}}" value="{{this.attendance_id}}">
+                    {{/each}}
+                    {{/if}}
+
+                    <!-- Include activities as hidden inputs -->
+                    {{#if activities.length}}
+                    {{#each activities}}
+                    <input type="hidden" id="activityId_{{this.activity_day}}_{{this.activity_name}}"
+                        name="activity_id_{{this.activity_day}}_{{this.activity_name}}" value="{{this.activity_id}}">
                     {{/each}}
                     {{/if}}
 

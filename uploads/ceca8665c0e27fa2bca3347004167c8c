@@ -1,0 +1,5 @@
+First Name,Last Name,ID Number,Course,Year,,Attendance Day,AM IN,PM IN,PM OUT,Attendance Points,,Activity Day,Activity 1,Activity 2,Activity 3,Activity 4,Activity 5,Participation Points,,AM IN Points,PM Out Points,PM OUT Points,AM IN Calculated,PM IN Calculated,PM Out Calculated,,Role Names,Role Points
+ff,ff,vc,bstt,2,,1,TRUE,TRUE,TRUE,15,,1,INDIV. Participant,PROG. Spectator,TEAM Participant,TEAM Participant,INDIV. Participant,80,,5,5,5,5,5,5,,INDIV. Participant,15
+,,,,,,,,,,,,,,,,,,,,,,,,,,,TEAM Participant,20
+,,,,,,,,,,,,,,,,,,,,,,,,,,,PROG. Spectator,10
+,,,,,,,,,,,,,,,,,,,,,,,,,,,OTH. Spectator,5

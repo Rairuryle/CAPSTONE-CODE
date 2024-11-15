@@ -157,7 +157,7 @@
                             <div class="col-3 col-role">
                                 <select name="assignRole" class="assign-role ps-2" id="assignRole-{{@index}}"
                                     onchange="updatePoints({{@index}})">
-                                    <option selected="selected">Assign Role</option>
+                                    <option selected="selected" disabled="disabled">Assign Role</option>
                                     <option value="INDIV. Participant" {{#if (eq this.role_name "INDIV. Participant"
                                         )}}selected{{/if}}>INDIV. Participant</option>
                                     <option value="TEAM Participant" {{#if (eq this.role_name "TEAM Participant"
