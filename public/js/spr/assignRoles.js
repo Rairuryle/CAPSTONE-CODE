@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Get to_verify value from the URL
     const toVerify = new URLSearchParams(window.location.search).get('to_verify');
     console.log('To Verify URL:', toVerify);
-    
+
     // Optionally, if you want to update the element with the ID 'toVerify' with the value:
     if (toVerify) {
         document.getElementById('toVerify').value = toVerify;
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function updateRoleClass(select) {
-        select.classList.remove('indiv-participant', 'team-participant', 'prog-spectator', 'oth-spectator');
+        select.classList.remove('indiv-participant', 'team-participant', 'prog-spectator', 'oth-spectator', 'red-stamp', 'blue-stamp', 'violet-stamp');
 
         switch (select.value) {
             case 'INDIV. Participant':
@@ -44,6 +44,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 break;
             case 'OTH. Spectator':
                 select.classList.add('oth-spectator');
+                break;
+            case 'RED Stamp':
+                select.classList.add('red-stamp');
+                break;
+            case 'BLUE Stamp':
+                select.classList.add('blue-stamp');
+                break;
+            case 'VIOLET Stamp':
+                select.classList.add('violet-stamp');
                 break;
             default:
                 break;
@@ -59,7 +68,10 @@ document.addEventListener('DOMContentLoaded', function () {
             'INDIV. Participant': 15,
             'TEAM Participant': 20,
             'PROG. Spectator': 10,
-            'OTH. Spectator': 5
+            'OTH. Spectator': 5,
+            'RED Stamp': 5,
+            'BLUE Stamp': 10,
+            'VIOLET Stamp': 15
         };
 
         const selectedRole = select.value;

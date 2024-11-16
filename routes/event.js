@@ -52,6 +52,17 @@ router.post('/add-event', (req, res) => {
             const attendanceDate = new Date(currentDate).toISOString().split('T')[0]; // Format as YYYY-MM-DD
             const sqlAttendance = 'INSERT INTO attendance (attendance_date, event_id, attendance_day) VALUES (?, ?, ?)';
             attendanceQueries.push(db.query(sqlAttendance, [attendanceDate, eventId, attendanceDayCounter]));
+
+            // Insert "Midas Touch Avenue" activity for each event day
+            const sqlActivityMidas = 'INSERT INTO activity (activity_name, activity_date, event_id, activity_day) VALUES (?, ?, ?, ?)';
+            db.query(sqlActivityMidas, ['Midas Touch Avenue', attendanceDate, eventId, attendanceDayCounter], (err) => {
+                if (err) {
+                    console.error('Error inserting Midas Touch Avenue activity:', err);
+                } else {
+                    console.log(`Midas Touch Avenue activity inserted for date: ${attendanceDate}`);
+                }
+            });
+
             attendanceDayCounter++; // Increment the attendance day
             currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
         }
@@ -99,6 +110,7 @@ router.post('/add-event', (req, res) => {
         res.redirect(`/spr-edit?id=${student_id}`);
     });
 });
+
 
 // add activity
 router.post('/add-activity', (req, res) => {
@@ -186,8 +198,8 @@ router.post('/academic_year', async (req, res) => {
 router.put('/assign-role', (req, res) => {
     const { activity_id, role_name, id_number, points, admin_id } = req.body;
 
-    // Check if id_number exists in the student table
     const checkStudentQuery = `SELECT * FROM student WHERE id_number = ?`;
+
     db.query(checkStudentQuery, [id_number], (error, results) => {
         if (error) {
             console.error('Error checking student:', error);
@@ -212,7 +224,6 @@ router.put('/assign-role', (req, res) => {
 
             // Determine whether to insert or update
             if (existenceResults[0].count > 0) {
-                // Update existing record
                 const updateQuery = `
                     UPDATE participation_record 
                     SET participation_record_points = ?, role_name = ?, admin_id = ?
@@ -227,7 +238,6 @@ router.put('/assign-role', (req, res) => {
                 });
 
             } else {
-                // Insert new record
                 const insertQuery = `
                     INSERT INTO participation_record (participation_record_points, id_number, activity_id, role_name, admin_id)
                     VALUES (?, ?, ?, ?, ?)`;
@@ -256,7 +266,6 @@ router.post('/record-attendance', (req, res) => {
         }
 
         if (results.length > 0) {
-            // Record exists, perform an update
             const updateQuery = `
                 UPDATE attendance_record 
                 SET attendance_points = ?, am_in = ?, pm_in = ?, pm_out = ?, admin_id = ?
@@ -271,7 +280,6 @@ router.post('/record-attendance', (req, res) => {
                 res.json({ success: true, message: 'Attendance record updated successfully' });
             });
         } else {
-            // No existing record, perform an insert
             const insertQuery = `
                 INSERT INTO attendance_record (attendance_points, am_in, pm_in, pm_out, attendance_id, id_number, admin_id)
                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
@@ -464,22 +472,20 @@ router.post('/delete-event', (req, res) => {
     });
 });
 
-
 router.post('/update-activity', (req, res) => {
     const { activity_id, activity_name, activity_date, activity_day } = req.body;
     console.log('Updating activity:', req.body);
 
-    // Ensure required data is provided
     if (!activity_id || !activity_name || !activity_date || !activity_day) {
         return res.status(400).json({ success: false, message: 'Activity ID, name, date, and day are required.' });
     }
 
-    // SQL query to update activity name and activity_day
     const query = `
         UPDATE activity 
         SET activity_name = ?, activity_date = ?, activity_day = ? 
         WHERE activity_id = ?
     `;
+
     db.query(query, [activity_name, activity_date, activity_day, activity_id], (err, result) => {
         if (err) {
             console.error('Error updating activity:', err);

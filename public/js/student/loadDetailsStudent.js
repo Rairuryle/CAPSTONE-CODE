@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-    
 
     setSelectedEventScope();
 
@@ -132,7 +131,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    // Helper function to extract the student ID from the URL
     function getStudentIdFromUrl() {
         const urlParams = new URLSearchParams(window.location.search);
         let studentId = urlParams.get('id_number');
@@ -141,5 +139,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         return studentId;
     }
-    
 });

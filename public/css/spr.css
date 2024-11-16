@@ -219,19 +219,28 @@ body {
 }
 
 .team-participant,
-.prog-spectator {
+.prog-spectator,
+.red-stamp {
   background-color: red;
 }
 
 .indiv-participant,
-.oth-spectator {
+.oth-spectator,
+.blue-stamp {
   background-color: blue;
+}
+
+.violet-stamp {
+  background-color: #7f00ff;
 }
 
 .indiv-participant,
 .team-participant,
 .prog-spectator,
-.oth-spectator {
+.oth-spectator,
+.red-stamp,
+.blue-stamp,
+.violet-stamp {
   color: white;
   border: 0;
 }

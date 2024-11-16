@@ -529,25 +529,25 @@ router.get('/spr-main', (req, res) => {
         const aboName = req.session.aboName;
         const iboName = req.session.iboName;
 
-        const { 
-            isUSG, 
-            isSAO, 
-            isCollegeDepartment, 
-            isUSGorSAO, 
-            isCollegeOrSAO, 
-            isUSGorCollegeOrSAO, 
-            isMainOrgsTrue 
+        const {
+            isUSG,
+            isSAO,
+            isCollegeDepartment,
+            isUSGorSAO,
+            isCollegeOrSAO,
+            isUSGorCollegeOrSAO,
+            isMainOrgsTrue
         } = isMainOrgs(organization, departmentName);
 
-        const { 
-            isCSO, 
-            isIBO, 
-            isABOorIBO, 
-            isCSOorSAO, 
-            isCSOorIBO, 
-            isCSOorABOorSAO, 
-            isCSOorIBOorSAO, 
-            isExtraOrgsTrue 
+        const {
+            isCSO,
+            isIBO,
+            isABOorIBO,
+            isCSOorSAO,
+            isCSOorIBO,
+            isCSOorABOorSAO,
+            isCSOorIBOorSAO,
+            isExtraOrgsTrue
         } = isExtraOrgs(organization);
 
         const selectedScope = req.query.event_scope || (isUSG ? 'INSTITUTIONAL' : organization) || '';
@@ -651,6 +651,9 @@ router.get('/spr-main', (req, res) => {
                                                 WHEN 'TEAM Participant' THEN 20
                                                 WHEN 'PROG. Spectator' THEN 10
                                                 WHEN 'OTH. Spectator' THEN 5
+                                                WHEN 'RED Stamp' THEN 5
+                                                WHEN 'BLUE Stamp' THEN 10
+                                                WHEN 'VIOLET Stamp' THEN 15
                                                 ELSE 0
                                             END AS participation_record_points
                                         FROM activity a
@@ -1005,13 +1008,14 @@ router.get('/spr-student', (req, res) => {
             semestralScore,
             yearlyScore,
             selectedEventDay,
-            verificationStatusByDay, // Pass verification status to the view
+            verificationStatusByDay,
             currentPath: '/spr-student',
             title: 'Student Participation Record | LSU HEU Events and Attendance Tracking Website'
         });
     };
 
     const studentQuery = 'SELECT * FROM student WHERE id_number = ?';
+
     db.query(studentQuery, [id_number], (err, studentResults) => {
         if (err) {
             return res.status(500).send('Database error while fetching student data');
@@ -1022,8 +1026,6 @@ router.get('/spr-student', (req, res) => {
         if (!student) {
             return res.status(404).send('Student not found');
         }
-
-        console.log('Student Data:', student);
 
         fetchAcademicYears((err, academicYears) => {
             if (err) {
@@ -1049,6 +1051,9 @@ router.get('/spr-student', (req, res) => {
                                                    WHEN 'TEAM Participant' THEN 20
                                                    WHEN 'PROG. Spectator' THEN 10
                                                    WHEN 'OTH. Spectator' THEN 5
+                                                   WHEN 'RED Stamp' THEN 5
+                                                   WHEN 'BLUE Stamp' THEN 10
+                                                   WHEN 'VIOLET Stamp' THEN 15
                                                    ELSE 0
                                                END AS participation_record_points
                                         FROM activity a
@@ -1113,7 +1118,7 @@ router.get('/spr-student', (req, res) => {
 
                                             db.query(verificationStatusQuery, [eventId], (err, verificationResults) => {
                                                 if (err) return res.status(500).send('Database error while fetching verification status');
-                                                
+
                                                 const verificationStatusByDay = {};
                                                 verificationResults.forEach(row => {
                                                     verificationStatusByDay[row.activity_day] = row.verification_status;

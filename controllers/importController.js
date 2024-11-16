@@ -42,7 +42,10 @@ function processImportedData(importedData, req, res) {
         "INDIV. Participant": 15,
         "PROG. Spectator": 10,
         "OTH. Spectator": 5,
-        "TEAM Participant": 20
+        "TEAM Participant": 20,
+        "RED Stamp": 5,
+        "BLUE Stamp": 10,
+        "VIOLET Stamp": 15
     };
 
     const errors = [];
