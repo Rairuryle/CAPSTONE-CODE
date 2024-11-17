@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 if (data.studentFound) {
                     const student = data.results[0];
-                    window.location.href = `/spr-student?id_number=${student.id_number}`;
+                    const queryString = window.location.search;
+                    
+                    window.location.href = `/spr-student?id_number=${student.id_number}&${queryString}`;
                 } else {
                     alert("Student not found!");
                 }

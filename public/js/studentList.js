@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const yearLevel = target.getAttribute('data-year-level');
             const aboName = target.getAttribute('data-abo-name');
             const iboName = target.getAttribute('data-ibo-name');
+
             selectedLastNameContainer.innerText = `${lastName}`;
             selectedFirstNameContainer.innerText = `${firstName}`;
             selectedIDNumberContainer.innerText = `${idNumber}`;
@@ -112,9 +113,28 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedCourseContainer.innerText = `${courseName}`;
             selectedYearLevelContainer.innerText = `${yearLevel}`;
             selectedABOContainer.innerText = `${aboName}`;
-            selectedIBOContainer.innerText = `${iboName}`;
+            selectedIBOContainer.innerText = iboName ? iboName : 'None';
+
+            const noStudentSelectedText = document.getElementById('noStudentSelectedText');
+            noStudentSelectedText.classList.add("d-none");
+
+            const studentGroupPrimaryInformationContainer = document.querySelector('.student-group-primary-information');
+            studentGroupPrimaryInformationContainer.classList.remove("d-none");
+
+            const studentGroupStatusContainer = document.querySelector('.student-group-status');
+            studentGroupStatusContainer.classList.remove("d-none");
+            studentGroupStatusContainer.classList.add("d-flex");
+
+            const studentGroupListContainer = document.querySelector('.student-group-list');
+            studentGroupListContainer.classList.remove("d-none");
+            studentGroupListContainer.classList.add("d-flex");
+
+            const btnViewRecord = document.querySelector('.btn-view-record');
+            btnViewRecord.classList.remove("d-none");
+            btnViewRecord.classList.add("d-flex");
         }
     });
+
 
     sortSelect.addEventListener('change', function () {
         const sortValue = this.value;
@@ -138,9 +158,30 @@ document.addEventListener('DOMContentLoaded', function () {
     renderStudents(selectedStudents);
 
     const viewRecordButton = document.querySelector('.btn-view-record');
-    viewRecordButton.addEventListener('click', function () {
-        const selectedIdNumber = selectedIDNumberContainer.innerText; // Get the selected ID number
-        window.location.href = `/spr-main?id=${selectedIdNumber}`; // Redirect to spr-main with the ID in the query
-    });
+    viewRecordButton.addEventListener('click', async function () {
+        const selectedIdNumber = selectedIDNumberContainer.innerText;
+        const selectedDepartment = selectedDepartmentContainer.innerText;
+        const selectedABO = selectedABOContainer.innerText;
+        const selectedIBO = selectedIBOContainer.innerText;
 
+        try {
+            await fetch('/student/store-student-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id_number: selectedIdNumber,
+                    department_name: selectedDepartment,
+                    abo_name: selectedABO,
+                    ibo_name: selectedIBO,
+                }),
+            });
+
+            window.location.href = `/spr-main?id=${selectedIdNumber}`;
+        } catch (error) {
+            console.error('Error storing student data:', error);
+            alert('Failed to store student data. Please try again.');
+        }
+    });
 });

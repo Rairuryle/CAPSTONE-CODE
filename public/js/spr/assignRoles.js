@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const verifyButton = document.querySelector('.btn-verify-points');
     const studentId = getStudentIdFromUrl();
 
+    // Define isCSO based on the value in your HTML element
+    const isCSO = document.querySelector('#isCSO').value === "true";
+
     const eventDays = {};  // To track the assigned roles per event day
 
     // Get to_verify value from the URL
@@ -25,7 +28,10 @@ document.addEventListener('DOMContentLoaded', function () {
             updatePoints(select, index);
             // Track assigned roles count per event day
             updateAssignedRolesCount(select);
-            checkAndEnableVerifyButton();
+            // Only check and enable the button if isCSO is not true
+            if (!isCSO) {
+                checkAndEnableVerifyButton();
+            }
         });
     });
 

@@ -19,7 +19,7 @@ const getDaysDifference = (startDate, endDate) => {
 
 router.post('/add-event', (req, res) => {
     const { event_name, event_date_start, event_date_end, event_scope, student_id, to_verify, academic_year, semester } = req.body;
-
+    
     const activity_name = req.body['activity_name[]'] ? [].concat(req.body['activity_name[]']) : [];
     const activity_date = req.body['activity_date[]'] ? [].concat(req.body['activity_date[]']) : [];
 
@@ -53,15 +53,17 @@ router.post('/add-event', (req, res) => {
             const sqlAttendance = 'INSERT INTO attendance (attendance_date, event_id, attendance_day) VALUES (?, ?, ?)';
             attendanceQueries.push(db.query(sqlAttendance, [attendanceDate, eventId, attendanceDayCounter]));
 
-            // Insert "Midas Touch Avenue" activity for each event day
-            const sqlActivityMidas = 'INSERT INTO activity (activity_name, activity_date, event_id, activity_day) VALUES (?, ?, ?, ?)';
-            db.query(sqlActivityMidas, ['Midas Touch Avenue', attendanceDate, eventId, attendanceDayCounter], (err) => {
-                if (err) {
-                    console.error('Error inserting Midas Touch Avenue activity:', err);
-                } else {
-                    console.log(`Midas Touch Avenue activity inserted for date: ${attendanceDate}`);
-                }
-            });
+            // Insert "Midas Touch Avenue" activity only if the event_scope is INSTITUTIONAL
+            if (event_scope === 'INSTITUTIONAL') {
+                const sqlActivityMidas = 'INSERT INTO activity (activity_name, activity_date, event_id, activity_day) VALUES (?, ?, ?, ?)';
+                db.query(sqlActivityMidas, ['Midas Touch Avenue', attendanceDate, eventId, attendanceDayCounter], (err) => {
+                    if (err) {
+                        console.error('Error inserting Midas Touch Avenue activity:', err);
+                    } else {
+                        console.log(`Midas Touch Avenue activity inserted for date: ${attendanceDate}`);
+                    }
+                });
+            }
 
             attendanceDayCounter++; // Increment the attendance day
             currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
@@ -110,6 +112,7 @@ router.post('/add-event', (req, res) => {
         res.redirect(`/spr-edit?id=${student_id}`);
     });
 });
+
 
 
 // add activity

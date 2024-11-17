@@ -251,17 +251,23 @@
 
                     <div class="card card-list-container mt-3">
                         <div class="card-body">
-                            <h1 id="selectedLastName" class="m-0 fw-bold"></h1>
-                            <p id="selectedFirstName"
-                                class="card-text card-small-text student-name-list mb-2 fw-bold fs-4">
-                            </p>
-                            <span id="selectedIDNumber" class="student-id-number-list p-2 fw-bold"></span>
-                            <div class="d-flex mt-3 border-bottom border-secondary pb-4">
+                            <h5 id="noStudentSelectedText" class="text-center fw-bold mt-2">Select a Student to View
+                                Details</h5>
+
+                            <div class="student-group-primary-information d-none">
+                                <h1 id="selectedLastName" class="m-0 fw-bold"></h1>
+                                <p id="selectedFirstName"
+                                    class="card-text card-small-text student-name-list mb-2 fw-bold fs-4">
+                                </p>
+                                <span id="selectedIDNumber" class="student-id-number-list p-2 fw-bold"></span>
+                            </div>
+
+                            <div class="student-group-status d-none mt-3 border-bottom border-secondary pb-4">
                                 <span id="selectedExemptionStatus" class="student-status-list border px-3 me-2"></span>
                                 <span id="selectedActiveStatus" class="student-status-list border px-3"></span>
                             </div>
-                            
-                            <div class="student-group-list d-flex flex-column mt-4">
+
+                            <div class="student-group-list d-none flex-column mt-4">
                                 <div class="student-group-list-details px-2 py-2">
                                     <span
                                         class="card-text card-small-text student-group-list-title px-1">Department</span>
@@ -286,7 +292,7 @@
                             </div>
 
                             <button type="button"
-                                class="btn btn-success btn-view-record d-flex justify-content-center w-50 m-auto mt-5">
+                                class="d-none btn btn-success btn-view-record d-none justify-content-center w-50 m-auto mt-5">
                                 View Record
                             </button>
                         </div>

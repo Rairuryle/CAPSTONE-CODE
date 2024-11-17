@@ -1,6 +1,6 @@
 const express = require('express');
 const mysql = require("mysql");
-const { isMainOrgs, isExtraOrgs } = require('../routes/utils');
+const { isMainOrgs, isExtraOrgs } = require('../utils/utilsOrg');
 const router = express.Router();
 
 const db = mysql.createConnection({
@@ -111,15 +111,12 @@ router.get('/students', (req, res) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
-        res.json(results); // Only send results, not the entire query object
+        res.json(results);
     });
 });
 
 router.post('/add-students-to-ibo', (req, res) => {
-    console.log('Incoming request body:', req.body); // Log the request body
     const { students, ibo_name } = req.body;
-
-    // Log received data
     console.log('Students:', students);
     console.log('IBO Name:', ibo_name);
 
@@ -132,25 +129,20 @@ router.post('/add-students-to-ibo', (req, res) => {
         return res.status(400).json({ success: false, message: 'IBO name is missing' });
     }
 
-    // Build a SQL query to update ibo_name for selected students
     const placeholders = students.map(() => '?').join(',');
     const query = `UPDATE student SET ibo_name = ? WHERE id_number IN (${placeholders})`;
 
     // Prepare the parameters for the query
     const parameters = [ibo_name, ...students];
-
-    // Log SQL query and parameters
     console.log('SQL Query:', query);
     console.log('Parameters:', parameters);
 
-    // Execute the query
     db.query(query, parameters, (error, results) => {
         if (error) {
             console.error('Error updating students:', error);
             return res.status(500).json({ success: false, message: 'Database error' });
         }
 
-        // Successfully updated
         res.json({ success: true, message: 'Students added to IBO successfully' });
     });
 });
@@ -203,6 +195,37 @@ router.get('/search', (req, res) => {
             res.status(404).json({ studentFound: false });
         }
     });
+});
+
+// search students for add-student-ibo
+router.get('/search-students', (req, res) => {
+    const searchQuery = req.query.q;
+    console.log('Search query:', searchQuery);
+
+    if (!searchQuery) return res.json([]);
+
+    const query = `
+        SELECT id_number, first_name, last_name
+        FROM student
+        WHERE (id_number LIKE ? OR first_name LIKE ? OR last_name LIKE ?)
+        AND (ibo_name IS NULL OR ibo_name = '')`;
+
+    db.query(query, [`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`], (err, results) => {
+        if (err) {
+            console.error('Server Error:', err);
+            return res.status(500).json({ message: 'Server Error' });
+        }
+        console.log('Results:', results.length ? results : 'No results found');
+        res.json(results);
+    });
+});
+
+router.post('/store-student-data', (req, res) => {
+    const { id_number, department_name, abo_name, ibo_name } = req.body;
+
+    // Store data in session (or another preferred storage method)
+    req.session.studentData = { id_number, department_name, abo_name, ibo_name };
+    res.status(200).send({ message: 'Student data stored successfully' });
 });
 
 

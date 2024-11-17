@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const mysql = require("mysql");
 const exphbs = require('express-handlebars');
-const { getUrlFlags, isLeadingOrgs, isMainOrgs, isExtraOrgs, otherCombinations } = require('./utils');
+const { isLeadingOrgs, isMainOrgs, isExtraOrgs, otherCombinations } = require('../utils/utilsOrg');
+const { fetchEvents, filterEvents, formatDate, fetchSemestralPoints, fetchYearlyPoints } = require('../utils/utilsSPR');
 
 const app = express();
 
@@ -256,35 +257,11 @@ router.get('/add-student-ibo', (req, res) => {
     }
 });
 
-// search students for add-student-ibo
-router.get('/search-students', (req, res) => {
-    const searchQuery = req.query.q;
-    console.log('Search query:', searchQuery);
-
-    if (!searchQuery) return res.json([]);
-
-    const query = `
-        SELECT id_number, first_name, last_name
-        FROM student
-        WHERE (id_number LIKE ? OR first_name LIKE ? OR last_name LIKE ?)
-        AND (ibo_name IS NULL OR ibo_name = '')`;
-
-    db.query(query, [`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`], (err, results) => {
-        if (err) {
-            console.error('Server Error:', err);
-            return res.status(500).json({ message: 'Server Error' });
-        }
-        console.log('Results:', results.length ? results : 'No results found');
-        res.json(results);
-    });
-});
-
 router.get('/list', (req, res) => {
     if (req.session.isAuthenticated) {
         const adminData = req.session.adminData;
         const organization = adminData.organization;
         const departmentName = req.session.departmentName;
-        console.log('Department Name:', departmentName);
 
         // Use selected group if available, otherwise default to the admin's organization.
         const selectedGroup = req.query.groupList || organization;
@@ -324,6 +301,7 @@ router.get('/list', (req, res) => {
                 };
 
                 const selectedStudents = filterStudents(students, selectedGroup);
+                const noStudent = selectedStudents.length == 0;
 
                 res.render('list', {
                     adminData,
@@ -345,6 +323,7 @@ router.get('/list', (req, res) => {
                     organization,
                     selectedGroup,  // Pass the selected group for highlighting in the view.
                     selectedStudents,  // Pass the filtered students to the template.
+                    noStudent,
                     currentPath: '/list',
                     title: 'List of Students | LSU HEU Events and Attendance Tracking Website',
                 });
@@ -355,168 +334,6 @@ router.get('/list', (req, res) => {
     }
 });
 
-const fetchEvents = (academicYear, semester, eventScope, callback) => {
-    const eventQuery = `
-    SELECT * FROM event
-    WHERE academic_year = ? AND semester = ? AND (event_scope = ? OR event_scope = 'INSTITUTIONAL')
-    ORDER BY event_date_start DESC
-    `;
-
-    db.query(eventQuery, [academicYear, semester, eventScope], (err, eventResults) => {
-        if (err) {
-            console.error('Error fetching events:', err);
-            return callback([]); // Return an empty array in case of error
-        }
-        callback(eventResults);
-    });
-};
-
-const filterEvents = (events, departmentName, aboName, iboName, selectedScope) => {
-    const institutionalEvents = events.filter(event => event.event_scope === 'INSTITUTIONAL');
-    const collegeEvents = events.filter(event => event.event_scope === departmentName);
-    const aboEvents = events.filter(event => event.event_scope === aboName);
-    const iboEvents = events.filter(event => event.event_scope === iboName);
-
-    let filteredEvents;
-
-    if (selectedScope === 'INSTITUTIONAL') {
-        filteredEvents = institutionalEvents;
-    } else if (selectedScope === departmentName) {
-        filteredEvents = collegeEvents;
-    } else if (selectedScope === aboName) {
-        filteredEvents = aboEvents;
-    } else if (selectedScope === iboName) {
-        filteredEvents = iboEvents;
-    } else {
-        filteredEvents = []; // If no matching scope, return empty array
-    }
-    return {
-        institutionalEvents,
-        collegeEvents,
-        aboEvents,
-        iboEvents,
-        filteredEvents
-    };
-};
-
-
-const formatDate = (date) => {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return new Intl.DateTimeFormat('en-US', options).format(new Date(date));
-};
-
-// Helper function to calculate total points for a student in a specific semester
-const fetchSemestralPoints = (academicYear, semester, idNumber, callback) => {
-    const semestralPointsQuery = `
-        SELECT 
-            attendance_points.id_number,
-            COALESCE(total_attendance_points, 0) + COALESCE(total_participation_points, 0) AS total_points
-        FROM 
-            (SELECT 
-                ar.id_number,
-                SUM(
-                    (COALESCE(ar.am_in, 0)) + 
-                    (COALESCE(ar.pm_in, 0)) + 
-                    (COALESCE(ar.pm_out, 0))
-                ) AS total_attendance_points
-            FROM 
-                attendance_record ar
-            JOIN 
-                attendance a ON ar.attendance_id = a.attendance_id
-            JOIN 
-                event e ON a.event_id = e.event_id
-            WHERE 
-                e.academic_year = ? 
-                AND e.semester = ? 
-                AND ar.id_number = ?
-            GROUP BY 
-                ar.id_number) AS attendance_points
-
-        LEFT JOIN
-            (SELECT 
-                pr.id_number,
-                SUM(pr.participation_record_points) AS total_participation_points
-            FROM 
-                participation_record pr
-            JOIN 
-                activity ac ON pr.activity_id = ac.activity_id
-            JOIN 
-                event e ON ac.event_id = e.event_id
-            WHERE 
-                e.academic_year = ?
-                AND e.semester = ? 
-                AND pr.id_number = ?
-            GROUP BY 
-                pr.id_number) AS participation_points
-
-        ON attendance_points.id_number = participation_points.id_number;
-    `;
-
-    db.query(semestralPointsQuery, [academicYear, semester, idNumber, academicYear, semester, idNumber], (err, results) => {
-        if (err) {
-            console.error('Error fetching total points:', err);
-            return callback(0); // Default to 0 if there’s an error
-        }
-        const totalPoints = results.length > 0 ? results[0].total_points : 0;
-        callback(totalPoints);
-    });
-};
-
-// Helper function to calculate total points for a student for the entire academic year
-const fetchYearlyPoints = (academicYear, idNumber, callback) => {
-    const yearlyPointsQuery = `
-        SELECT 
-            attendance_points.id_number,
-            COALESCE(total_attendance_points, 0) + COALESCE(total_participation_points, 0) AS total_points
-        FROM 
-            (SELECT 
-                ar.id_number,
-                SUM(
-                    (COALESCE(ar.am_in, 0)) + 
-                    (COALESCE(ar.pm_in, 0)) + 
-                    (COALESCE(ar.pm_out, 0))
-                ) AS total_attendance_points
-            FROM 
-                attendance_record ar
-            JOIN 
-                attendance a ON ar.attendance_id = a.attendance_id
-            JOIN 
-                event e ON a.event_id = e.event_id
-            WHERE 
-                e.academic_year = ? 
-                AND ar.id_number = ?
-            GROUP BY 
-                ar.id_number) AS attendance_points
-
-        LEFT JOIN
-            (SELECT 
-                pr.id_number,
-                SUM(pr.participation_record_points) AS total_participation_points
-            FROM 
-                participation_record pr
-            JOIN 
-                activity ac ON pr.activity_id = ac.activity_id
-            JOIN 
-                event e ON ac.event_id = e.event_id
-            WHERE 
-                e.academic_year = ?
-                AND pr.id_number = ?
-            GROUP BY 
-                pr.id_number) AS participation_points
-
-        ON attendance_points.id_number = participation_points.id_number;
-    `;
-
-    db.query(yearlyPointsQuery, [academicYear, idNumber, academicYear, idNumber], (err, results) => {
-        if (err) {
-            console.error('Error fetching total points:', err);
-            return callback(0); // Default to 0 if there’s an error
-        }
-        const totalPoints = results.length > 0 ? results[0].total_points : 0;
-        callback(totalPoints);
-    });
-};
-
 // Route for spr-main
 router.get('/spr-main', (req, res) => {
     if (req.session.isAuthenticated) {
@@ -525,9 +342,16 @@ router.get('/spr-main', (req, res) => {
         const idNumber = req.query.id;
         const adminData = req.session.adminData;
         const organization = adminData.organization;
-        const departmentName = req.session.departmentName;
-        const aboName = req.session.aboName;
-        const iboName = req.session.iboName;
+        const studentData = req.session.studentData;
+        const departmentName = req.session.departmentName || studentData.department_name;
+        const aboName = req.session.aboName || studentData.abo_name;
+        const iboName = req.session.iboName || studentData.ibo_name;
+        console.log('ID Number:', idNumber);
+        console.log('Organization:', organization);
+        console.log('Student Data:', studentData);
+        console.log('Department Name:', departmentName);
+        console.log('ABO:', aboName);
+        console.log('IBO:', iboName);
 
         const {
             isUSG,
@@ -551,7 +375,12 @@ router.get('/spr-main', (req, res) => {
         } = isExtraOrgs(organization);
 
         const selectedScope = req.query.event_scope || (isUSG ? 'INSTITUTIONAL' : organization) || '';
-        const selectedYear = req.query.academic_year || "Select Year";
+        let selectedYear = req.query.academic_year || "Select Year";
+        if (selectedYear.length === 4) {
+            const startYear = selectedYear;
+            const endYear = parseInt(startYear) + 1;
+            selectedYear = `${startYear}-${endYear}`;
+        }
         const selectedSemester = req.query.semester || "Select Sem";
         const selectedEventDay = req.query.event_day;
 
@@ -569,7 +398,15 @@ router.get('/spr-main', (req, res) => {
                 if (err) {
                     return callback(err, null);
                 }
-                callback(null, results);
+
+                // Format the academic years to "yyyy-yyyy" format
+                const formattedYears = results.map(year => {
+                    const startYear = year.academic_year;
+                    const endYear = parseInt(startYear) + 1;
+                    return { academic_year: `${startYear}-${endYear}` };
+                });
+
+                callback(null, formattedYears);
             });
         };
 
@@ -634,8 +471,8 @@ router.get('/spr-main', (req, res) => {
             if (err) return res.status(500).send('Database error while fetching student data');
             const student = studentResults.length > 0 ? studentResults[0] : null;
 
-            fetchSemestralPoints(selectedYear, selectedSemester, idNumber, (semestralScore) => {
-                fetchYearlyPoints(selectedYear, idNumber, (yearlyScore) => {
+            fetchSemestralPoints(selectedYear, selectedSemester, selectedScope, idNumber, (semestralScore) => {
+                fetchYearlyPoints(selectedYear, selectedScope, idNumber, (yearlyScore) => {
                     if (idNumber && selectedYear !== "Select Year" && selectedSemester !== "Select Sem") {
                         fetchEvents(selectedYear, selectedSemester, selectedScope, (events) => {
                             if (events && events.length > 0) {
@@ -659,7 +496,8 @@ router.get('/spr-main', (req, res) => {
                                         FROM activity a
                                         LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id AND pr.id_number = ?
                                         LEFT JOIN admin ad ON pr.admin_id = ad.admin_id
-                                        WHERE a.event_id = ?;`
+                                        WHERE a.event_id = ?
+                                        ORDER BY a.activity_date ASC, a.activity_name ASC;`
 
                                     db.query(activitiesQuery, [idNumber, eventId], (err, activityResults) => {
                                         if (err) return res.status(500).send('Database error while fetching activities');
@@ -677,7 +515,8 @@ router.get('/spr-main', (req, res) => {
                                             FROM attendance a
                                             LEFT JOIN attendance_record ar ON a.attendance_id = ar.attendance_id AND ar.id_number = ?
                                             LEFT JOIN admin ad ON ar.admin_id = ad.admin_id
-                                            WHERE a.event_id = ?;`;
+                                            WHERE a.event_id = ?
+                                            ORDER BY a.attendance_date ASC`;
 
                                         db.query(attendanceQuery, [idNumber, eventId], (err, attendanceResults) => {
                                             if (err) return res.status(500).send('Database error while fetching attendance');
@@ -690,23 +529,17 @@ router.get('/spr-main', (req, res) => {
                                             }));
 
                                             const verificationStatusQuery = `
-                                                SELECT 
-                                                    a.activity_day,
+                                                SELECT
+                                                a.activity_day,
                                                     CASE 
                                                         WHEN COUNT(DISTINCT pr.role_name) >= e.to_verify THEN 'Verified'
                                                         ELSE 'Not Verified'
                                                     END AS verification_status
-                                                FROM 
-                                                    activity a
-                                                LEFT JOIN 
-                                                    participation_record pr ON a.activity_id = pr.activity_id
-                                                JOIN 
-                                                    event e ON a.event_id = e.event_id
-                                                WHERE 
-                                                    a.event_id = ?
-                                                GROUP BY 
-                                                    a.activity_day;
-                                            `;
+                                                FROM activity a
+                                                LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id
+                                                JOIN event e ON a.event_id = e.event_id
+                                                WHERE a.event_id = ?
+                                                GROUP BY a.activity_day;`
 
                                             db.query(verificationStatusQuery, [eventId], (err, verificationResults) => {
                                                 if (err) return res.status(500).send('Database error while fetching verification status');
@@ -754,11 +587,19 @@ router.get('/spr-main', (req, res) => {
 router.get('/spr-edit', (req, res) => {
     if (req.session.isAuthenticated) {
         console.log('Entered Edit Mode');
+
+        const idNumber = req.query.id;
         const adminData = req.session.adminData;
         const organization = adminData.organization;
-        const departmentName = req.session.departmentName;
-        const aboName = req.session.aboName;
-        const iboName = req.session.iboName;
+        const studentData = req.session.studentData;
+        const departmentName = req.session.departmentName || studentData.department_name;
+        const aboName = req.session.aboName || studentData.abo_name;
+        const iboName = req.session.iboName || studentData.ibo_name;
+
+        console.log('ID Number (Edit):', idNumber);
+        console.log('Department Name (Edit):', departmentName);
+        console.log('ABO (Edit):', aboName);
+        console.log('IBO (Edit):', iboName);
 
         const {
             isUSG,
@@ -780,25 +621,29 @@ router.get('/spr-edit', (req, res) => {
             isExtraOrgsTrue
         } = isExtraOrgs(organization);
 
-        const idNumber = req.query.id;
-        const selectedYear = req.query.academic_year || "Select Year";
+        let selectedYear = req.query.academic_year || "Select Year";
+        if (selectedYear.length === 4) {
+            const startYear = selectedYear;
+            const endYear = parseInt(startYear) + 1;
+            selectedYear = `${startYear}-${endYear} `;
+        }
+
         const selectedSemester = req.query.semester || "Select Sem";
         const selectedScope = isUSG ? 'INSTITUTIONAL' : organization;
-        console.log('ID Number:', idNumber);
-        console.log('Selected Year:', selectedYear);
-        console.log('Selected Semester:', selectedSemester);
-        console.log('Selected Scope:', selectedScope);
+        console.log('Selected Year (Edit):', selectedYear);
+        console.log('Selected Semester (Edit):', selectedSemester);
+        console.log('Selected Scope (Edit):', selectedScope);
 
         const eventId = req.query.event_id;
         const eventName = req.query.event_name;
         const eventDays = req.query.event_days || null;
         const eventDateStart = req.query.event_start_date;
         const eventDateEnd = req.query.event_end_date;
-        console.log('Event ID:', eventId);
-        console.log('Event Name:', eventName);
-        console.log('Event Days:', eventDays);
-        console.log('Event Start Date:', eventDateStart);
-        console.log('Event End Date:', eventDateEnd);
+        console.log('Event ID (Edit):', eventId);
+        console.log('Event Name (Edit):', eventName);
+        console.log('Event Days (Edit):', eventDays);
+        console.log('Event Start Date (Edit):', eventDateStart);
+        console.log('Event End Date (Edit):', eventDateEnd);
 
         const departments = ['CAS', 'CBA', 'CCJE', 'CCSEA', 'CON', 'CTE', 'CTHM'];
         const IBOs = ['Compatriots', 'Cosplay Corps', 'Green Leaders', 'Kainos', 'Meeples', 'Micromantics', 'Red Cross Youth', 'Soul Whisperers', 'Vanguard E-sports'];
@@ -809,7 +654,14 @@ router.get('/spr-edit', (req, res) => {
                 if (err) {
                     return callback(err, null);
                 }
-                callback(null, results);
+
+                const formattedYears = results.map(year => {
+                    const startYear = year.academic_year;
+                    const endYear = parseInt(startYear) + 1;
+                    return { academic_year: `${startYear}-${endYear} ` };
+                });
+
+                callback(null, formattedYears);
             });
         };
 
@@ -874,14 +726,14 @@ router.get('/spr-edit', (req, res) => {
                 fetchEvents(selectedYear, selectedSemester, selectedScope, (events) => {
                     if (events && events.length > 0) {
                         if (eventId && eventDays) {
-                            const activitiesQuery = 'SELECT * FROM activity WHERE event_id = ?';
+                            const activitiesQuery = 'SELECT * FROM activity WHERE event_id = ? ORDER BY activity_date ASC, activity_name ASC';
                             db.query(activitiesQuery, [eventId], (err, activityResults) => {
                                 if (err) {
                                     return res.status(500).send('Database error while fetching activities');
                                 }
 
                                 // Fetch attendance based on student ID and activity ID
-                                const attendanceQuery = 'SELECT * FROM attendance WHERE event_id = ?';
+                                const attendanceQuery = 'SELECT * FROM attendance WHERE event_id = ? ORDER BY attendance_date ASC';
                                 db.query(attendanceQuery, [eventId], (err, attendanceResults) => {
                                     if (err) {
                                         return res.status(500).send('Database error while fetching attendance');
@@ -955,7 +807,13 @@ router.get('/landing-page-student-search', (req, res) => {
 router.get('/spr-student', (req, res) => {
     const id_number = req.query.id_number;
     const selectedScope = req.query.event_scope || '';
-    const selectedYear = req.query.academic_year || "Select Year";
+    let selectedYear = req.query.academic_year || "Select Year";
+    if (selectedYear.length === 4) {
+        const startYear = selectedYear;
+        const endYear = parseInt(startYear) + 1;
+        selectedYear = `${startYear}-${endYear}`;
+    }
+
     const selectedSemester = req.query.semester || "Select Sem";
     const eventId = req.query.event_id;
     const eventName = req.query.event_name;
@@ -975,7 +833,14 @@ router.get('/spr-student', (req, res) => {
             if (err) {
                 return callback(err, null);
             }
-            callback(null, results);
+
+            const formattedYears = results.map(year => {
+                const startYear = year.academic_year;
+                const endYear = parseInt(startYear) + 1;
+                return { academic_year: `${startYear}-${endYear} ` };
+            });
+
+            callback(null, formattedYears);
         });
     };
 
@@ -1032,8 +897,8 @@ router.get('/spr-student', (req, res) => {
                 return res.status(500).send('Database error while fetching academic years');
             }
 
-            fetchSemestralPoints(selectedYear, selectedSemester, id_number, (semestralScore) => {
-                fetchYearlyPoints(selectedYear, id_number, (yearlyScore) => {
+            fetchSemestralPoints(selectedYear, selectedSemester, selectedScope, id_number, (semestralScore) => {
+                fetchYearlyPoints(selectedYear, selectedScope, id_number, (yearlyScore) => {
                     // Fetch events
                     if (id_number && selectedYear !== "Select Year" && selectedSemester !== "Select Sem") {
                         fetchEvents(selectedYear, selectedSemester, selectedScope, (events) => {
@@ -1041,12 +906,12 @@ router.get('/spr-student', (req, res) => {
                             if (events && events.length > 0) {
                                 if (eventId && eventDays) {
                                     const activitiesQuery = `
-                                        SELECT a.*, 
-                                               pr.role_name, 
-                                               pr.admin_id, 
-                                               ad.first_name AS officer_first_name,
-                                               ad.last_name AS officer_last_name,
-                                               CASE pr.role_name 
+                                        SELECT a.*,
+                                        pr.role_name,
+                                        pr.admin_id,
+                                        ad.first_name AS officer_first_name,
+                                            ad.last_name AS officer_last_name,
+                                                CASE pr.role_name 
                                                    WHEN 'INDIV. Participant' THEN 15
                                                    WHEN 'TEAM Participant' THEN 20
                                                    WHEN 'PROG. Spectator' THEN 10
@@ -1059,7 +924,9 @@ router.get('/spr-student', (req, res) => {
                                         FROM activity a
                                         LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id AND pr.id_number = ?
                                         LEFT JOIN admin ad ON pr.admin_id = ad.admin_id
-                                        WHERE a.event_id = ?`;
+                                        WHERE a.event_id = ? 
+                                        ORDER BY a.activity_date ASC, a.activity_name ASC;`
+
 
                                     db.query(activitiesQuery, [id_number, eventId], (err, activityResults) => {
                                         if (err) {
@@ -1070,17 +937,18 @@ router.get('/spr-student', (req, res) => {
 
                                         const attendanceQuery = `
                                             SELECT a.attendance_id,
-                                                   a.attendance_day,
-                                                   a.attendance_date,
-                                                   COALESCE(ar.am_in, 0) AS am_in,
-                                                   COALESCE(ar.pm_in, 0) AS pm_in,
-                                                   COALESCE(ar.pm_out, 0) AS pm_out,
-                                                   ad.first_name AS officer_first_name,
-                                                   ad.last_name AS officer_last_name
+                                                a.attendance_day,
+                                                a.attendance_date,
+                                                COALESCE(ar.am_in, 0) AS am_in,
+                                                COALESCE(ar.pm_in, 0) AS pm_in,
+                                                COALESCE(ar.pm_out, 0) AS pm_out,
+                                                ad.first_name AS officer_first_name,
+                                                ad.last_name AS officer_last_name
                                             FROM attendance a
                                             LEFT JOIN attendance_record ar ON a.attendance_id = ar.attendance_id AND ar.id_number = ?
                                             LEFT JOIN admin ad ON ar.admin_id = ad.admin_id
-                                            WHERE a.event_id = ?`;
+                                            WHERE a.event_id = ?
+                                            ORDER BY a.attendance_date ASC`;
 
                                         db.query(attendanceQuery, [id_number, eventId], (err, attendanceResults) => {
                                             if (err) {
@@ -1098,23 +966,17 @@ router.get('/spr-student', (req, res) => {
 
                                             // Add the verification status query
                                             const verificationStatusQuery = `
-                                                SELECT 
-                                                    a.activity_day,
+                                                SELECT
+                                                a.activity_day,
                                                     CASE 
                                                         WHEN COUNT(DISTINCT pr.role_name) >= e.to_verify THEN 'Verified'
                                                         ELSE 'Not Verified'
                                                     END AS verification_status
-                                                FROM 
-                                                    activity a
-                                                LEFT JOIN 
-                                                    participation_record pr ON a.activity_id = pr.activity_id
-                                                JOIN 
-                                                    event e ON a.event_id = e.event_id
-                                                WHERE 
-                                                    a.event_id = ?
-                                                GROUP BY 
-                                                    a.activity_day;
-                                            `;
+                                                FROM activity a
+                                                LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id
+                                                JOIN event e ON a.event_id = e.event_id
+                                                WHERE a.event_id = ?
+                                                GROUP BY a.activity_day;`
 
                                             db.query(verificationStatusQuery, [eventId], (err, verificationResults) => {
                                                 if (err) return res.status(500).send('Database error while fetching verification status');

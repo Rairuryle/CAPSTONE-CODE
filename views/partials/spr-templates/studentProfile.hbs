@@ -42,7 +42,13 @@
                         <span class="org-spr border px-3">{{student.abo_name}}</span>
 
                         <span class="org-text org-small-text ms-4 me-2">IBO</span>
-                        <span class="org-spr border px-3">{{student.ibo_name}}</span>
+                        <span class="org-spr border px-3">
+                            {{#if student.ibo_name}}
+                            {{student.ibo_name}}
+                            {{else}}
+                            None
+                            {{/if}}
+                        </span>
                     </div>
                 </div>
             </div>

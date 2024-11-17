@@ -130,7 +130,7 @@
                 {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-edit'))}}
                 {{#if (eq currentPath '/spr-main')}}
                 {{#unless isCSOorSAO}}
-                <a href="/spr-edit?id={{student.id_number}}" class="nav-link align-middle px-0">
+                <a href="/spr-edit" data-mode="edit" class="nav-link align-middle px-0">
                     <div class="d-flex align-items-center">
                         <div class="icon-container me-3">
                             <img src="../img/edit-mode.png" alt="Edit Mode Icon">
@@ -142,7 +142,7 @@
                 </a>
                 {{/unless}}
                 {{else}}
-                <a href="/spr-main?id={{student.id_number}}" class="nav-link align-middle px-0">
+                <a href="/spr-main" data-mode="exit-edit" class="nav-link align-middle px-0">
                     <div class="d-flex align-items-center">
                         <div class="icon-container me-3">
                             <img src="../img/edit-mode.png" alt="Edit Mode Icon">
@@ -156,9 +156,8 @@
                 {{/if}}
             </li>
 
-
             <li class="nav-item nav-item-title ps-4">
-                <a href="/logout" class="nav-link align-middle px-0">
+                <a href="/logout" id="btn-logout" class="nav-link align-middle px-0" onclick="handleLogout(event)">
                     <div class="d-flex align-items-center">
                         <div class="icon-container me-3">
                             <img src="../img/logout.png" alt="Logout Icon">

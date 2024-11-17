@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const isSAO = document.querySelector('#isSAO').value === "true";
+
     function disableAllCheckboxes() {
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
@@ -36,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const exemptionStatus = document.getElementById('exemptionStatus').textContent;
     const currentPath = window.location.pathname;
 
-    if (activeStatus === 'Inactive' || exemptionStatus === 'Exempted' || currentPath === '/spr-edit') {
+    if (activeStatus === 'Inactive' || exemptionStatus === 'Exempted' || currentPath === '/spr-edit' || isSAO) {
         disableAllCheckboxes();
         disableAllAssignRoles();
         disableImportFileButton();

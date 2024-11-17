@@ -134,11 +134,12 @@ input:focus + #suggestionsList {
 .remove-icon {
   cursor: pointer;
   color: red;
+  font-size: 1.5rem;
   margin-left: 10px;
 }
 
 .member-item {
-  padding-top: 15px; /* Adjust the value as needed */
+  padding-top: 15px;
 }
 
 /* add student successful */

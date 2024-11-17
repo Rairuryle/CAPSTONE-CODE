@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
             // Reload the page with the updated URL
             window.location.href = url.toString();
-    
             console.log("Updated URL:", url.toString());
     
             const eventScopeLabel = document.getElementById('eventScopeLabel');

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const express = require('express');
 const session = require('express-session');
-const { isMainOrgs, isExtraOrgs } = require('../routes/utils');
+const { isMainOrgs, isExtraOrgs } = require('../utils/utilsOrg');
 const app = express();
 
 const db = mysql.createConnection({

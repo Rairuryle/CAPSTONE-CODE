@@ -6,7 +6,7 @@ function searchStudentProfile() {
         return;
     }
 
-    const searchQuery = idNumberInput.value.trim(); // Use this for search
+    const searchQuery = idNumberInput.value.trim();
 
     if (!searchQuery) {
         alert('Please enter an ID number or name to search.');
@@ -15,7 +15,6 @@ function searchStudentProfile() {
 
     console.log('Sending request with search query:', searchQuery);
 
-    // Send a request to the server to search for the student profile
     fetch(`/student/search?searchStudentProfile=${encodeURIComponent(searchQuery)}`)
         .then(response => {
             if (response.status === 200) {
@@ -33,14 +32,18 @@ function searchStudentProfile() {
         })
         .then(data => {
             if (data.studentFound) {
-                // Get the current URL to check if we are in the `spr-edit` context
-                const currentUrl = window.location.href;
+                const studentId = encodeURIComponent(data.studentData.id_number);
                 let redirectUrl = '';
 
+                const currentUrl = window.location.href;
+                const queryString = window.location.search;
+
                 if (currentUrl.includes('/spr-edit')) {
-                    redirectUrl = `/spr-edit?id=${encodeURIComponent(data.studentData.id_number)}`;
+                    redirectUrl = `/spr-edit?id=${studentId}&${queryString}`;
+                } else if (currentUrl.includes('/spr-main')) {
+                    redirectUrl = `/spr-main?id=${studentId}&${queryString}`;
                 } else {
-                    redirectUrl = `/spr-main?id=${encodeURIComponent(data.studentData.id_number)}`;
+                    redirectUrl = `/spr-main?id=${studentId}`;
                 }
 
                 window.location.href = redirectUrl;
@@ -53,7 +56,6 @@ function searchStudentProfile() {
         });
 }
 
-// Add event listeners for search button and Enter key press
 document.getElementById('searchButton').addEventListener('click', searchStudentProfile);
 document.getElementById('searchStudentProfile').addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
