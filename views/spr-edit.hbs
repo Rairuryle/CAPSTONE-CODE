@@ -86,9 +86,9 @@
                         </button>
                         <div class="d-flex align-items-center ms-auto">
                             <img src="../img/document-filter.png" alt="Sort" class="ps-2" style="height: 20px;">
-                            <select id="sortActivities"
-                                class="form-control sort-activities bg-transparent border-0 fw-bold ps-1"
-                                name="sortActivities">
+                            <select id="sortActivityTable"
+                                class="form-control sort-activity-table bg-transparent border-0 fw-bold ps-1"
+                                name="sortActivityTable">
                                 <option value="" disabled selected>Sort By</option>
                                 <option value="Activity" {{#if (eq selectedSort "Activity" )}}selected{{/if}}> Sort By
                                     Activity
@@ -269,5 +269,5 @@
 <script src="../js/spr/modifyEvents.js"></script>
 <script src="../js/spr/modifyActivities.js"></script>
 <script src="../js/spr/editStudentProfile.js"></script>
-<script src="../js/spr/assignRoles.js"></script>
+<script src="../js/spr/sortSearchActivities.js"></script>
 <script src="../js/spr/disableElements.js"></script>

@@ -211,8 +211,77 @@ function processImportedData(importedData, req, res) {
     }
 }
 
+function processImportedStudentData(importedStudentData, req, res) {
+    const currentDateTime = new Date().toISOString().slice(0, 19).replace('T', ' ');  // Format as 'YYYY-MM-DD HH:MM:SS'
 
+    importedStudentData.forEach(student => {
+        // Map CSV fields to the correct database columns
+        const {
+            'First Name': first_name,
+            'Last Name': last_name,
+            'ID Number': id_number,
+            'Department': department_name,
+            'Course': course_name,
+            'ABO': abo_name,
+            'Year Level': year_level
+        } = student;
 
+        // Default values for null or static fields
+        const ibo_name = null;  // Set IBO name to null
+        const exemption_status = 'Not Exempted';  // Default exemption status
+        const active_status = 'Active';  // Default active status
 
+        // First, check if the id_number already exists in the database
+        const checkIdQuery = `SELECT COUNT(*) AS count FROM student WHERE id_number = ?`;
 
-module.exports = { processImportedData };
+        db.query(checkIdQuery, [id_number], (err, result) => {
+            if (err) {
+                console.error('Error checking student ID:', err);
+                return res.status(500).json({ success: false, message: 'Error checking student data.' });
+            }
+
+            if (result[0].count > 0) {
+                // If the ID exists, skip the insertion for this student
+                console.log(`ID Number ${id_number} already exists. Skipping insertion.`);
+                return;  // Skip the insertion
+            }
+
+            // If the ID does not exist, insert the new student data
+            const studentInsertQuery = `
+                INSERT INTO student 
+                (id_number, last_name, first_name, department_name, course_name, abo_name, ibo_name, year_level, exemption_status, active_status, date_added) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `;
+
+            const studentValues = [
+                id_number,
+                last_name,
+                first_name,
+                department_name,
+                course_name,
+                abo_name,
+                ibo_name,
+                year_level,
+                exemption_status,
+                active_status,
+                currentDateTime
+            ];
+
+            // Insert the student data into the database
+            db.query(studentInsertQuery, studentValues, (err, result) => {
+                if (err) {
+                    console.error('Error inserting student:', err);
+                    return res.status(500).json({ success: false, message: 'Error inserting student data.' });
+                }
+                console.log('Inserted student with ID:', result.insertId);  // Log the inserted student's ID
+            });
+        });
+    });
+
+    res.status(200).json({ success: true, message: 'Student data successfully imported.' });
+}
+
+module.exports = { 
+    processImportedData, 
+    processImportedStudentData 
+};

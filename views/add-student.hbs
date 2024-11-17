@@ -12,7 +12,19 @@
                     {{> headerSearch}}
 
                     <div class="ms-3" style="width: 67rem;">
-                        <h1 class="border-bottom border-secondary pb-1">Add Student</h1>
+                        <div class="d-flex align-items-center border-bottom border-secondary pb-1 mb-4">
+                            <h1 class="m-0 mt-4">Add Student</h1>
+                            <form action="/import/import-csv-student" class="m-0 mt-4 px-3" method="POST"
+                                id="importCsvStudentForm" enctype="multipart/form-data">
+                                <input type="file" id="csvFileInput" name="csvFile" style="display:none"
+                                    accept=".csv" />
+
+                                <label for="csvFileInput" class="link-primary" style="cursor: pointer;"
+                                    title="Click to import a CSV file to add student information all at once">(Import
+                                    File)</label>
+                                <button type="submit" style="display:none;" id="submitBtn"></button>
+                            </form>
+                        </div>
                         <form action="/student/add-student" method="POST"
                             class="d-flex align-items-center justify-content-center flex-column form-group"
                             style="min-height: 25rem;">
@@ -173,3 +185,4 @@
     </div>
 </div>
 <script src="../js/addStudent.js"></script>
+<script src="../js/importFileAddStudent.js"></script>

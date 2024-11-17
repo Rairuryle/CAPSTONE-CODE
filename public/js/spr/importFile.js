@@ -2,6 +2,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentUrl = new URL(window.location.href);
     const queryParams = currentUrl.searchParams;
 
+    const fileInput = document.getElementById('csvFile');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+    // Display the file name when the file is selected
+    fileInput.addEventListener('change', function () {
+        const fileName = fileInput.files[0] ? fileInput.files[0].name : '';
+        
+        if (fileName) {
+            fileNameDisplay.textContent = `Selected File: ${fileName}`;
+            fileNameDisplay.style.display = 'block';  // Make the file name visible
+        } else {
+            fileNameDisplay.style.display = 'none';  // Hide if no file is selected
+        }
+    });
+
     document.getElementById('importCsvForm').addEventListener('submit', function (event) {
         event.preventDefault(); 
 
@@ -33,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.location.reload();
             })
             .catch(error => {
+                console.error('Error uploading CSV:', error);
             });
     });
 });

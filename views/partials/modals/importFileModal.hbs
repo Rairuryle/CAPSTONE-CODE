@@ -35,12 +35,16 @@
                     <!-- Hidden file input field, triggered by clicking the image -->
                     <input type="file" class="form-control" name="csvFile" id="csvFile" accept=".csv"
                         style="display: none;" />
-            </div>
 
-            <div class="modal-footer border-top-0 mt-1">
-                <button type="submit" class="btn btn-success btn-import-file-submit importBtn px-5">Import</button>
+                    <!-- Display file name -->
+                    <div id="fileNameDisplay" class="mt-2" style="display: none;"></div>
+
+                    <div class="modal-footer border-top-0 mt-1">
+                        <button type="submit"
+                            class="btn btn-success btn-import-file-submit importBtn px-5">Import</button>
+                    </div>
+                </form>
+
             </div>
-            </form>
         </div>
     </div>
-</div>
