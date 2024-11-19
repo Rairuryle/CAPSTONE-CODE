@@ -202,9 +202,9 @@
                         <p>No events found.</p>
                         {{else}}
                         {{#each filteredEvents}}
-                        <div class="card event-card mb-1" data-scope="{{this.event_scope}}"
-                            data-event-days="{{this.event_days}}"
-                            onclick="showEventDetails({{this.event_id}}, {{this.event_days}}, '{{this.event_name}}', '{{formatDate this.event_date_start 'YYYY-MM-DD'}}', '{{formatDate this.event_date_end 'YYYY-MM-DD'}}')">
+                        <div class="card event-card mb-1" data-event-id="{{this.event_id}}"
+                            data-scope="{{this.event_scope}}" data-event-days="{{this.event_days}}"
+                            onclick="showEventDetails(event, {{this.event_id}}, {{this.event_days}}, '{{this.event_name}}', '{{formatDate this.event_date_start 'YYYY-MM-DD'}}', '{{formatDate this.event_date_end 'YYYY-MM-DD'}}')">
                             <div class="card-body event-card-body d-flex flex-column py-2">
                                 <div class="d-flex justify-content-between">
                                     <span class="card-title fw-bold">{{this.event_name}}</span>

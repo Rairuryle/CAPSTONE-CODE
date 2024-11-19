@@ -1,17 +1,25 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const selectedEventId = localStorage.getItem('selectedEventId');
+    if (selectedEventId) {
+        const selectedCard = document.querySelector(`.event-card[data-event-id="${selectedEventId}"]`);
+        if (selectedCard) {
+            selectedCard.classList.add('selected');
+        }
+    }
+
     function updateURLWithEventScope() {
         const selectEventScope = document.getElementById('selectEventScope');
         const scope = selectEventScope ? selectEventScope.value : null;
-    
+
         if (scope) {
             console.log("Setting Scope Value:", scope);
             const url = new URL(window.location.href);
             url.searchParams.set('event_scope', scope);
-    
+
             // Reload the page with the updated URL
             window.location.href = url.toString();
             console.log("Updated URL:", url.toString());
-    
+
             const eventScopeLabel = document.getElementById('eventScopeLabel');
             if (eventScopeLabel) {
                 eventScopeLabel.textContent = scope.toUpperCase() + ' EVENTS';
@@ -20,16 +28,16 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("No scope value determined.");
         }
     }
-    
+
 
     function setSelectedEventScope() {
         const selectEventScope = document.getElementById('selectEventScope');
         const urlParams = new URLSearchParams(window.location.search);
         const eventScope = urlParams.get('event_scope');
-    
+
         if (selectEventScope && eventScope && selectEventScope.value !== eventScope) {
             selectEventScope.value = eventScope;
-    
+
             const eventScopeLabel = document.getElementById('eventScopeLabel');
             if (eventScopeLabel) {
                 eventScopeLabel.textContent = eventScope.toUpperCase() + ' EVENTS';
@@ -84,12 +92,20 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = url.toString();
     };
 
-    window.showEventDetails = function (eventId, eventDays, eventName, eventStartDate, eventEndDate) {
+    window.showEventDetails = function (event, eventId, eventDays, eventName, eventStartDate, eventEndDate) {
         console.log("showEventDetails called with eventId:", eventId);
         console.log("Days:", eventDays);
         console.log("Name:", eventName);
         console.log("Start Date:", eventStartDate);
         console.log("End Date:", eventEndDate);
+
+        localStorage.setItem('selectedEventId', eventId);
+
+        document.querySelectorAll('.event-card.selected').forEach(card => {
+            card.classList.remove('selected');
+        });
+
+        event.currentTarget.classList.add('selected');
 
         // Populate the dropdown
         const selectEventDayDropdown = document.getElementById('selectEventDay');

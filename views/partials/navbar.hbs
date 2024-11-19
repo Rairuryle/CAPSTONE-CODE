@@ -36,8 +36,8 @@
             <li
                 class="nav-item nav-item-title nav-item-records ps-4 {{#unless (eq currentPath '/spr-student')}} mt-3 {{/unless}}
                 {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-edit') (eq currentPath '/spr-student') )}}active{{/if}}">
-                <a {{#if (or (eq currentPath '/spr-main' ) (eq currentPath '/spr-edit' ))}} href="/spr-main" {{else}}
-                    href="/spr-student?id_number={{student.id_number}}" {{/if}} class="nav-link align-middle px-0">
+                <a {{#unless (eq currentPath '/spr-student' )}} href="/spr-main" {{else}}
+                    href="/spr-student?id_number={{student.id_number}}" {{/unless}} class="nav-link align-middle px-0">
                     <div class="d-flex align-items-center">
                         <div class="icon-container me-3">
                             {{#if (or (eq currentPath '/spr-main') (eq currentPath '/spr-edit') (eq currentPath

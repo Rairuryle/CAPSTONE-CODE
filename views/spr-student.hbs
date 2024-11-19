@@ -94,9 +94,11 @@
                             </div>
                         </div>
                         <div class="col-4">
+                            {{#if this.officer_first_name}}
                             <span class="officer-in-charge officer-attendance-recorder ps-3">
                                 {{this.officer_first_name}} {{this.officer_last_name}}
                             </span>
+                            {{/if}}
                         </div>
                     </div>
                     {{/each}}
@@ -183,6 +185,14 @@
                                         )}}selected{{/if}}>PROG. Spectator</option>
                                     <option value="OTH. Spectator" {{#if (eq this.role_name "OTH. Spectator"
                                         )}}selected{{/if}}>OTH. Spectator</option>
+                                    {{#if (eq this.activity_name 'Midas Touch Avenue')}}
+                                    <option value="RED Stamp" {{#if (eq this.role_name "RED Stamp" )}}selected{{/if}}>
+                                        RED Stamp</option>
+                                    <option value="BLUE Stamp" {{#if (eq this.role_name "BLUE Stamp" )}}selected{{/if}}>
+                                        BLUE Stamp</option>
+                                    <option value="VIOLET Stamp" {{#if (eq this.role_name "VIOLET Stamp"
+                                        )}}selected{{/if}}>VIOLET Stamp</option>
+                                    {{/if}}
                                 </select>
                             </div>
 
@@ -235,9 +245,9 @@
                         <p>No events found.</p>
                         {{else}}
                         {{#each filteredEvents}}
-                        <div class="card event-card mb-1" data-scope="{{this.event_scope}}"
-                            data-event-days="{{this.event_days}}"
-                            onclick="showEventDetails({{this.event_id}}, {{this.event_days}}, '{{this.event_name}}', '{{formatDate this.event_date_start 'YYYY-MM-DD'}}', '{{formatDate this.event_date_end 'YYYY-MM-DD'}}')">
+                        <div class="card event-card mb-1" data-event-id="{{this.event_id}}"
+                            data-scope="{{this.event_scope}}" data-event-days="{{this.event_days}}"
+                            onclick="showEventDetails(event, {{this.event_id}}, {{this.event_days}}, '{{this.event_name}}', '{{formatDate this.event_date_start 'YYYY-MM-DD'}}', '{{formatDate this.event_date_end 'YYYY-MM-DD'}}')">
                             <div class="card-body event-card-body d-flex flex-column py-2">
                                 <div class="d-flex justify-content-between">
                                     <span class="card-title fw-bold">{{this.event_name}}</span>

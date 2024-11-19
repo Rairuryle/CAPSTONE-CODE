@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const selectedEventId = localStorage.getItem('selectedEventId');
+    if (selectedEventId) {
+        const selectedCard = document.querySelector(`.event-card[data-event-id="${selectedEventId}"]`);
+        if (selectedCard) {
+            selectedCard.classList.add('selected');
+        }
+    }
+
     function updateURLWithEventScope() {
         const scopeElementDefault = document.getElementById('eventScope');
         const scopeElementAutomatic = document.getElementById('eventScopeAutomatic');
@@ -103,13 +111,22 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = url.toString();
     };
 
-    window.showEventDetails = function (eventId, eventDays, eventName, eventStartDate, eventEndDate, toVerify) {
+    window.showEventDetails = function (event, eventId, eventDays, eventName, eventStartDate, eventEndDate, toVerify) {
         console.log("showEventDetails called with eventId:", eventId);
         console.log("Days:", eventDays);
         console.log("Name:", eventName);
         console.log("Start Date:", eventStartDate);
         console.log("End Date:", eventEndDate);
         console.log("To Verify:", toVerify)
+
+        localStorage.setItem('selectedEventId', eventId);
+
+        document.querySelectorAll('.event-card.selected').forEach(card => {
+            card.classList.remove('selected');
+        });
+
+        event.currentTarget.classList.add('selected');
+
 
         // Populate the dropdown
         const selectEventDayDropdown = document.getElementById('selectEventDay');

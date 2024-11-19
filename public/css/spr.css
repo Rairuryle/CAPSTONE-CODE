@@ -209,7 +209,7 @@ body {
 
 .officer-activity-recorder,
 .officer-attendance-recorder {
-  padding-top: 0.1rem;
+  padding-top: 0.2rem;
   padding-bottom: 0.2rem;
   line-height: 15px;
 }
@@ -325,7 +325,7 @@ body {
   font-size: 0.9rem;
 }
 
-.event-card::after {
+.event-card.selected::after {
   content: "";
   position: absolute;
   top: 0;

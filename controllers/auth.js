@@ -15,12 +15,14 @@ const db = mysql.createConnection({
 
 function getFlags(organization) {
     const { isSAO, isUSGorSAO, isCollegeOrSAO } = isMainOrgs(organization);
-    const { isCSOorSAO, isCSOorIBOorSAO, isExtraOrgsTrue } = isExtraOrgs(organization);
+    const { isCSOorSAO, isCSOorABOorSAO, isCSOorIBOorSAO, isExtraOrgsTrue } = isExtraOrgs(organization);
 
     return {
         isSAO,
         isUSGorSAO,
         isCollegeOrSAO,
+        isCSOorSAO,
+        isCSOorABOorSAO,
         isCSOorIBOorSAO,
         isExtraOrgsTrue,
         isCAS: ["JSWAP", "LABELS", "LSUPS", "POLISAYS"].includes(organization) || isCSOorSAO,

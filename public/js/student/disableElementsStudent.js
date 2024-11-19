@@ -13,11 +13,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const selectedRole = assignRole.value;
 
-            if (selectedRole === "INDIV. Participant" || selectedRole === "OTH. Spectator") {
+            if (selectedRole === "INDIV. Participant" || selectedRole === "OTH. Spectator" || selectedRole === "BLUE Stamp") {
                 assignRole.style.backgroundColor = "blue";
                 assignRole.style.color = "white";
-            } else if (selectedRole === "TEAM Participant" || selectedRole === "PROG. Spectator") {
+            } else if (selectedRole === "TEAM Participant" || selectedRole === "PROG. Spectator" || selectedRole === "RED Stamp") {
                 assignRole.style.backgroundColor = "red";
+                assignRole.style.color = "white";
+            } else if (selectedRole === "VIOLET Stamp") {
+                assignRole.style.backgroundColor = "#7f00ff";
                 assignRole.style.color = "white";
             }
         });

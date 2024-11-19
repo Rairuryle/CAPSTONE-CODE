@@ -342,7 +342,7 @@ router.get('/spr-main', (req, res) => {
         const idNumber = req.query.id;
         const adminData = req.session.adminData;
         const organization = adminData.organization;
-        const studentData = req.session.studentData;
+        const studentData = req.session.studentData || {};
         const departmentName = req.session.departmentName || studentData.department_name;
         const aboName = req.session.aboName || studentData.abo_name;
         const iboName = req.session.iboName || studentData.ibo_name;
@@ -536,12 +536,12 @@ router.get('/spr-main', (req, res) => {
                                                         ELSE 'Not Verified'
                                                     END AS verification_status
                                                 FROM activity a
-                                                LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id
+                                                LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id AND pr.id_number = ?
                                                 JOIN event e ON a.event_id = e.event_id
                                                 WHERE a.event_id = ?
                                                 GROUP BY a.activity_day;`
 
-                                            db.query(verificationStatusQuery, [eventId], (err, verificationResults) => {
+                                            db.query(verificationStatusQuery, [idNumber, eventId], (err, verificationResults) => {
                                                 if (err) return res.status(500).send('Database error while fetching verification status');
                                                 const verificationStatusByDay = {};
                                                 verificationResults.forEach(row => {
@@ -591,7 +591,7 @@ router.get('/spr-edit', (req, res) => {
         const idNumber = req.query.id;
         const adminData = req.session.adminData;
         const organization = adminData.organization;
-        const studentData = req.session.studentData;
+        const studentData = req.session.studentData || {};
         const departmentName = req.session.departmentName || studentData.department_name;
         const aboName = req.session.aboName || studentData.abo_name;
         const iboName = req.session.iboName || studentData.ibo_name;
@@ -964,7 +964,6 @@ router.get('/spr-student', (req, res) => {
                                                 attendance_date: formatDate(att.attendance_date)
                                             }));
 
-                                            // Add the verification status query
                                             const verificationStatusQuery = `
                                                 SELECT
                                                 a.activity_day,
@@ -973,12 +972,12 @@ router.get('/spr-student', (req, res) => {
                                                         ELSE 'Not Verified'
                                                     END AS verification_status
                                                 FROM activity a
-                                                LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id
+                                                LEFT JOIN participation_record pr ON a.activity_id = pr.activity_id AND pr.id_number = ?
                                                 JOIN event e ON a.event_id = e.event_id
                                                 WHERE a.event_id = ?
                                                 GROUP BY a.activity_day;`
 
-                                            db.query(verificationStatusQuery, [eventId], (err, verificationResults) => {
+                                            db.query(verificationStatusQuery, [id_number, eventId], (err, verificationResults) => {
                                                 if (err) return res.status(500).send('Database error while fetching verification status');
 
                                                 const verificationStatusByDay = {};

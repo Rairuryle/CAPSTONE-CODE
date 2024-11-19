@@ -212,13 +212,14 @@
                                 <select name="assignRole" class="assign-role ps-2" id="assignRole-{{@index}}"
                                     onchange="updatePoints({{@index}})">
                                     <option disabled="disabled" selected="selected">Assign Role</option>
-                                    <option value="INDIV. Participant" {{#if (eq this.role_name "INDIV. Participant"
-                                        )}}selected{{/if}}>INDIV. Participant</option>
-                                    <option value="TEAM Participant" {{#if (eq this.role_name "TEAM Participant"
-                                        )}}selected{{/if}}>TEAM Participant</option>
-                                    <option value="PROG. Spectator" {{#if (eq this.role_name "PROG. Spectator"
+                                    <option value="INDIV. Participant" disabled {{#if (eq
+                                        this.role_name "INDIV. Participant" )}}selected{{/if}}>INDIV. Participant
+                                    </option>
+                                    <option value="TEAM Participant" disabled {{#if (eq
+                                        this.role_name "TEAM Participant" )}}selected{{/if}}>TEAM Participant</option>
+                                    <option value="PROG. Spectator" disabled {{#if (eq this.role_name "PROG. Spectator"
                                         )}}selected{{/if}}>PROG. Spectator</option>
-                                    <option value="OTH. Spectator" {{#if (eq this.role_name "OTH. Spectator"
+                                    <option value="OTH. Spectator" disabled {{#if (eq this.role_name "OTH. Spectator"
                                         )}}selected{{/if}}>OTH. Spectator</option>
                                 </select>
                             </div>
@@ -325,9 +326,9 @@
                         <p>No events found.</p>
                         {{else}}
                         {{#each filteredEvents}}
-                        <div class="card event-card mb-1" data-scope="{{this.event_scope}}"
-                            data-event-days="{{this.event_days}}"
-                            onclick="showEventDetails({{this.event_id}}, {{this.event_days}}, '{{this.event_name}}', '{{formatDate this.event_date_start 'YYYY-MM-DD'}}', '{{formatDate this.event_date_end 'YYYY-MM-DD'}}', {{this.to_verify}})">
+                        <div class="card event-card mb-1" data-event-id="{{this.event_id}}"
+                            data-scope="{{this.event_scope}}" data-event-days="{{this.event_days}}"
+                            onclick="showEventDetails(event, {{this.event_id}}, {{this.event_days}}, '{{this.event_name}}', '{{formatDate this.event_date_start 'YYYY-MM-DD'}}', '{{formatDate this.event_date_end 'YYYY-MM-DD'}}', {{this.to_verify}})">
                             <input type="hidden" id="toVerify" value="{{this.to_verify}}">
                             <div class="card-body event-card-body d-flex flex-column py-2">
                                 <div class="d-flex justify-content-between">
