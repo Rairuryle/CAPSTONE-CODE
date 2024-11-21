@@ -19,7 +19,7 @@ const getDaysDifference = (startDate, endDate) => {
 
 router.post('/add-event', (req, res) => {
     const { event_name, event_date_start, event_date_end, event_scope, student_id, to_verify, academic_year, semester } = req.body;
-    
+
     const activity_name = req.body['activity_name[]'] ? [].concat(req.body['activity_name[]']) : [];
     const activity_date = req.body['activity_date[]'] ? [].concat(req.body['activity_date[]']) : [];
 
@@ -260,9 +260,12 @@ router.put('/assign-role', (req, res) => {
 router.post('/record-attendance', (req, res) => {
     const { attendance_points, am_in, pm_in, pm_out, attendance_id, id_number, admin_id } = req.body;
 
-    // First, check if a record already exists for this attendance_id
-    const selectQuery = 'SELECT * FROM attendance_record WHERE attendance_id = ? AND id_number = ?';
+    // If all attendance statuses are null, skip the update/insert and return
+    if (am_in === null && pm_in === null && pm_out === null) {
+        return res.status(400).json({ success: false, message: 'All attendance statuses are null, use delete endpoint' });
+    }
 
+    const selectQuery = 'SELECT * FROM attendance_record WHERE attendance_id = ? AND id_number = ?';
     db.query(selectQuery, [attendance_id, id_number], (err, results) => {
         if (err) {
             return res.status(500).json({ success: false, message: err.message });
@@ -275,7 +278,6 @@ router.post('/record-attendance', (req, res) => {
                 WHERE attendance_id = ? AND id_number = ?`;
 
             const updateValues = [attendance_points, am_in, pm_in, pm_out, admin_id, attendance_id, id_number];
-
             db.query(updateQuery, updateValues, (err, results) => {
                 if (err) {
                     return res.status(500).json({ success: false, message: err.message });
@@ -288,7 +290,6 @@ router.post('/record-attendance', (req, res) => {
                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
             const insertValues = [attendance_points, am_in, pm_in, pm_out, attendance_id, id_number, admin_id];
-
             db.query(insertQuery, insertValues, (err, results) => {
                 if (err) {
                     return res.status(500).json({ success: false, message: err.message });
@@ -298,6 +299,20 @@ router.post('/record-attendance', (req, res) => {
         }
     });
 });
+
+// delete the attendance record if all checkboxes are unchecked
+router.post('/delete-attendance', (req, res) => {
+    const { attendance_id, id_number } = req.body;
+
+    const deleteQuery = 'DELETE FROM attendance_record WHERE attendance_id = ? AND id_number = ?';
+    db.query(deleteQuery, [attendance_id, id_number], (err, results) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: err.message });
+        }
+        res.json({ success: true, message: 'Attendance record deleted successfully' });
+    });
+});
+
 
 // update event
 router.post('/update-event', (req, res) => {

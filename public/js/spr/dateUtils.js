@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('endDateEvent').addEventListener('change', function () {
         updateActivityDateRestrictions();
     });
-    
+
 
     // add activities modal
 
@@ -76,38 +76,37 @@ document.addEventListener('DOMContentLoaded', function () {
     // edit activities modal
     const editActivitiesModal = document.getElementById('editActivitiesModal');
 
-editActivitiesModal.addEventListener('show.bs.modal', function () {
+    editActivitiesModal.addEventListener('show.bs.modal', function () {
 
-    // Function to format date to YYYY-MM-DD
-    function formatDateToYYYYMMDD(dateString) {
-        const parts = dateString.split('/');
-        return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`; // YYYY-MM-DD format
-    }
+        // Function to format date to YYYY-MM-DD
+        function formatDateToYYYYMMDD(dateString) {
+            const parts = dateString.split('/');
+            return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`; // YYYY-MM-DD format
+        }
 
-    // Function to update date restrictions on activity date input
-    function updateActivityDateRestrictions(startDate, endDate) {
-        const activityDateInput = document.getElementById('editActivityDate');
+        // Function to update date restrictions on activity date input
+        function updateActivityDateRestrictions(startDate, endDate) {
+            const activityDateInput = document.getElementById('editActivityDate');
 
-        // Convert start and end dates to YYYY-MM-DD format
-        const formattedStartDate = formatDateToYYYYMMDD(startDate);
-        const formattedEndDate = formatDateToYYYYMMDD(endDate);
+            // Convert start and end dates to YYYY-MM-DD format
+            const formattedStartDate = formatDateToYYYYMMDD(startDate);
+            const formattedEndDate = formatDateToYYYYMMDD(endDate);
 
-        // Set min and max date attributes for the activity date input
-        activityDateInput.setAttribute('min', formattedStartDate);
-        activityDateInput.setAttribute('max', formattedEndDate);
-        activityDateInput.value = ''; // Clear previous value to avoid confusion
-    }
+            // Set min and max date attributes for the activity date input
+            activityDateInput.setAttribute('min', formattedStartDate);
+            activityDateInput.setAttribute('max', formattedEndDate);
+            activityDateInput.value = ''; // Clear previous value to avoid confusion
+        }
 
-    // Get event start and end date values from hidden inputs
-    const eventDateStart = document.getElementById('eventStartDate').value;
-    const eventDateEnd = document.getElementById('eventEndDate').value;
+        // Get event start and end date values from hidden inputs
+        const eventDateStart = document.getElementById('eventStartDate').value;
+        const eventDateEnd = document.getElementById('eventEndDate').value;
 
-    console.log("Event Start Date:", eventDateStart);
-    console.log("Event End Date:", eventDateEnd);
+        console.log("Event Start Date:", eventDateStart);
+        console.log("Event End Date:", eventDateEnd);
 
-    if (eventDateStart && eventDateEnd) {
-        updateActivityDateRestrictions(eventDateStart, eventDateEnd);
-    }
-});
-
+        if (eventDateStart && eventDateEnd) {
+            updateActivityDateRestrictions(eventDateStart, eventDateEnd);
+        }
+    });
 });

@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             console.log("Formatted Event Start Date:", formattedStartDate);
             console.log("Formatted Event End Date:", formattedEndDate);
+
+            // Update the end date range based on the formatted start date
+            updateEndDateRange(formattedStartDate);
         });
     });
 
@@ -38,35 +41,42 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-
     const startDateInput = document.getElementById('editStartDateEvent');
     const endDateInput = document.getElementById('editEndDateEvent');
 
     // Get today's date in 'YYYY-MM-DD' format
     const today = new Date();
-    const formattedToday = today.toISOString().split('T')[0];
+    const formattedToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     // Set min date for start date to today
     startDateInput.min = formattedToday;
 
-    // Set event listener to update end date range when start date changes
-    startDateInput.addEventListener('change', function () {
-        const selectedStartDate = new Date(startDateInput.value);
-        const maxEndDate = new Date(selectedStartDate);
-        maxEndDate.setDate(maxEndDate.getDate() + 6);
+    // Function to update the end date range based on a given start date
+    function updateEndDateRange(formattedStartDate) {
+        if (formattedStartDate) {
+            const start = new Date(formattedStartDate);
+            const maxEndDate = new Date(start);
+            maxEndDate.setDate(maxEndDate.getDate() + 6);
 
-        const formattedMaxEndDate = maxEndDate.toISOString().split('T')[0];
-        endDateInput.min = startDateInput.value; // end date can't be earlier than start date
-        endDateInput.max = formattedMaxEndDate;  // end date can't be more than 6 days after start date
+            endDateInput.min = formattedStartDate;
+            endDateInput.max = maxEndDate.toISOString().split('T')[0];
+            endDateInput.disabled = false; // Enable the end date field
+        } else {
+            endDateInput.value = ""; // Clear end date if no start date is selected
+            endDateInput.disabled = true; // Disable end date input
+        }
+    }
+
+    // Update end date range when the start date changes
+    startDateInput.addEventListener('change', function () {
+        const selectedStartDate = startDateInput.value;
+        updateEndDateRange(selectedStartDate);
     });
 
-    // Initialize the end date min and max for the first time
-    const initialEndDate = new Date(today);
-    initialEndDate.setDate(initialEndDate.getDate() + 6);
-    endDateInput.min = formattedToday;
-    endDateInput.max = initialEndDate.toISOString().split('T')[0];
+    // Initialize end date range on page load or modal open
+    updateEndDateRange(null);
 
-    // update event
+    // Update event
     document.querySelector('.btn-edit-event-submit').addEventListener('click', function (event) {
         event.preventDefault();
 
@@ -132,5 +142,4 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Failed to delete event');
             });
     });
-
 });

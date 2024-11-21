@@ -156,12 +156,14 @@
                             <div class="col-2 d-flex justify-content-between col-officer-in-charge">
                                 <span
                                     class="officer-in-charge officer-activity-recorder officer-edit ps-3 w-100">N/A</span>
+                                {{#unless (eq this.activity_name 'Midas Touch Avenue')}}
                                 <button class="btn m-0 p-0" data-bs-toggle="modal" data-bs-target="#editActivitiesModal"
                                     data-activity-id="{{this.activity_id}}" data-activity-name="{{this.activity_name}}"
                                     data-activity-date="{{formatDate this.activity_date}}"
                                     onclick="event.stopPropagation();">
                                     <img src="../img/edit.png" alt="Edit Activity" class="ms-2">
                                 </button>
+                                {{/unless}}
                             </div>
                         </div>
                         {{/each}}
