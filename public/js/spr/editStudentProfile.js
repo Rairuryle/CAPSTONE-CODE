@@ -48,19 +48,15 @@ document.addEventListener('DOMContentLoaded', function () {
         BSTM: ['SOTE']
     };
 
-    // Ensure these are pre-filled with the correct student's course and ABO when the modal is opened
-    const studentCourseName = courseInput.value; // Handlebars value
-    const studentABOName = ABOInput.value; // Handlebars value
+    const studentCourseName = courseInput.value;
+    const studentABOName = ABOInput.value;
 
-    // Function to update the courseInput dropdown based on selected department
     function updateCourses() {
         const selectedDepartment = departmentInput.value;
         const courses = departmentCourses[selectedDepartment] || [];
 
-        // Reset courseInput and add default placeholder option
         courseInput.innerHTML = '<option disabled="disabled" selected="selected">New Course</option>';
 
-        // Add new options dynamically based on selected department
         courses.forEach(course => {
             const option = document.createElement('option');
             option.value = course;
@@ -94,9 +90,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Retain the student ABO value if no update
         if (studentABOName && ABOs.includes(studentABOName)) {
-            ABOInput.value = studentABOName; // Retain the student's current ABO value
+            ABOInput.value = studentABOName; 
         } else {
-            ABOInput.value = ''; // Reset to 'Select ABO' if no match
+            ABOInput.value = '';
         }
     }
 
@@ -110,7 +106,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial function call to populate courses and ABO based on selected department/course
     updateCourses();
     updateABO();
-
 
 
     document.querySelector('.btn-edit-student-profile-submit').addEventListener('click', function (event) {
@@ -134,17 +129,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                id_number: originalStudentId,  // Send the original ID
+                id_number: originalStudentId, 
                 first_name: updatedFirstName,
                 last_name: updatedLastName,
-                new_id_number: newStudentId,  // Send the new ID number
-                active_status: updatedActiveStatus,  // Send the active status
-                exemption_status: updatedExemptionStatus,  // Send the exemption status
-                department_name: updatedDepartment, // Send the updated department
-                course_name: updatedCourse,  // Send the updated course
-                abo_name: updatedABO,  // Send the updated ABO
-                ibo_name: updatedIBO,  // Send the updated IBO
-                year_level: updatedYearLevel,  // Send the updated year level
+                new_id_number: newStudentId,
+                active_status: updatedActiveStatus,
+                exemption_status: updatedExemptionStatus,
+                department_name: updatedDepartment,
+                course_name: updatedCourse,
+                abo_name: updatedABO,
+                ibo_name: updatedIBO,
+                year_level: updatedYearLevel,
             }),
         })
             .then(response => response.json())

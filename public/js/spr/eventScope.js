@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (selectedScope) {
                     eventScopeLabel.textContent = selectedScope.toUpperCase() + ' EVENTS';
                 } else {
-                    eventScopeLabel.textContent = ''; // Hide the label when no scope is selected
+                    eventScopeLabel.textContent = '';
                 }
 
                 // Show or hide event cards based on the selected scope

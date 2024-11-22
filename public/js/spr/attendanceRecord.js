@@ -9,14 +9,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const pmInChecked = document.querySelector(`input[data-role-name="PM IN"][data-attendance-id="${attendanceId}"]`).checked;
             const pmOutChecked = document.querySelector(`input[data-role-name="PM OUT"][data-attendance-id="${attendanceId}"]`).checked;
 
-            // Calculate attendance points
             let attendancePoints = 0;
             if (amInChecked) attendancePoints += 5;
             if (pmInChecked) attendancePoints += 5;
             if (pmOutChecked) attendancePoints += 5;
 
             if (!amInChecked && !pmInChecked && !pmOutChecked) {
-                // If all checkboxes are unchecked, delete the attendance record
+                // delete if all checkboxes are unchecked
                 fetch('/event/delete-attendance', {
                     method: 'POST',
                     headers: {

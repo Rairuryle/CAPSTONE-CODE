@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Calculate the activity day (1-based index)
         const timeDiff = activityDate - startDate;
-        const activityDay = Math.ceil(timeDiff / (1000 * 3600 * 24));  // No +1 here
+        const activityDay = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
 
         // Make sure activity day is valid (e.g., should be within event date range)
         if (activityDay < 1 || activityDate < startDate) {
@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Send the updated activity data (including activity_day) to the backend
         fetch('/event/update-activity', {
             method: 'POST',
             headers: {

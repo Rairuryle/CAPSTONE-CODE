@@ -11,9 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (fileName) {
             fileNameDisplay.textContent = `Selected File: ${fileName}`;
-            fileNameDisplay.style.display = 'block';  // Make the file name visible
+            fileNameDisplay.style.display = 'block';
         } else {
-            fileNameDisplay.style.display = 'none';  // Hide if no file is selected
+            fileNameDisplay.style.display = 'none'; 
         }
     });
 

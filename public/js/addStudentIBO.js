@@ -27,13 +27,10 @@ function renderSuggestions(results) {
         listItem.addEventListener('click', function () {
             const studentName = `${student.first_name} ${student.last_name}`;
             const membersToAddElement = document.getElementById('membersToAdd');
-            // Add student to the selectedStudents array
             selectedStudents.push(student.id_number);
 
-            // Log selected students after adding a new one
             logSelectedStudents();
 
-            // Append the new student to the existing list with a remove icon
             const memberItem = document.createElement('div');
             memberItem.innerHTML = `
             ${studentName}
@@ -49,7 +46,6 @@ function renderSuggestions(results) {
 
             membersToAddElement.appendChild(memberItem);
 
-            // Clear the input and suggestions
             document.getElementById('searchInput').value = '';
             suggestionsList.innerHTML = '';
             suggestionsList.style.display = 'none';
@@ -106,8 +102,8 @@ if (form) {
             .then(data => {
                 if (data.success) {
                     alert('Students added successfully!');
-                    document.getElementById('membersToAdd').innerHTML = ''; // Clear displayed students
-                    selectedStudents.length = 0; // Clear selected students
+                    document.getElementById('membersToAdd').innerHTML = '';
+                    selectedStudents.length = 0;
                 } else {
                     alert('Failed to add students: ' + data.message);
                 }

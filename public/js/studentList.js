@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (selectedSelect !== iboSelect) {
                 iboSelect.selectedIndex = 0; // Reset to default option
             }
-            // Submit the form after resetting
             filterForm.submit();
         }
 
@@ -142,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (sortValue === "Name") {
             filteredStudents.sort((a, b) => a.last_name.localeCompare(b.last_name));
         } else if (sortValue === "ID Number") {
-            // Sort as string comparison (in case the id_number is stored as a string)
             filteredStudents.sort((a, b) => a.id_number.localeCompare(b.id_number));
         } else if (sortValue === "Course") {
             filteredStudents.sort((a, b) => a.course_name.localeCompare(b.course_name));

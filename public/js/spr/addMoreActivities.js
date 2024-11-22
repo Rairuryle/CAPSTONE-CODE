@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const handleAddMoreActivities = (modal) => {
         let activityIndex = 1;
 
-        // Function to clone the activity entry and add a delete icon (trash)
+        // clone the activity entry and add a delete icon
         const cloneActivityEntry = (originalEntry) => {
-            const newEntry = originalEntry.cloneNode(true); // Clone the original activity entry
+            const newEntry = originalEntry.cloneNode(true);
             const activityNameInput = newEntry.querySelector('input[name^="activity_name"]');
             const activityDateInput = newEntry.querySelector('input[name^="activity_date"]');
 

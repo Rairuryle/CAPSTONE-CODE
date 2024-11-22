@@ -80,6 +80,5 @@ function filterActivities(searchTerm) {
         }
     });
 
-    // Force reflow after filtering (optional)
     activitiesContainer.offsetHeight;
 }

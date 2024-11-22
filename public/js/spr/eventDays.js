@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', function () {
         attendances.forEach(attendance => {
             const attendanceDay = attendance.getAttribute('data-day');
             if (Number(attendanceDay) === selectedDayNumber) {
-                attendance.style.display = 'flex';  // Show attendance
+                attendance.style.display = 'flex';
             } else {
                 attendance.classList.remove("d-flex");
-                attendance.style.display = 'none';  // Hide attendance
+                attendance.style.display = 'none'; 
             }
         });
 
@@ -29,11 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
         activities.forEach(activity => {
             const activityDay = activity.getAttribute('data-day');
             if (Number(activityDay) === selectedDayNumber) {
-                activity.style.display = 'flex';  // Show activity
+                activity.style.display = 'flex';
                 hasActivities = true;
             } else {
                 activity.classList.remove("d-flex");
-                activity.style.display = 'none';  // Hide activity
+                activity.style.display = 'none';
             }
         });
 
@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', function () {
             activityTableInformationContainer.appendChild(foundMessage);
         }
 
-        // Optionally, you can send the selected event day to the backend if needed:
+        // send the selected event day to the backend if needed:
         const queryParams = new URLSearchParams({
-            event_day: selectedDayNumber  // Pass the selected event day as a query parameter
+            event_day: selectedDayNumber
         });
 
         fetch(`/spr-main?${queryParams.toString()}`, {
@@ -56,12 +56,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())  // Assuming the server responds with JSON
+        .then(response => response.json())
         .then(data => {
-            console.log('Server Response:', data);  // Handle the server's response if needed
+            console.log('Server Response:', data);
         })
         .catch(error => {
-            console.error('Error sending event day:', error);  // Handle any errors
+            console.error('Error sending event day:', error);
         });
     });
 });

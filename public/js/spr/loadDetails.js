@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
             window.history.replaceState({}, '', url.toString());
             console.log("Updated URL:", url.toString());
 
-            // Send the updated scope via AJAX
             fetch(url.toString(), {
                 method: 'GET',
                 headers: {
@@ -143,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function () {
         loadEventDetails(eventId, eventDays, eventName, eventStartDate, eventEndDate, toVerify);
     };
 
-    // Function to load event details and redirect
     function loadEventDetails(eventId, eventDays, eventName, eventStartDate, eventEndDate, toVerify) {
         const currentYear = document.getElementById('selectYearDropdown').innerText || "Select Year";
         const currentSemester = document.getElementById('selectSemDropdown').innerText || "Select Sem";
@@ -151,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const currentPath = window.location.pathname.includes('spr-edit') ? 'spr-edit' : 'spr-main';
 
-        // Construct the URL with the correct path and maintain the event scope
         const url = new URL(`/${currentPath}?id=${studentId}&event_id=${eventId}`, window.location.origin);
         url.searchParams.set('academic_year', currentYear);
         url.searchParams.set('semester', currentSemester);
@@ -171,7 +168,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = url.toString();
     }
 
-    // Helper function to extract the student ID from the URL
     function getStudentIdFromUrl() {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('id');

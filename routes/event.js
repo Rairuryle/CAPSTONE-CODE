@@ -45,7 +45,6 @@ router.post('/add-event', (req, res) => {
         const endDate = new Date(event_date_end);
         const attendanceQueries = [];
 
-        // Initialize attendance day counter
         let attendanceDayCounter = 1;
 
         while (currentDate <= endDate) {
@@ -75,7 +74,7 @@ router.post('/add-event', (req, res) => {
                 if (name && activity_date[index]) {
                     const activityDate = new Date(activity_date[index]);
                     const startDate = new Date(event_date_start);
-                    const dayDifference = Math.ceil((activityDate - startDate) / (1000 * 60 * 60 * 24)) + 1; // +1 to make it 1-based index
+                    const dayDifference = Math.ceil((activityDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
                     return {
                         query: 'INSERT INTO activity (activity_name, activity_date, event_id, activity_day) VALUES (?, ?, ?, ?)',
@@ -125,7 +124,6 @@ router.post('/add-activity', (req, res) => {
         return res.status(400).send('Please provide all required fields');
     }
 
-    // Convert event_date_start to a valid Date object
     let startDate = new Date(event_date_start);
 
     // Check if the initial parsing was successful
@@ -138,12 +136,10 @@ router.post('/add-activity', (req, res) => {
         }
     }
 
-    // Validate the parsed date
     if (isNaN(startDate.getTime())) {
         return res.status(400).send('Invalid event start date');
     }
 
-    // Prepare and execute activity insertion
     const activityQueries = activity_name.map((name, index) => {
         if (name && activity_date[index]) {
             const activityDate = new Date(activity_date[index]);
@@ -180,7 +176,7 @@ router.post('/add-activity', (req, res) => {
 
 // academic year
 router.post('/academic_year', async (req, res) => {
-    const { academic_year } = req.body; //
+    const { academic_year } = req.body;
 
     if (!academic_year) {
         return res.status(400).json({ error: 'Academic year is required.' });
@@ -374,7 +370,7 @@ router.post('/update-event', (req, res) => {
                         return res.status(500).send('Error updating activity_day');
                     }
 
-                    // Now we update the attendance_day for all attendance records within the new date range
+                    // update the attendance_day for all attendance records within the new date range
                     const updateAttendanceDayQuery = `
                         UPDATE attendance
                         SET attendance_day = DATEDIFF(attendance_date, ?) + 1
@@ -445,7 +441,6 @@ router.post('/update-event', (req, res) => {
                         // Sort the attendance dates in chronological order
                         attendanceDates.sort((a, b) => new Date(a.attendanceDate) - new Date(b.attendanceDate));
 
-                        // Push the attendance insert promises after sorting
                         attendanceDates.forEach(item => {
                             attendancePromises.push(insertAttendance(item.attendanceDate, item.attendanceDay));
                         });
@@ -510,7 +505,6 @@ router.post('/update-activity', (req, res) => {
             return res.status(500).json({ success: false, message: 'Database error' });
         }
 
-        // Check if an activity was actually updated
         if (result.affectedRows === 0) {
             return res.status(404).json({ success: false, message: 'Activity not found' });
         }

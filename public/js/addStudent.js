@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function () {
         BSTM: ['SOTE']
     };
 
-    // Function to update the courseInput dropdown based on selected department
     function updateCourses() {
         const selectedDepartment = departmentInput.value;
         const courses = departmentCourses[selectedDepartment] || [];
@@ -63,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Function to update the ABOInput dropdown based on selected course
     function updateABO() {
         const selectedCourse = courseInput.value;
         const ABOs = coursesABO[selectedCourse] || [];
@@ -106,7 +104,6 @@ document.querySelector('.btn-reset').addEventListener('click', function (e) {
         }
     });
 
-    // Optionally remove validation/error classes
     document.querySelectorAll('.form-control').forEach((element) => {
         element.classList.remove('is-valid', 'is-invalid');
     });

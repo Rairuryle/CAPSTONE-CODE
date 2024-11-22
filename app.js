@@ -4,14 +4,14 @@ const mysql = require("mysql");
 const dotenv = require('dotenv');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
-const authMiddleware = require('./middleware/authMiddleware'); // Import authentication middleware
+const authMiddleware = require('./middleware/authMiddleware');
 const bodyParser = require('body-parser'); // Parsing form data
 dotenv.config({ path: './.env' });
 
 const multer = require('multer');
 const csv = require('csv-parser');
-const fs = require('fs'); // File System module
-const processImportedData = require('./controllers/importController'); // Import the import controller
+const fs = require('fs');
+const processImportedData = require('./controllers/importController');
 
 
 const app = express();
@@ -111,7 +111,6 @@ app.use('/import', require('./routes/import')); // Import routes
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Start the server
 app.listen(3000, () => {
     console.log("Server started on Port 3000");
 });

@@ -8,9 +8,8 @@ const db = mysql.createConnection({
 });
 
 function processImportedData(importedData, req, res) {
-    const { admin_id } = req.body; // Get admin_id from the form submission
+    const { admin_id } = req.body;
 
-    // Queries for inserting or updating attendance records
     const attendanceInsertQuery = `
         INSERT INTO attendance_record 
         (attendance_id, id_number, am_in, pm_in, pm_out, attendance_points, admin_id) 
@@ -23,7 +22,6 @@ function processImportedData(importedData, req, res) {
         WHERE attendance_id = ? AND id_number = ?
     `;
 
-    // Queries for inserting participation records
     const participationInsertQuery = `
         INSERT INTO participation_record 
         (activity_id, id_number, role_name, participation_record_points, admin_id) 
@@ -37,7 +35,6 @@ function processImportedData(importedData, req, res) {
     `;
 
 
-    // Define role points based on the role name
     const rolePoints = {
         "INDIV. Participant": 15,
         "PROG. Spectator": 10,
@@ -52,18 +49,17 @@ function processImportedData(importedData, req, res) {
 
     // Iterate over the rows in the imported data
     importedData.forEach((row) => {
-        // Attendance Part (unchanged)
         const filteredAttendanceRow = {
-            id_number: row['ID Number'],  // CSV -> id_number
-            attendance_day: row['Attendance Day'],  // CSV -> attendance_day
-            am_in: row['AM IN'],  // CSV -> am_in
-            pm_in: row['PM IN'],  // CSV -> pm_in
-            pm_out: row['PM OUT'],  // CSV -> pm_out
-            attendance_points: row['Attendance Points']  // CSV -> attendance_points
+            id_number: row['ID Number'],
+            attendance_day: row['Attendance Day'],
+            am_in: row['AM IN'],
+            pm_in: row['PM IN'],
+            pm_out: row['PM OUT'],
+            attendance_points: row['Attendance Points']
         };
 
-        const id_number = filteredAttendanceRow.id_number;  // CSV -> id_number
-        const attendance_day = filteredAttendanceRow.attendance_day;  // CSV -> attendance_day
+        const id_number = filteredAttendanceRow.id_number;
+        const attendance_day = filteredAttendanceRow.attendance_day;
         console.log('Processing attendance for day:', attendance_day);
 
         if (!attendance_day || !id_number) {
@@ -80,18 +76,17 @@ function processImportedData(importedData, req, res) {
             return; // Skip this iteration if any essential value is missing
         }
 
-        const am_in = filteredAttendanceRow.am_in;  // CSV -> am_in
-        const pm_in = filteredAttendanceRow.pm_in;  // CSV -> pm_in
-        const pm_out = filteredAttendanceRow.pm_out;  // CSV -> pm_out
-        const attendance_points = filteredAttendanceRow.attendance_points;  // CSV -> attendance_points
+        const am_in = filteredAttendanceRow.am_in;
+        const pm_in = filteredAttendanceRow.pm_in;
+        const pm_out = filteredAttendanceRow.pm_out; 
+        const attendance_points = filteredAttendanceRow.attendance_points;
 
         // Convert checkbox states (TRUE/FALSE) to integers (5 or null)
         const amIn = (am_in === 'TRUE') ? 5 : null;
         const pmIn = (pm_in === 'TRUE') ? 5 : null;
         const pmOut = (pm_out === 'TRUE') ? 5 : null;
 
-        // Calculate attendance points as the sum of AM IN, PM IN, and PM OUT
-        const points = (amIn || 0) + (pmIn || 0) + (pmOut || 0); // Ensure null values are treated as 0
+        const points = (amIn || 0) + (pmIn || 0) + (pmOut || 0);
 
         // Check if the attendance record exists and insert or update it
         const checkExistingQuery = `
@@ -140,15 +135,14 @@ function processImportedData(importedData, req, res) {
         }
 
         const validActivityColumns = headers.slice(startIndex + 1, endIndex);
-
         console.log('validActivityColumns', validActivityColumns);
 
-        const activity_day = row['Activity Day']; // Activity Day from CSV
+        const activity_day = row['Activity Day'];
         console.log('Activity Day:', activity_day);
         if (!activity_day || !id_number) return;
 
         validActivityColumns.forEach((activityName) => {
-            const roleName = row[activityName]; // Role Name (e.g., "INDIV. Participant")
+            const roleName = row[activityName];
             console.log('Activity Name:', activityName, 'Role Name:', roleName);
 
             const participationPoints = rolePoints[roleName];
@@ -176,7 +170,6 @@ function processImportedData(importedData, req, res) {
                     }
 
                     if (result.length > 0) {
-                        // Update existing participation record
                         console.log(`Updating participation record for ID: ${id_number}, Activity: ${activityName}, Role: ${roleName}`);
                         db.query(participationUpdateQuery, [activity_id, roleName, participationPoints, admin_id, activity_id, id_number, roleName], (err, updateResult) => {
                             if (err) {
@@ -187,7 +180,6 @@ function processImportedData(importedData, req, res) {
                             }
                         });
                     } else {
-                        // Insert new participation record
                         console.log(`Inserting new participation record for ID: ${id_number}, Activity: ${activityName}, Role: ${roleName}`);
                         db.query(participationInsertQuery, [activity_id, id_number, roleName, participationPoints, admin_id], (err, insertResult) => {
                             if (err) {
@@ -203,7 +195,6 @@ function processImportedData(importedData, req, res) {
         });
     });
 
-    // Send response with errors or success message
     if (errors.length > 0) {
         res.status(500).json({ message: "Errors occurred during import", errors });
     } else {
@@ -227,9 +218,9 @@ function processImportedStudentData(importedStudentData, req, res) {
         } = student;
 
         // Default values for null or static fields
-        const ibo_name = null;  // Set IBO name to null
-        const exemption_status = 'Not Exempted';  // Default exemption status
-        const active_status = 'Active';  // Default active status
+        const ibo_name = null;
+        const exemption_status = 'Not Exempted';
+        const active_status = 'Active';
 
         // First, check if the id_number already exists in the database
         const checkIdQuery = `SELECT COUNT(*) AS count FROM student WHERE id_number = ?`;
@@ -273,7 +264,7 @@ function processImportedStudentData(importedStudentData, req, res) {
                     console.error('Error inserting student:', err);
                     return res.status(500).json({ success: false, message: 'Error inserting student data.' });
                 }
-                console.log('Inserted student with ID:', result.insertId);  // Log the inserted student's ID
+                console.log('Inserted student with ID:', result.insertId);
             });
         });
     });
