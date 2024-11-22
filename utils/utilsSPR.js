@@ -57,9 +57,7 @@ const formatDate = (date) => {
     return new Intl.DateTimeFormat('en-US', options).format(new Date(date));
 };
 
-// Helper function to calculate total points for a student in a specific semester
 const fetchSemestralPoints = (academicYear, semester, eventScope, idNumber, callback) => {
-    // Logging inputs to ensure correct data is passed
     console.log('Academic Year:', academicYear);
     console.log('Semester:', semester);
     console.log('Event Scope:', eventScope);
@@ -117,22 +115,21 @@ const fetchSemestralPoints = (academicYear, semester, eventScope, idNumber, call
         (err, results) => {
             if (err) {
                 console.error('Error fetching total points:', err);
-                return callback(0); // Default to 0 if there’s an error
+                return callback(0);
             }
             
             if (results.length > 0) {
                 const totalPoints = results[0].total_points;
-                console.log('Total Points:', totalPoints); // Log the total points
+                console.log('Total Points:', totalPoints);
                 callback(totalPoints);
             } else {
                 console.log('No records found for the given parameters.');
-                callback(0); // Return 0 if no records found
+                callback(0);
             }
         });
 };
 
 
-// Helper function to calculate total points for a student for the entire academic year
 const fetchYearlyPoints = (academicYear, eventScope, idNumber, callback) => {
     const yearlyPointsQuery = `
         SELECT 
@@ -184,7 +181,7 @@ const fetchYearlyPoints = (academicYear, eventScope, idNumber, callback) => {
     db.query(yearlyPointsQuery, [academicYear, eventScope, idNumber, academicYear, eventScope, idNumber], (err, results) => {
         if (err) {
             console.error('Error fetching total points:', err);
-            return callback(0); // Default to 0 if there’s an error
+            return callback(0);
         }
         const totalPoints = results.length > 0 ? results[0].total_points : 0;
         callback(totalPoints);

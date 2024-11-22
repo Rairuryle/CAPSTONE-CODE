@@ -112,8 +112,6 @@ router.post('/add-event', (req, res) => {
     });
 });
 
-
-
 // add activity
 router.post('/add-activity', (req, res) => {
     const { event_id, student_id, event_date_start } = req.body;
@@ -312,7 +310,7 @@ router.post('/delete-attendance', (req, res) => {
 
 // update event
 router.post('/update-event', (req, res) => {
-    const { event_id, event_name, event_date_start, event_date_end } = req.body;
+    const { event_id, event_name, event_date_start, event_date_end, event_scope } = req.body;
 
     if (!event_name || !event_date_start || !event_date_end) {
         return res.status(400).send('Please provide all required fields');
@@ -356,7 +354,6 @@ router.post('/update-event', (req, res) => {
                     return res.status(500).send('Error managing activities');
                 }
 
-                // Update activity_day dynamically based on the new event_date_start
                 const updateActivityDayQuery = `
                     UPDATE activity
                     SET activity_day = DATEDIFF(activity_date, ?) + 1
@@ -370,7 +367,6 @@ router.post('/update-event', (req, res) => {
                         return res.status(500).send('Error updating activity_day');
                     }
 
-                    // update the attendance_day for all attendance records within the new date range
                     const updateAttendanceDayQuery = `
                         UPDATE attendance
                         SET attendance_day = DATEDIFF(attendance_date, ?) + 1
@@ -401,7 +397,7 @@ router.post('/update-event', (req, res) => {
                                         return reject('Error checking attendance records');
                                     }
 
-                                    if (results.length === 0) {  // No existing record, insert new
+                                    if (results.length === 0) {
                                         const sqlAttendance = `
                                             INSERT INTO attendance (attendance_date, event_id, attendance_day) 
                                             VALUES (?, ?, ?)
@@ -415,7 +411,7 @@ router.post('/update-event', (req, res) => {
                                             resolve();
                                         });
                                     } else {
-                                        resolve();  // No insertion needed, resolve immediately
+                                        resolve();
                                     }
                                 });
                             });
@@ -424,13 +420,11 @@ router.post('/update-event', (req, res) => {
                         const attendancePromises = [];
                         let attendanceDayCounter = 1;
 
-                        // Store all attendance dates to sort them before inserting
                         const attendanceDates = [];
 
                         while (currentDate <= endDate) {
-                            const attendanceDate = currentDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+                            const attendanceDate = currentDate.toISOString().split('T')[0];
 
-                            // Recalculate attendance_day based on the new event_date_start
                             const diffTime = currentDate - new Date(event_date_start);
                             const attendanceDay = Math.floor(diffTime / (1000 * 3600 * 24)) + 1;
 
@@ -438,14 +432,40 @@ router.post('/update-event', (req, res) => {
                             currentDate.setDate(currentDate.getDate() + 1);
                         }
 
-                        // Sort the attendance dates in chronological order
                         attendanceDates.sort((a, b) => new Date(a.attendanceDate) - new Date(b.attendanceDate));
 
                         attendanceDates.forEach(item => {
                             attendancePromises.push(insertAttendance(item.attendanceDate, item.attendanceDay));
+
+                            if (event_scope === 'INSTITUTIONAL') {
+                                const checkExistingMidasQuery = `
+                                    SELECT 1 FROM activity 
+                                    WHERE event_id = ? AND activity_name = 'Midas Touch Avenue' AND activity_date = ?
+                                `;
+
+                                db.query(checkExistingMidasQuery, [event_id, item.attendanceDate], (checkErr, results) => {
+                                    if (checkErr) {
+                                        console.error('Error checking for existing Midas Touch Avenue activity:', checkErr);
+                                    } else if (results.length === 0) {
+                                        const sqlActivityMidas = `
+                                            INSERT INTO activity (activity_name, activity_date, event_id, activity_day)
+                                            VALUES (?, ?, ?, ?)
+                                        `;
+                                        db.query(sqlActivityMidas, ['Midas Touch Avenue', item.attendanceDate, event_id, item.attendanceDay], (err) => {
+                                            if (err) {
+                                                console.error('Error inserting Midas Touch Avenue activity:', err);
+                                            } else {
+                                                console.log(`Midas Touch Avenue activity inserted for date: ${item.attendanceDate}`);
+                                            }
+                                        });
+                                    } else {
+                                        console.log(`Midas Touch Avenue activity already exists for date: ${item.attendanceDate}`);
+                                    }
+                                });
+                            }
                         });
 
-                        // Wait for all attendance records to be inserted before responding
+                        // Wait for all attendance records and "Midas Touch Avenue" activities to be inserted
                         Promise.all(attendancePromises)
                             .then(() => {
                                 res.json({ success: true, message: 'Event, attendance, and activities updated successfully' });
@@ -460,6 +480,8 @@ router.post('/update-event', (req, res) => {
         });
     });
 });
+
+
 
 router.post('/delete-event', (req, res) => {
     const { event_id } = req.body;

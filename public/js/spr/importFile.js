@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const fileInput = document.getElementById('csvFile');
     const fileNameDisplay = document.getElementById('fileNameDisplay');
 
-    // Display the file name when the file is selected
     fileInput.addEventListener('change', function () {
         const fileName = fileInput.files[0] ? fileInput.files[0].name : '';
         
@@ -22,20 +21,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = new FormData(this);
 
-        // Log formData entries to check if 'admin_id' is correctly included
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
-        }
-
-        // Append query parameters to formData individually
         queryParams.forEach((value, key) => {
-            formData.append(key, value);  // Append each query parameter to form data
+            formData.append(key, value);
         });
 
-        // Make an AJAX request to upload the file
         fetch('/import/import-csv', {
             method: 'POST',
-            body: formData,  // send FormData, which includes the file and query parameters
+            body: formData,
         })
             .then(response => {
                 if (response.redirected) {

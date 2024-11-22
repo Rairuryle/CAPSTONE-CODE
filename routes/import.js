@@ -1,8 +1,8 @@
 const express = require('express');
 const mysql = require('mysql');
 const multer = require('multer');
-const fs = require('fs');
 const csv = require('csv-parser');
+const { Readable } = require('stream');
 const router = express.Router();
 
 const db = mysql.createConnection({
@@ -12,39 +12,33 @@ const db = mysql.createConnection({
     database: process.env.DATABASE
 });
 
-// Set up multer storage for 'spr' uploads
-const sprUpload = multer({ dest: 'uploads/spr/' });
-
-// Set up multer storage for 'student' uploads
-const studentUpload = multer({ dest: 'uploads/student/' });
+// Use Multer's memoryStorage to keep the file in memory instead of saving it to the filesystem
+const memoryStorage = multer.memoryStorage();
+const sprUpload = multer({ storage: memoryStorage }).single('csvFile');
+const studentUpload = multer({ storage: memoryStorage }).single('csvFile');
 
 // Import the controller function for processing the CSV data
 const { processImportedData } = require('../controllers/importController');
 const { processImportedStudentData } = require('../controllers/importController');
 
-// Define the CSV upload route for general data import
-router.post('/import-csv', sprUpload.single('csvFile'), (req, res) => {
+router.post('/import-csv', sprUpload, (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
 
-    const filePath = req.file.path;
     const importedData = [];
 
-    // Parse the CSV file and collect the data
-    fs.createReadStream(filePath)
+    const bufferStream = Readable.from(req.file.buffer.toString());
+    
+    bufferStream
         .pipe(csv())
         .on('data', (row) => {
-            importedData.push(row);  // Store each row of the CSV in the importedData array
+            importedData.push(row);
         })
         .on('end', () => {
             console.log('CSV file successfully processed');
             
-            // Delegate to the controller to process the data and save it to the database
-            processImportedData(importedData, req, res);  // Pass req and res to the controller
-
-            // Optionally, delete the uploaded file after processing
-            fs.unlinkSync(filePath);  // Clean up the uploaded file after processing
+            processImportedData(importedData, req, res);
         })
         .on('error', (err) => {
             console.error('Error reading CSV:', err);
@@ -52,16 +46,17 @@ router.post('/import-csv', sprUpload.single('csvFile'), (req, res) => {
         });
 });
 
-// Define the CSV upload route for student data import
-router.post('/import-csv-student', studentUpload.single('csvFile'), (req, res) => {
+router.post('/import-csv-student', studentUpload, (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
 
-    const filePath = req.file.path;
     const importedData = [];
 
-    fs.createReadStream(filePath)
+    // Convert the buffer to a stream and pipe it to csv-parser
+    const bufferStream = Readable.from(req.file.buffer.toString());
+
+    bufferStream
         .pipe(csv())
         .on('data', (row) => {
             importedData.push(row);
@@ -70,9 +65,6 @@ router.post('/import-csv-student', studentUpload.single('csvFile'), (req, res) =
             console.log('CSV file successfully processed');
             
             processImportedStudentData(importedData, req, res);
-
-            // Clean up the uploaded file after processing
-            fs.unlinkSync(filePath);
         })
         .on('error', (err) => {
             console.error('Error reading CSV:', err);

@@ -215,7 +215,7 @@
                                         data-event-name="{{this.event_name}}"
                                         data-event-start="{{formatDate this.event_date_start 'YYYY-MM-DD'}}"
                                         data-event-end="{{formatDate this.event_date_end 'YYYY-MM-DD'}}"
-                                        onclick="event.stopPropagation();">
+                                        data-event-scope="{{this.event_scope}}" onclick="event.stopPropagation();">
                                         <img src="../img/edit.png" alt="Edit Event" class="edit-event-icon me-2">
                                     </button>
                                 </div>

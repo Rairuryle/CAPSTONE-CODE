@@ -7,24 +7,24 @@ document.addEventListener('DOMContentLoaded', function () {
             const eventName = this.getAttribute("data-event-name");
             let eventStart = this.getAttribute("data-event-start");
             let eventEnd = this.getAttribute("data-event-end");
+            let eventScope = this.getAttribute("data-event-scope");
 
-            // Convert dates to 'YYYY-MM-DD' format without using `toISOString()`
             eventStart = new Date(eventStart);
             eventEnd = new Date(eventEnd);
 
-            const formattedStartDate = `${eventStart.getFullYear()}-${String(eventStart.getMonth() + 1).padStart(2, '0')}-${String(eventStart.getDate()).padStart(2, '0')}`;
-            const formattedEndDate = `${eventEnd.getFullYear()}-${String(eventEnd.getMonth() + 1).padStart(2, '0')}-${String(eventEnd.getDate()).padStart(2, '0')}`;
+            const formattedStartDate = new Intl.DateTimeFormat('en-CA').format(eventStart);
+            const formattedEndDate = new Intl.DateTimeFormat('en-CA').format(eventEnd);
 
             document.getElementById("editEventID").value = eventId;
             document.getElementById("deleteEventID").value = eventId;
             document.getElementById("editEventNameInput").value = eventName;
             document.getElementById("editStartDateEvent").value = formattedStartDate;
             document.getElementById("editEndDateEvent").value = formattedEndDate;
+            document.getElementById("editEventScope").value = eventScope;
 
             console.log("Formatted Event Start Date:", formattedStartDate);
             console.log("Formatted Event End Date:", formattedEndDate);
 
-            // Update the end date range based on the formatted start date
             updateEndDateRange(formattedStartDate);
         });
     });
@@ -44,14 +44,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const startDateInput = document.getElementById('editStartDateEvent');
     const endDateInput = document.getElementById('editEndDateEvent');
 
-    // Get today's date in 'YYYY-MM-DD' format
     const today = new Date();
     const formattedToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-    // Set min date for start date to today
     startDateInput.min = formattedToday;
 
-    // Function to update the end date range based on a given start date
     function updateEndDateRange(formattedStartDate) {
         if (formattedStartDate) {
             const start = new Date(formattedStartDate);
@@ -60,23 +57,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
             endDateInput.min = formattedStartDate;
             endDateInput.max = maxEndDate.toISOString().split('T')[0];
-            endDateInput.disabled = false; // Enable the end date field
+            endDateInput.disabled = false;
         } else {
-            endDateInput.value = ""; // Clear end date if no start date is selected
-            endDateInput.disabled = true; // Disable end date input
+            endDateInput.value = "";
+            endDateInput.disabled = true;
         }
     }
 
-    // Update end date range when the start date changes
     startDateInput.addEventListener('change', function () {
         const selectedStartDate = startDateInput.value;
         updateEndDateRange(selectedStartDate);
     });
 
-    // Initialize end date range on page load or modal open
     updateEndDateRange(null);
 
-    // Update event
+    // update event
     document.querySelector('.btn-edit-event-submit').addEventListener('click', function (event) {
         event.preventDefault();
 
@@ -84,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const updatedEventName = document.getElementById('editEventNameInput').value;
         const updatedEventStart = document.getElementById('editStartDateEvent').value;
         const updatedEventEnd = document.getElementById('editEndDateEvent').value;
+        const updatedEventScope = document.getElementById('editEventScope').value;
 
         fetch('/event/update-event', {
             method: 'POST',
@@ -94,7 +90,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 event_id: eventId,
                 event_name: updatedEventName,
                 event_date_start: updatedEventStart,
-                event_date_end: updatedEventEnd
+                event_date_end: updatedEventEnd,
+                event_scope: updatedEventScope
             }),
         })
             .then(response => response.json())
