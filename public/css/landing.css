@@ -53,6 +53,7 @@ body {
 .attendance-guidelines-link,
 .help-link {
   color: var(--main-green);
+  text-decoration: none;
 }
 
 .btn-attendance-guidelines:hover,

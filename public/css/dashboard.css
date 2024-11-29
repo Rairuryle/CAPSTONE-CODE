@@ -201,6 +201,7 @@ input:focus + #suggestionsList {
   margin-left: -8rem;
   border: 1px dashed var(--main-green);
 }
+
 .student-id-number-list {
   background-color: #efefef;
   border: 1px solid rgba(33, 58, 49, 0.3);
