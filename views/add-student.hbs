@@ -1,17 +1,55 @@
 <head>
     <link rel="stylesheet" href="../css/dashboard.css">
+
+    <style>
+        @media (min-width: 1600px) {
+            .main-col-add-student {
+                margin-left: 2rem;
+            }
+
+            .first-col-add-student {
+                margin-right: 0rem !important;
+            }
+
+            .add-student-form-group {
+                width: 80rem !important;
+            }
+
+            .second-col-add-student {
+                margin-left: 0rem !important;
+            }
+        }
+
+        @media (min-width: 1800px) {
+            .add-student-form-group {
+                width: 90rem !important;
+                margin-top: 3rem;
+            }
+
+            .second-col-add-student {
+                margin-left: 8rem !important;
+            }
+        }
+
+        @media (min-width: 1900px) {
+            .add-student-form-group {
+                width: 100rem !important;
+                font-size: larger;
+            }
+        }
+    </style>
 </head>
 
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {{> navbar}}
 
-        <div class="col-9 mt-3">
+        <div class="col-9 main-col-add-student mt-3">
             <div class="d-flex justify-content-between">
-                <div class="col-lg-9 me-5">
+                <div class="col-lg-9 first-col-add-student me-5">
                     {{> headerSearch}}
 
-                    <div class="ms-3" style="width: 67rem;">
+                    <div class="add-student-form-group ms-3" style="width: 67rem;">
                         <div class="d-flex align-items-center border-bottom border-secondary pb-1 mb-4">
                             <h1 class="m-0 mt-4">Add Student</h1>
                             <form action="/import/import-csv-student" class="m-0 mt-4 px-3" method="POST"
@@ -177,7 +215,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 ms-5">
+                <div class="col-lg-3 second-col-add-student ms-5">
                     {{> headerOfficer}}
                 </div>
             </div>

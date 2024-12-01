@@ -1,12 +1,94 @@
 <head>
     <link rel="stylesheet" href="../css/dashboard.css">
+
+    <style>
+        @media (min-width: 1350px) {
+            .highlight-dashboard-img {
+                height: 18rem !important;
+            }
+        }
+
+        @media (min-width: 1500px) {
+            .middle-col-dashboard {
+                flex: 0 0 78%;
+                max-width: 78%;
+            }
+
+            .card-spr-dashboard {
+                margin-top: 5rem !important;
+            }
+
+            .card-bottom-container {
+                height: 35h;
+            }
+
+            .card-bottom {
+                padding: 2rem 1rem 2rem 1rem;
+            }
+
+            .card-bottom-body {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .card-bottom-title {
+                font-size: 2rem;
+            }
+
+            .card-text-bottom-description {}
+
+            .input-group {
+                display: flex;
+                justify-content: center;
+            }
+
+            .container-calendar {
+                margin-top: 5rem !important;
+            }
+        }
+
+        @media (min-width: 1700px) {
+            .spr-title {
+                font-size: 3rem !important;
+            }
+
+            .spr-text {
+                font-size: 1.2rem;
+            }
+
+            .highlight-dashboard-img {
+                min-height: 100% !important;
+            }
+        }
+
+        @media (min-width: 1900px) {
+            .card-spr-dashboard {
+                margin-top: 3rem !important;
+            }
+
+            .container-calendar {
+                margin-top: 3rem !important;
+            }
+        }
+
+        @media (min-height: 1000px) {
+            .card-spr-dashboard {
+                margin-top: 5rem !important;
+            }
+
+            .container-calendar {
+                margin-top: 5rem !important;
+            }
+        }
+    </style>
 </head>
 
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {{> navbar}}
 
-        <div class="col-9 mt-3">
+        <div class="col-9 middle-col-dashboard mt-3">
             <div class="d-flex justify-content-between">
                 <div class="col-sm-9 me-5">
                     {{> headerSearch}}
@@ -16,25 +98,27 @@
                             <div class="col-md-9">
                                 <div class="card-body p-4 mt-2">
                                     <p class="card-text card-small-text mb-2">Events and Attendance Tracking Website</p>
-                                    <h1 class="card-title mt-0 fs-1">THE STUDENT PARTICIPATION RECORD</h1>
-                                    <p class="card-text">On the dashboard, simply click on the “Records” button to hop
+                                    <h1 class="card-title spr-title mt-0 fs-1">THE STUDENT PARTICIPATION RECORD</h1>
+                                    <p class="card-text spr-text">On the dashboard, simply click on the “Records” button
+                                        to hop
                                         into the
                                         Student Participation Record page, or you can immediately search for it
                                         by using the search bar and entering either the student’s name or ID!</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <img src="../img/highlight-dashboard.png" class="img-fluid" alt="Attendance-Taking"
-                                    style="height: 289px; width:300px;">
+                                <img src="../img/highlight-dashboard.png"
+                                    class="img-fluid highlight-dashboard-img h-100 w-100" alt="Attendance-Taking">
                             </div>
                         </div>
                     </div>
 
-                    <div class="d-flex {{#unless isCSOorABOorSAO}} flex-wrap justify-content-between {{/unless}} mt-4">
+                    <div
+                        class="d-flex card-bottom-container {{#unless isCSOorABOorSAO}} flex-wrap justify-content-between {{/unless}} mt-4">
                         {{#unless isCSOorABOorSAO}}
                         <div class="card card-bottom flex-grow-1 mx-2 mb-2">
-                            <div class="card-body p-3">
-                                <h3 class="card-title text-center">Add Student</h3>
+                            <div class="card-body card-bottom-body p-3">
+                                <h3 class="card-title card-bottom-title text-center">Add Student</h3>
                                 <p class="card-text card-text-bottom-description">Create an account for a student for
                                     their participation to be recorded! It also keeps them informed of their clearance
                                     status.
@@ -53,8 +137,8 @@
                         {{/unless}}
 
                         <div class="card card-bottom flex-grow-1 mx-2 mb-2 {{#if isCSOorABOorSAO}} w-50 {{/if}}">
-                            <div class="card-body p-3">
-                                <h3 class="card-title text-center">List</h3>
+                            <div class="card-body card-bottom-body p-3">
+                                <h3 class="card-title card-bottom-title text-center">List</h3>
                                 <p class="card-text card-text-bottom-description">Shows every student
                                     listed in the system, complete with profiles and a link to the student's record and
                                     sorted
@@ -71,9 +155,10 @@
                             </div>
                         </div>
 
-                        <div class="card card-bottom flex-grow-1 mx-2 mb-2 {{#if isCSOorABOorSAO}} w-50 {{/if}}">
+                        <div
+                            class="card card-bottom card-bottom-body flex-grow-1 mx-2 mb-2 {{#if isCSOorABOorSAO}} w-50 {{/if}}">
                             <div class="card-body p-3">
-                                <h3 class="card-title text-center">Register</h3>
+                                <h3 class="card-title card-bottom-title text-center">Register</h3>
                                 <p class="card-text card-text-bottom-description">Register a newly authorized officer
                                     into the system in order for them to access the records, aid in organizing events,
                                     and increase manpower!</p>

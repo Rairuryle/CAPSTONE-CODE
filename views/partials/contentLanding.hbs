@@ -1,9 +1,50 @@
+<style>
+    @media (min-height: 800px) {
+        .first-col-landing {
+            margin-right: 1rem;
+        }
+
+        .figure-landing {
+            width: 39rem !important;
+        }
+
+        .description-landing {
+            font-size: 1.3rem;
+        }
+
+        .btn-attendance-guidelines,
+        .btn-help {
+            margin-top: 1.8rem;
+        }
+    }
+
+    @media (min-height: 900px) {
+        .container {
+            margin-top: 2rem;
+        }
+
+        .figure-landing {
+            width: 42rem !important;
+        }
+
+        .description-landing {
+            font-size: 1.4rem;
+        }
+    }
+
+    @media (min-height: 1000px) {
+        .container {
+            margin-top: 6rem;
+        }
+    }
+</style>
+
 <body>
     {{> headerLanding}}
-    <div class="container">
+    <div class="container container-landing">
         <div class="row">
-            <div class="col">
-                <figure class="figure-landing position-relative" style="width: 34.5rem;">
+            <div class="col first-col-landing">
+                <figure class="figure-landing position-relative" style="width: 33.5rem;">
                     <img src="../img/landing-img.png" alt="Landing Page Image" class="img-fluid">
                     <div
                         class="position-absolute top-0 start-50 translate-middle-x py-5 text-center d-flex align-items-center w-75">
