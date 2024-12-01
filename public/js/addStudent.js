@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         CCJE: ['BSCrim'],
         CCSEA: ['BLIS', 'BSArch', 'BSCE', 'BSCpE', 'BSCS', 'BSECE', 'BSEE', 'BSGE', 'BSIT'],
         CON: ['BSN'],
-        CTE: ['BECED', 'BEEd', 'BPE', 'BTLEd-HE', 'BSEd-English', 'BSED-Filipino', 'BSEd-Mathematics', 'BSEd-Science', 'BSEd-SocStud', 'BSEd-ValEd', 'BSNEd'],
+        CTE: ['BECED', 'BEEd', 'BPE', 'BTLEd-HE', 'BSEd-English', 'BSEd-Filipino', 'BSEd-Mathematics', 'BSEd-Science', 'BSEd-SocStud', 'BSEd-ValEd', 'BSNEd'],
         CTHM: ['BSHM', 'BSTM']
     };
 
