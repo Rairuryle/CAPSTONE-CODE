@@ -10,10 +10,6 @@ body {
   height: 2.5rem;
 }
 
-.figure-landing img {
-  width: 95%;
-}
-
 .brackets-landing,
 .title-img-landing,
 .brackets-login,
@@ -44,10 +40,6 @@ body {
 
 .description-landing {
   top: calc(10% + 9rem);
-}
-
-.second-col-landing {
-  height: 35rem;
 }
 
 .attendance-guidelines-link,

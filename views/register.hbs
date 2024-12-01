@@ -43,11 +43,13 @@
                                             type="button">SAO</button>
                                         {{/if}}
                                         {{#if isUSGorSAO}}
-                                        <button class="btn btn-org border border-2 fw-bold ms-3 mb-3"
+                                        <button
+                                            class="btn btn-org border border-2 fw-bold {{#if isSAO}} ms-3 {{/if}} mb-3"
                                             type="button">USG</button>
                                         {{/if}}
                                         {{#if isCSOorSAO}}
-                                        <button class="btn btn-org border border-2 fw-bold ms-3 mb-3"
+                                        <button
+                                            class="btn btn-org border border-2 fw-bold {{#if isSAO}} ms-3 {{/if}} mb-3"
                                             type="button">CSO</button>
                                         {{/if}}
 
@@ -55,7 +57,7 @@
                                         {{#if isCollegeOrSAORegister}} {{!-- Start of CollegeOrSAORegister --}}
                                         <div class="dropdown">
                                             <button
-                                                class="btn btn-org border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
+                                                class="btn btn-org border border-2 fw-bold {{#if isSAO}} ms-3 {{/if}}mb-3 dropdown-toggle"
                                                 type="button" id="dropdown1" data-dropdown-id="dropdown1"
                                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 COLLEGE
@@ -90,7 +92,7 @@
                                         {{#if isCSOorABOorSAO}} {{!-- Start of CSOorABOorSAO --}}
                                         <div class="dropdown">
                                             <button
-                                                class="btn btn-org border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
+                                                class="btn btn-org border border-2 fw-bold {{#if isCSOorSAO}} ms-3 {{/if}} mb-3 dropdown-toggle"
                                                 type="button" id="dropdown2" data-dropdown-id="dropdown2"
                                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 ABO
@@ -229,7 +231,7 @@
                                         {{#if isCSOorIBOorSAO}} {{!-- Start of CSOorIBOorSAO --}}
                                         <div class="dropdown">
                                             <button
-                                                class="btn btn-org border border-2 fw-bold ms-3 mb-3 dropdown-toggle"
+                                                class="btn btn-org border border-2 fw-bold {{#if isCSOorSAO}} ms-3 {{/if}} mb-3 dropdown-toggle"
                                                 type="button" id="dropdown3" data-dropdown-id="dropdown3"
                                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 IBO
