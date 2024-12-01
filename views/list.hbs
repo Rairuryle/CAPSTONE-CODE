@@ -1,5 +1,14 @@
 <head>
     <link rel="stylesheet" href="../css/dashboard.css">
+
+    <style>
+        @media (max-width: 1300px) {
+            .first-col-list {
+                flex: 0 0 83%;
+                max-width: 83%;
+            }
+        }
+    </style>
 </head>
 
 <div class="container-fluid">
@@ -8,7 +17,7 @@
 
         <div class="col-9 mt-3">
             <div class="d-flex justify-content-between">
-                <div class="col-lg-9 me-5">
+                <div class="col-lg-9 first-col-list me-5">
                     {{> headerSearch}}
                     <div class="ms-3" style="width: 40rem;">
                         <div class="row border-bottom border-secondary">
