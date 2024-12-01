@@ -3,7 +3,93 @@
     body {
         height: 100%;
         margin: 0;
-        overflow: hidden;
+        overflow-y: hidden;
+    }
+
+    @media (max-height: 678px) {
+        body {
+            overflow-y: auto;
+        }
+    }
+
+    @media (min-height: 815px) {
+        .btn-dashboard-redirect {
+            margin-bottom: 0.5rem;
+        }
+
+        .card-register {
+            height: 75vh;
+        }
+
+        .card-body {
+            font-size: large;
+        }
+
+        .card-body>form {
+            margin-top: 0.5rem;
+        }
+
+        .col-org {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .registration-form-input {
+            margin-top: 1.8rem !important;
+        }
+
+        .btn-bottom {
+            margin-top: 1rem !important;
+        }
+    }
+
+    @media (min-height: 870px) {
+        .registration-form-input {
+            margin-top: 2rem !important;
+        }
+
+        .btn-bottom {
+            margin-top: 2rem !important;
+        }
+    }
+
+    @media (min-height: 950px) {
+        .registration-container {
+            margin-top: -5rem;
+        }
+
+        .btn-dashboard-redirect {
+            margin-bottom: 0rem;
+        }
+
+        .card-register {
+            height: 70vh;
+            border-end-start-radius: 30px !important;
+            border-end-end-radius: 30px !important;
+            padding-top: 1rem;
+        }
+
+        .card-body {
+            font-size: larger;
+        }
+
+        .registration-form-input {
+            margin-top: 2rem !important;
+        }
+
+        .registration-form-input .col-7 {
+            flex: 0 0 75%;
+            max-width: 75%;
+        }
+    }
+
+    @media (min-height: 1050px) {
+        .card-register {
+            height: 60vh;
+        }
     }
 </style>
 
@@ -11,7 +97,7 @@
     {{> headerLanding}}
     {{> officerPermission}}
 
-    <div class="container d-flex flex-column h-100">
+    <div class="container-fluid d-flex flex-column h-100">
         <div class="row">
             <div class="col position-relative" style="min-height: 30px;">
                 <div
@@ -23,20 +109,19 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-center flex-grow-1">
-            <div class="row d-flex flex-column" style="width: 1000px;">
-
+        <div class="d-flex justify-content-center align-items-center flex-grow-1">
+            <div class="row d-flex flex-column registration-container" style="width: 1000px;">
                 <div class="col">
                     <a href="/dashboard">
                         <button type="button" class="btn btn-dashboard-redirect btn-light btn-md fw-bold w-25">Back to
                             Dashboard</button>
                     </a>
-                    <div class="card card-register d-flex justify-content-center align-items-center mt-2"
-                        style="min-height: 50rem;">
+                    <div class="card card-register d-flex justify-content-center align-items-center mt-2 mx-auto"
+                        style="min-height: 35rem;">
                         <div class="card-body card-body-register w-100" style="max-width: 900px;">
                             <form action="/auth/register" method="POST">
                                 <span>Organization</span>
-                                <div class="form-group row mt-2 border-bottom">
+                                <div class="form-group row border-bottom mt-2">
                                     <div class="col col-org d-flex">
                                         {{#if isSAO}}
                                         <button class="btn btn-org border border-2 fw-bold mb-3"
@@ -283,7 +368,7 @@
 
                                 <input type="hidden" name="organizationRegister" id="organizationRegister">
 
-                                <div class="form-group row d-flex align-items-center mt-4">
+                                <div class="form-group row registration-form-input d-flex align-items-center mt-4">
                                     <div class="col-2">
                                         <label for="inputLasttName">Last Name</label>
                                     </div>
@@ -292,7 +377,7 @@
                                             name="lastNameRegister" required>
                                     </div>
                                 </div>
-                                <div class="form-group row d-flex align-items-center mt-3">
+                                <div class="form-group row registration-form-input d-flex align-items-center mt-3">
                                     <div class="col-2">
                                         <label for="inputFirstName">First Name</label>
                                     </div>
@@ -301,7 +386,7 @@
                                             name="firstNameRegister" required>
                                     </div>
                                 </div>
-                                <div class="form-group row d-flex align-items-center mt-3">
+                                <div class="form-group row registration-form-input d-flex align-items-center mt-3">
                                     <div class="col-2">
                                         <label for="inputUsername">Username</label>
                                     </div>
@@ -311,7 +396,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row d-flex align-items-center mt-3">
+                                <div class="form-group row registration-form-input d-flex align-items-center mt-3">
                                     <div class="col-2">
                                         <label for="inputPassword">Password</label>
                                     </div>
@@ -331,7 +416,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row d-flex align-items-center mt-4">
+                                <div class="form-group row registration-form-input d-flex align-items-center mt-4">
                                     <div class="col-2">
                                         <label for="confirmPassword">Confirm Password</label>
                                     </div>
@@ -351,7 +436,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group d-flex justify-content-end mt-4 w-100">
+                                <div class="form-group btn-bottom d-flex justify-content-end mt-4 w-100">
                                     <button class="btn btn-reset btn-light mx-4">Reset</button>
                                     <input class="btn btn-register btn-outline-success w-25" type="submit"
                                         value="Register">
