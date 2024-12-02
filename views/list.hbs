@@ -3,9 +3,65 @@
 
     <style>
         @media (max-width: 1300px) {
-            .first-col-list {
-                flex: 0 0 83%;
-                max-width: 83%;
+            .list-container {
+                width: 37rem !important;
+            }
+
+            .card-list-container {
+                margin-bottom: 1.8rem !important;
+            }
+
+        }
+
+        @media (min-width: 1500px) {
+            .list-container {
+                width: 45rem !important;
+            }
+        }
+
+        @media (min-width: 1700px) {
+            .list-container {
+                width: 53rem !important;
+            }
+
+            .second-col-list {
+                margin-left: 7rem !important;
+            }
+        }
+
+        @media (min-width: 1800px) {
+            .list-container {
+                width: 55rem !important;
+            }
+        }
+
+        @media (min-width: 1900px) {
+            .list-container {
+                width: 58rem !important;
+                margin-top: 2rem !important;
+            }
+
+            .card-list-container {
+                margin-top: 3.5rem !important;
+                font-size: 1.9rem !important;
+            }
+
+            .student-group-list {
+                margin-top: 0.7rem !important;
+            }
+
+            .student-group-list-details {
+                margin-top: 0.9rem !important;
+            }
+        }
+
+        @media (min-height: 800px) {
+            .card-list-container {
+                padding: 2rem;
+            }
+
+            #noStudentSelectedText {
+                font-size: 1.8rem !important;
             }
         }
     </style>
@@ -19,7 +75,7 @@
             <div class="d-flex justify-content-between">
                 <div class="col-lg-9 first-col-list me-5">
                     {{> headerSearch}}
-                    <div class="ms-3" style="width: 40rem;">
+                    <div class="list-container ms-3" style="width: 40rem;">
                         <div class="row border-bottom border-secondary">
                             <div class="col-auto">
                                 <h1 class="mb-3">List of Students</h1>
@@ -255,7 +311,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 ms-5">
+                <div class="col-lg-3 second-col-list ms-5">
                     {{> headerOfficer}}
 
                     <div class="card card-list-container mt-3">

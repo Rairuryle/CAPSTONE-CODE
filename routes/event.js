@@ -481,8 +481,6 @@ router.post('/update-event', (req, res) => {
     });
 });
 
-
-
 router.post('/delete-event', (req, res) => {
     const { event_id } = req.body;
     console.log('Deleting event with ID:', event_id);
