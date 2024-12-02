@@ -508,3 +508,27 @@ body {
   border: 1px dashed black;
   border-radius: 20px;
 }
+
+/* media queries */
+@media (min-height: 750px) {
+  .events-container {
+    min-height: 16rem !important;
+    max-height: 45vh !important;
+  }
+
+  .import-file-card {
+    padding: 1rem;
+  }
+
+  .points-card-body {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+}
+
+@media (min-height: 850px) {
+  .events-container {
+    min-height: 35vh !important;
+    max-height: 55vh !important;
+  }
+}
