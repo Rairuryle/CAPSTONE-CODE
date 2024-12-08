@@ -1,0 +1,221 @@
+/* add student */
+
+@media (min-width: 1600px) {
+  .main-col-add-student {
+    margin-left: 2rem;
+  }
+
+  .first-col-add-student {
+    margin-right: 0rem !important;
+  }
+
+  .add-student-form-group {
+    width: 80rem !important;
+  }
+
+  .second-col-add-student {
+    margin-left: 0rem !important;
+  }
+}
+
+@media (min-width: 1800px) {
+  .add-student-form-group {
+    width: 90rem !important;
+    margin-top: 3rem;
+  }
+
+  .second-col-add-student {
+    margin-left: 8rem !important;
+  }
+}
+
+@media (min-width: 1900px) {
+  .add-student-form-group {
+    width: 100rem !important;
+    font-size: larger;
+  }
+}
+
+/* add student successful */
+
+@media (max-width: 1280px) {
+  .add-student-successful-group {
+    width: 60rem !important;
+  }
+
+  .second-col-add-student-successful {
+    margin-left: 0 !important;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1310px) {
+  .add-student-successful-group {
+    width: 65rem !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  .add-student-successful-group {
+    width: 80rem !important;
+  }
+}
+
+@media (min-width: 1700px) {
+  .add-student-successful-group {
+    width: 85rem !important;
+  }
+}
+
+@media (min-width: 1800px) {
+  .add-student-successful-group {
+    width: 95rem !important;
+  }
+
+  .first-col-add-student-successful {
+    width: 70rem !important;
+  }
+
+  .second-col-add-student-successful {
+    margin-left: 2rem !important;
+  }
+}
+
+@media (min-width: 1900px) {
+  .add-student-successful-group {
+    width: 102rem !important;
+  }
+
+  .first-col-add-student-successful {
+    width: 75rem !important;
+  }
+}
+
+@media (min-width: 1980px) {
+  .add-student-successful-group {
+    width: 105rem !important;
+  }
+
+  .second-col-add-student-successful {
+    margin-left: 5rem !important;
+  }
+}
+
+@media (min-height: 800px) {
+  .add-student-successful-card {
+    height: 35rem !important;
+  }
+
+  .card-body-nested-add-student {
+    width: 25% !important;
+  }
+}
+
+@media (min-height: 900px) {
+  .card-body-nested-add-student {
+    margin-top: 5rem;
+  }
+}
+
+@media (min-height: 1000px) {
+  .card-body-nested-add-student {
+    margin-top: 13rem;
+  }
+
+  .title-add-student-successful {
+    font-size: 1.7rem;
+  }
+}
+
+/* add student ibo */
+
+@media (min-width: 1240px) and (max-width: 1264px) {
+  .add-student-ibo-form-group {
+    width: 62rem !important;
+  }
+}
+
+@media (min-width: 1265px) and (max-width: 1289px) {
+  .add-student-ibo-form-group {
+    width: 64rem !important;
+  }
+}
+
+@media (min-width: 1290px) and (max-width: 1320px) {
+  .add-student-ibo-form-group {
+    width: 65rem !important;
+  }
+}
+
+@media (min-width: 1500px) {
+  .add-student-ibo-form-group {
+    width: 75rem !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  .main-col-add-student-ibo {
+    margin-left: 2rem;
+  }
+
+  .add-student-ibo-form-group {
+    width: 80rem !important;
+  }
+}
+
+@media (min-width: 1800px) {
+  .add-student-ibo-form-group {
+    width: 90rem !important;
+  }
+}
+
+@media (min-width: 1900px) {
+  .add-student-ibo-form-group {
+    width: 95rem !important;
+  }
+
+  .second-col-add-student-ibo {
+    margin-left: 5rem !important;
+  }
+}
+
+@media (min-width: 1980px) {
+  .add-student-ibo-form-group {
+    width: 103rem !important;
+  }
+
+  .second-col-add-student-ibo {
+    margin-left: 10rem !important;
+  }
+}
+
+@media (min-height: 900px) {
+  .add-student-ibo-form-group {
+    font-size: larger !important;
+  }
+
+  .row-add-student-ibo {
+    height: 38rem !important;
+  }
+
+  .vertical-line {
+    height: 38rem !important;
+  }
+
+  .added-members-container {
+    height: 30rem !important;
+  }
+}
+
+@media (min-height: 1050px) {
+  .row-add-student-ibo {
+    height: 45rem !important;
+  }
+
+  .vertical-line {
+    height: 45rem !important;
+  }
+
+  .added-members-container {
+    height: 37rem !important;
+  }
+}

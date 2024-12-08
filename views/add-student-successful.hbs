@@ -1,26 +1,28 @@
 <head>
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/responsiveness/addStudentResponsive.css">
 </head>
 
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {{> navbar}}
 
-        <div class="col-9 mt-3">
+        <div class="col-9 main-col-add-student-successful mt-3">
             <div class="d-flex justify-content-between">
-                <div class="col-lg-9 me-5">
+                <div class="col-lg-9 first-col-add-student-successful me-5">
                     {{> headerSearch}}
 
-                    <div class="ms-3" style="width: 67rem;">
+                    <div class="add-student-successful-group ms-3" style="width: 67rem;">
                         <h1 class="border-bottom border-secondary pb-1">Add Student</h1>
 
-                        <div class="d-flex align-items-center justify-content-center" style="height: 25rem;">
+                        <div class="add-student-successful-card d-flex align-items-center justify-content-center"
+                            style="height: 25rem;">
                             <div class="card card-body-nested-add-student h-75">
                                 <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                                    <h5 class="card-title text-center fw-bold">Student Added<br>Successfully!</h5>
+                                    <h5 class="card-title title-add-student-successful text-center fw-bold">Student
+                                        Added<br>Successfully!</h5>
                                     <div class="return-buttons d-flex flex-column mt-4 w-75">
-                                        <button type="button"
-                                            onclick="location.href='/spr-main?id={{addedStudentID}}'"
+                                        <button type="button" onclick="location.href='/spr-main?id={{addedStudentID}}'"
                                             class="btn btn-success btn-add-student-successful btn-view-record-add-student btn-md">
                                             View Record
                                         </button>
@@ -36,7 +38,7 @@
                     </div>
                 </div>
 
-                <div class=" col-lg-3 ms-5">
+                <div class=" col-lg-3 second-col-add-student-successful ms-5">
                     {{> headerOfficer}}
                 </div>
             </div>

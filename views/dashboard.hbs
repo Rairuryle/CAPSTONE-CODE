@@ -1,87 +1,6 @@
 <head>
     <link rel="stylesheet" href="../css/dashboard.css">
-
-    <style>
-        @media (min-width: 1350px) {
-            .highlight-dashboard-img {
-                height: 18rem !important;
-            }
-        }
-
-        @media (min-width: 1500px) {
-            .middle-col-dashboard {
-                flex: 0 0 78%;
-                max-width: 78%;
-            }
-
-            .card-spr-dashboard {
-                margin-top: 5rem !important;
-            }
-
-            .card-bottom-container {
-                height: 35h;
-            }
-
-            .card-bottom {
-                padding: 2rem 1rem 2rem 1rem;
-            }
-
-            .card-bottom-body {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-
-            .card-bottom-title {
-                font-size: 2rem;
-            }
-
-            .card-text-bottom-description {}
-
-            .input-group {
-                display: flex;
-                justify-content: center;
-            }
-
-            .container-calendar {
-                margin-top: 5rem !important;
-            }
-        }
-
-        @media (min-width: 1700px) {
-            .spr-title {
-                font-size: 3rem !important;
-            }
-
-            .spr-text {
-                font-size: 1.2rem;
-            }
-
-            .highlight-dashboard-img {
-                min-height: 100% !important;
-            }
-        }
-
-        @media (min-width: 1900px) {
-            .card-spr-dashboard {
-                margin-top: 3rem !important;
-            }
-
-            .container-calendar {
-                margin-top: 3rem !important;
-            }
-        }
-
-        @media (min-height: 1000px) {
-            .card-spr-dashboard {
-                margin-top: 5rem !important;
-            }
-
-            .container-calendar {
-                margin-top: 5rem !important;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../css/responsiveness/dashboardResponsive.css">
 </head>
 
 <div class="container-fluid">
@@ -97,7 +16,8 @@
                         <div class="row g-0">
                             <div class="col-md-9">
                                 <div class="card-body p-4 mt-2">
-                                    <p class="card-text card-small-text mb-2">Events and Attendance Tracking Website</p>
+                                    <p class="card-text card-small-text card-small-text-spr mb-2">Events and Attendance
+                                        Tracking Website</p>
                                     <h1 class="card-title spr-title mt-0 fs-1">THE STUDENT PARTICIPATION RECORD</h1>
                                     <p class="card-text spr-text">On the dashboard, simply click on the “Records” button
                                         to hop
@@ -126,7 +46,8 @@
                                 <div class="input-group">
                                     <button type="button"
                                         class="btn btn-dark btn-block btn-card-bottom d-flex align-items-center ms-auto">
-                                        <a href="/add-student" style="text-decoration: none; color: white;">
+                                        <a {{#unless isIBO}} href="/add-student" {{/unless}} href="/add-student-ibo"
+                                            style="text-decoration: none; color: white;">
                                             <span class="px-2 btn-card-bottom-text">Add</span>
                                             <img src="../img/add-card-dashboard.png" alt="Add Student" class="pe-1">
                                         </a>
@@ -187,12 +108,10 @@
                                 <div id="carouselExampleIndicators" class="carousel slide">
                                     <div class="carousel-indicators">
                                         <button type="button" data-bs-target="#carouselExampleIndicators"
-                                            data-bs-slide-to="0" class="active" aria-current="true"
+                                            data-bs-slide-to="0" class="active bg-secondary" aria-current="true"
                                             aria-label="Slide 1"></button>
                                         <button type="button" data-bs-target="#carouselExampleIndicators"
-                                            data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                        <button type="button" data-bs-target="#carouselExampleIndicators"
-                                            data-bs-slide-to="2" aria-label="Slide 3"></button>
+                                            data-bs-slide-to="1" aria-label="Slide 2" class="bg-secondary"></button>
                                     </div>
                                     <div class="carousel-inner">
                                         <div class="carousel-item active">
