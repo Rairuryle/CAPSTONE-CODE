@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const verifyButton = document.querySelector('.btn-verify-points');
     const studentId = getStudentIdFromUrl();
 
-    // Define isCSO based on the value in your HTML element
     const isCSO = document.querySelector('#isCSO').value === "true";
 
     const eventDays = {};  // To track the assigned roles per event day
@@ -23,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         select.addEventListener('change', function () {
             updateRoleClass(select);
-            // Update points display based on role selected
             updatePoints(select, index);
             // Track assigned roles count per event day
             updateAssignedRolesCount(select);
@@ -67,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function updatePoints(select, index) {
         const pointsContainer = document.getElementById(`points-container-${index}`);
         const officerSpan = document.getElementById(`officer-in-charge-${index}`);
-        const adminId = document.getElementById('adminId').value; // Retrieve the admin ID
+        const adminId = document.getElementById('adminId').value;
 
         const rolePoints = {
             'INDIV. Participant': 15,

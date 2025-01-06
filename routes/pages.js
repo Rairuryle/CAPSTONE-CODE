@@ -394,7 +394,18 @@ router.get('/spr-main', (req, res) => {
         const IBOs = ['Compatriots', 'Cosplay Corps', 'Green Leaders', 'Kainos', 'Meeples', 'Micromantics', 'Red Cross Youth', 'Soul Whisperers', 'Vanguard E-sports'];
 
         const fetchAcademicYears = (callback) => {
-            db.query('SELECT academic_year FROM academic_year ORDER BY academic_year DESC', (err, results) => {
+            const query = `
+                SELECT DISTINCT e.academic_year 
+                FROM event e
+                WHERE EXISTS (
+                    SELECT 1 
+                    FROM event 
+                    WHERE e.academic_year = academic_year
+                )
+                ORDER BY e.academic_year DESC
+            `;
+
+            db.query(query, (err, results) => {
                 if (err) {
                     return callback(err, null);
                 }
@@ -409,6 +420,7 @@ router.get('/spr-main', (req, res) => {
                 callback(null, formattedYears);
             });
         };
+
 
         const renderMainPage = (student, events, academicYears, eventDays, activities, attendance, totalParticipationPoints, totalAttendancePoints, semestralScore, yearlyScore, verificationStatusByDay) => {
             const { filteredEvents } = filterEvents(events, departmentName, aboName, iboName, selectedScope);
@@ -516,7 +528,7 @@ router.get('/spr-main', (req, res) => {
                                             LEFT JOIN attendance_record ar ON a.attendance_id = ar.attendance_id AND ar.id_number = ?
                                             LEFT JOIN admin ad ON ar.admin_id = ad.admin_id
                                             WHERE a.event_id = ?
-                                            ORDER BY a.attendance_date ASC`;
+                                            ORDER BY a.attendance_date ASC;`
 
                                         db.query(attendanceQuery, [idNumber, eventId], (err, attendanceResults) => {
                                             if (err) return res.status(500).send('Database error while fetching attendance');
@@ -748,7 +760,6 @@ router.get('/spr-edit', (req, res) => {
                                         if (err) {
                                             return res.status(500).send('Database error while fetching academic years');
                                         }
-
                                         renderEditPage(student, events, academicYears, eventDays, activityResults, formattedAttendance);
                                     });
                                 });
@@ -805,6 +816,12 @@ router.get('/landing-page-student-search', (req, res) => {
 });
 
 router.get('/spr-student', (req, res) => {
+    if (!req.session.isAuthorized) {
+        return res.redirect('/landing-page-student-search');
+    }
+
+    req.session.isAuthorized = false;
+
     const id_number = req.query.id_number;
     const selectedScope = req.query.event_scope || '';
     let selectedYear = req.query.academic_year || "Select Year";
@@ -829,15 +846,27 @@ router.get('/spr-student', (req, res) => {
     console.log('Selected Event Day:', selectedEventDay);
 
     const fetchAcademicYears = (callback) => {
-        db.query('SELECT academic_year FROM academic_year ORDER BY academic_year DESC', (err, results) => {
+        const query = `
+            SELECT DISTINCT e.academic_year 
+            FROM event e
+            WHERE EXISTS (
+                SELECT 1 
+                FROM event 
+                WHERE e.academic_year = academic_year
+            )
+            ORDER BY e.academic_year DESC
+        `;
+
+        db.query(query, (err, results) => {
             if (err) {
                 return callback(err, null);
             }
 
+            // Format the academic years to "yyyy-yyyy" format
             const formattedYears = results.map(year => {
                 const startYear = year.academic_year;
                 const endYear = parseInt(startYear) + 1;
-                return { academic_year: `${startYear}-${endYear} ` };
+                return { academic_year: `${startYear}-${endYear}` };
             });
 
             callback(null, formattedYears);

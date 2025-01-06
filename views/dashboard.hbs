@@ -39,9 +39,12 @@
                         <div class="card card-bottom flex-grow-1 mx-2 mb-2">
                             <div class="card-body card-bottom-body p-3">
                                 <h3 class="card-title card-bottom-title text-center">Add Student</h3>
-                                <p class="card-text card-text-bottom-description">Create an account for a student for
+                                <p class="card-text card-text-bottom-description">
+                                    {{#if isIBO}} Enlist an existing student into your organization as a member for
                                     their participation to be recorded! It also keeps them informed of their clearance
                                     status.
+                                    {{else}} Create an account for a student for their participation to be
+                                    recorded! It also keeps them informed of their clearance status. {{/if}}
                                 </p>
                                 <div class="input-group">
                                     <button type="button"

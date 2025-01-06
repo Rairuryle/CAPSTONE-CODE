@@ -71,11 +71,13 @@
                 </div>
 
                 {{else}}
-                <p class="description-landing fw-light">You can view your participation record by searching with either
-                    your ID or your name.
+                <p class="description-landing fw-light">You can view your participation record by entering your details
+                    in this format: <br>
+                    <span>ID Number - First Name Last Name</span> <br>
+                    <span>Example: N12345678 - John Doe</span>
                 </p>
 
-                <div class="container search-student-container border border-white" style="height: 21rem;">
+                <div class="container search-student-container border border-white" style="height: 19rem;">
                     <div class="input-group search-landing-page-student-group border-bottom w-100 mt-3 mb-5">
                         <input id="searchStudentProfileLanding" class="form-control border-0 bg-transparent text-white"
                             type="search" placeholder="Search..." aria-label="Search">
@@ -83,10 +85,6 @@
                             <img src="../img/search-landing-student.png" id="searchButton" alt="Search">
                         </span>
                     </div>
-
-                    <ul id="suggestionsList" class="list-group d-none position-absolute top-50 mt-2 w-75"
-                        style="max-height: 15rem;">
-                    </ul>
                 </div>
                 {{/unless}}
             </div>

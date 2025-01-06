@@ -306,25 +306,34 @@ router.get('/search-landing', (req, res) => {
         return res.status(400).json({ studentFound: false, message: 'Search query is required' });
     }
 
+    const parts = searchQuery.split(' - ');
+    if (parts.length !== 2) {
+        return res.status(400).json({ studentFound: false, message: 'Invalid search format. Use "ID Number - First Name Last Name"' });
+    }
+
+    const idNumber = parts[0].trim();
+    const name = parts[1].trim();
+
     const query = `
         SELECT * FROM student 
-        WHERE id_number LIKE ? 
-        OR first_name LIKE ? 
-        OR last_name LIKE ?
+        WHERE id_number = ? 
+        AND CONCAT(first_name, ' ', last_name) = ?
     `;
 
-    const likeSearch = `%${searchQuery}%`;
-
-    db.query(query, [likeSearch, likeSearch, likeSearch], (error, results) => {
+    db.query(query, [idNumber, name], (error, results) => {
         if (error) {
             console.error('Database error:', error);
             return res.status(500).json({ studentFound: false });
         }
 
-        res.status(200).json({ studentFound: results.length > 0, results });
+        if (results.length > 0) {
+            // Set session variable for validation
+            req.session.isAuthorized = true;
+            res.status(200).json({ studentFound: true, results });
+        } else {
+            res.status(404).json({ studentFound: false, message: 'Student not found' });
+        }
     });
 });
-
-
 
 module.exports = router;
